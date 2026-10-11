@@ -1,0 +1,3 @@
+namespace Application.Authentication.Queries.GetMicrosoftAuthorizationUrl;
+
+public sealed record GetMicrosoftAuthorizationUrlQuery;

@@ -1,0 +1,3 @@
+namespace Application.Authentication.Queries.GetFacebookAuthorizationUrl;
+
+public sealed record GetFacebookAuthorizationUrlQuery;

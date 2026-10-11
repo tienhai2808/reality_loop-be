@@ -1,0 +1,63 @@
+@baseUrl = http://localhost:5285/api/v1
+@accessToken = REPLACE_AFTER_LOGIN
+@refreshToken = REPLACE_AFTER_LOGIN
+
+### Start Google login: fetch with credentials or navigate to /auth/google in a browser.
+GET {{baseUrl}}/auth/google/authorize
+
+### Start Microsoft login: fetch with credentials or navigate to /auth/microsoft in a browser.
+GET {{baseUrl}}/auth/microsoft/authorize
+
+### Microsoft frontend callback. Use the code/state from Microsoft and the same browser's correlation cookie.
+POST {{baseUrl}}/auth/microsoft/callback
+Content-Type: application/json
+
+{ "code": "REPLACE_MICROSOFT_CODE", "state": "REPLACE_LOGIN_STATE", "device": { "deviceType": "Desktop", "deviceName": "Web" } }
+
+### Start Facebook login: fetch with credentials or navigate to /auth/facebook in a browser.
+GET {{baseUrl}}/auth/facebook/authorize
+
+### Facebook frontend callback. Use the code/state from Facebook and the same browser's correlation cookie.
+POST {{baseUrl}}/auth/facebook/callback
+Content-Type: application/json
+
+{ "code": "REPLACE_FACEBOOK_CODE", "state": "REPLACE_LOGIN_STATE", "device": { "deviceType": "Desktop", "deviceName": "Web" } }
+
+### Current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+### Rotate refresh token; replace BOTH tokens with the returned values.
+POST {{baseUrl}}/auth/refresh
+Content-Type: application/json
+
+{ "refreshToken": "{{refreshToken}}" }
+
+### Revoke by refresh token (works with an expired access token)
+POST {{baseUrl}}/auth/revoke
+Content-Type: application/json
+
+{ "refreshToken": "{{refreshToken}}" }
+
+### Logout current session
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
+
+### Active sessions (keyset pagination)
+GET {{baseUrl}}/auth/sessions?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Logout selected devices; use IDs from the session list
+POST {{baseUrl}}/auth/logout/sessions
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "sessionIds": ["REPLACE_SESSION_ID"] }
+
+### Logout every other session
+POST {{baseUrl}}/auth/logout/others
+Authorization: Bearer {{accessToken}}
+
+### Logout every session, including the current one
+POST {{baseUrl}}/auth/logout/all
+Authorization: Bearer {{accessToken}}

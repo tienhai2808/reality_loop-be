@@ -1,0 +1,3 @@
+namespace Application.Authentication.Queries.GetGoogleAuthorizationUrl;
+
+public sealed record GetGoogleAuthorizationUrlQuery;
