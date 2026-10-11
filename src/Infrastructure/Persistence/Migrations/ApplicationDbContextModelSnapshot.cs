@@ -221,6 +221,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("email");

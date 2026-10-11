@@ -14,7 +14,7 @@ public sealed class User : Entity
 
     private User(
         long id,
-        string? email,
+        string email,
         string firstName,
         string lastName,
         string? avatarUrl,
@@ -30,7 +30,7 @@ public sealed class User : Entity
         UpdatedAt = createdAt;
     }
 
-    public string? Email { get; private set; }
+    public string Email { get; private set; } = null!;
 
     public string FirstName { get; private set; } = null!;
 
@@ -52,7 +52,7 @@ public sealed class User : Entity
 
     public static User Create(
         long id,
-        string? email,
+        string email,
         string firstName,
         string lastName,
         string? avatarUrl,

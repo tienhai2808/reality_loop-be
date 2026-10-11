@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false),
-                    email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     first_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     last_name = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
                     avatar_url = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
@@ -133,6 +133,13 @@ namespace Infrastructure.Persistence.Migrations
                 column: "session_id");
 
             migrationBuilder.CreateIndex(
+                name: "ux_refresh_tokens_session_unconsumed",
+                table: "refresh_tokens",
+                column: "session_id",
+                unique: true,
+                filter: "consumed_at IS NULL AND revoked_at IS NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "ux_refresh_tokens_token_hash",
                 table: "refresh_tokens",
                 column: "token_hash",
@@ -142,6 +149,13 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_sessions_user_id",
                 table: "sessions",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_sessions_user_id_active_id",
+                table: "sessions",
+                columns: new[] { "user_id", "id" },
+                descending: new[] { false, true },
+                filter: "revoked_at IS NULL");
 
             migrationBuilder.CreateIndex(
                 name: "ux_users_email",

@@ -16,6 +16,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Email)
             .HasColumnName("email")
             .HasMaxLength(255)
+            .IsRequired()
             .HasColumnType("character varying(255)");
 
         builder.HasIndex(x => x.Email)

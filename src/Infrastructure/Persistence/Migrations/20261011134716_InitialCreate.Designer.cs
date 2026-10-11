@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20261010164701_InitialCreate")]
+    [Migration("20261011134716_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -118,6 +118,11 @@ namespace Infrastructure.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("ux_refresh_tokens_token_hash");
 
+                    b.HasIndex(new[] { "SessionId" }, "UnconsumedSessionToken")
+                        .IsUnique()
+                        .HasDatabaseName("ux_refresh_tokens_session_unconsumed")
+                        .HasFilter("consumed_at IS NULL AND revoked_at IS NULL");
+
                     b.ToTable("refresh_tokens", (string)null);
                 });
 
@@ -193,6 +198,11 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
+                    b.HasIndex("UserId", "Id")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_sessions_user_id_active_id")
+                        .HasFilter("revoked_at IS NULL");
+
                     b.ToTable("sessions", (string)null);
                 });
 
@@ -214,6 +224,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("email");
