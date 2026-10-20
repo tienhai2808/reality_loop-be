@@ -13,7 +13,7 @@ public static class WebApplicationExtensions
         app.UseCors("Frontend");
         app.Use(async (context, next) =>
         {
-            if (context.Request.Path.StartsWithSegments("/api/v1/auth"))
+            if (context.Request.Path.StartsWithSegments("/api/v1/auth") || context.Request.Path.StartsWithSegments("/api/v1/ai"))
             {
                 context.Response.Headers.CacheControl = "no-store";
                 context.Response.Headers.Pragma = "no-cache";
@@ -25,6 +25,7 @@ public static class WebApplicationExtensions
         app.UseRateLimiter();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseMiddleware<Api.Common.RateLimiting.AiSetupRateLimitMiddleware>();
         if (app.Environment.IsDevelopment()) app.MapOpenApi("/api/v1/openapi/{documentName}.json").AllowAnonymous();
         app.MapControllers();
         return app;

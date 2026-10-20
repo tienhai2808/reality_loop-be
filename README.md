@@ -4,6 +4,13 @@
 Cách chia `Common`, feature `Commands`/`Queries`, dependency injection và persistence tham khảo
 [Jason Taylor CleanArchitecture](https://github.com/jasontaylordev/CleanArchitecture).
 
+## Mục lục
+
+- [Cấu trúc và quy tắc mở rộng](#cấu-trúc-và-quy-tắc-mở-rộng)
+- [Cấu hình và chạy](#cấu-hình-và-chạy)
+- [Endpoint xác thực](#endpoint)
+- [Tài liệu chi tiết](#tài-liệu-chi-tiết)
+
 ## Cấu trúc và quy tắc mở rộng
 
 ```text
@@ -11,6 +18,7 @@ src/
   Domain/
     Common/                         Entity nền tảng
     Users/                          User, OAuthAccount, Session, RefreshToken và invariant
+    AI/                             AiConnection, provider/status/failure enum và invariant
   Application/
     Common/
       Interfaces/                   Contract repository, transaction, OAuth, token, current user
@@ -34,6 +42,18 @@ src/
         GetSessions/                Danh sách session với cursor pagination
       Models/                       Kết quả use case và DTO
       Services/                     OAuthLoginService và SessionLogoutService
+    AI/
+      Commands/
+        CreateAiConnection/         Command và handler riêng từng file
+        UpdateAiConnection/
+        VerifyAiConnection/
+        DeleteAiConnection/
+      Queries/
+        GetAiProviders/
+        GetAiModels/
+        GetAiConnections/
+      Models/                       DTO/result, mỗi type một file
+      Services/                     Provider registry và validation use case
     DependencyInjection.cs
   Infrastructure/
     Authentication/
@@ -41,8 +61,13 @@ src/
       Microsoft/                    HTTP exchange, PKCE, state/nonce, tenant/issuer, metadata/JWKS
       Facebook/                     HTTP exchange, state, token inspection, appsecret_proof/profile
       Tokens/                       JWT, random refresh token, SHA-256, lifetime options
+    AI/
+      Providers/                    HttpClient adapter OpenAI, Anthropic, Google
+      Security/                     AES-GCM, key ring và fingerprint
     IdGeneration/
     Persistence/
+      Entities/                     Receipt idempotency kỹ thuật
+      BackgroundServices/           Dọn receipt hết hạn
       Configurations/
       Migrations/
       Repositories/
@@ -53,7 +78,11 @@ src/
     Common/
       Routing/                      Prefix controller /api/v1
       Security/                     JWT validation events, kiểm tra session
-    Contracts/Authentication/       Request HTTP và validation
+      RateLimiting/                 Options/limiter/middleware của AI setup
+    Contracts/
+      Authentication/               Request HTTP và validation
+      AI/                           Request setup AI, mỗi type một file
+    Filters/                        Audit filter cho AI setup
     Controllers/                    Controller gọi handler
     Infrastructure/                 ProblemDetails/exception handler
     Services/                       CurrentUser từ HttpContext
@@ -61,8 +90,9 @@ src/
     WebApplicationExtensions.cs
     Program.cs
     appsettings.json
+docs/                               Tài liệu tích hợp và vận hành
 tests/
-  Authentication.IntegrationTests/  Kiểm tra chạy bằng console, không cần test framework
+  AiSetup.Tests/                    Console runner AI; PostgreSQL checks bật qua biến môi trường
 ```
 
 Dependency: `Application → Domain`, `Infrastructure → Application/Domain`,
@@ -81,8 +111,11 @@ OAuth SDK hoặc middleware OAuth. Hai package xác thực thêm vào là JWT Be
 
 ## Cấu hình và chạy
 
+Hướng dẫn ghép API AI cho FE: [docs/ai-setup-api.md](docs/ai-setup-api.md).
+Khóa mã hóa AI bắt buộc cấu hình theo [cấu hình và vận hành](docs/ai-setup-architecture.md#ai-cấu-hình-và-vận-hành).
+
 Các khóa nằm trong `src/Api/appsettings.json`. Khóa thật dùng user-secrets ở development
-hoặc environment variables/secret store khi deploy. Các placeholder Google, Microsoft, Facebook và JWT phải
+hoặc environment variables/secret store khi deploy. Các placeholder Google, Microsoft, Facebook, JWT và khóa mã hóa AI phải
 được thay; API kiểm tra cấu hình khi khởi động.
 
 ```bash
@@ -110,9 +143,9 @@ http://localhost:5285/api/v1/auth/google/callback
 Giá trị phải giống `Authentication:Google:RedirectUri`, kể cả scheme/port/path.
 Flow này chỉ xin `openid email profile`, không cần quyền Google API/offline access.
 
-Mặc định `appsettings.json` hiện trỏ Google về frontend
-`http://localhost:3000/auth/google/callback`; để dùng callback backend ở ví dụ trên,
-override `Authentication:Google:RedirectUri` cho khớp URI đã đăng ký.
+`Authentication:Google:RedirectUri` đang cấu hình callback frontend. Để dùng callback
+backend ở ví dụ trên, override giá trị này cho khớp URI đã đăng ký. Khi dùng tunnel,
+đăng ký chính xác URL HTTPS của môi trường; origin FE cũng phải có trong CORS allowlist.
 
 ## Luồng Microsoft login
 
@@ -138,11 +171,9 @@ API HTTP ở `http://localhost:5285`. Development cho phép HTTP loopback; môi 
 phải dùng HTTPS. Profile `https` dùng `https://localhost:7186`; khi đổi profile hãy cập nhật
 RedirectUri và Google Console cho khớp.
 
-API không tự chạy migration khi startup. `InitialCreate` tạo bảng auth;
-`OptimizeSessionRevocation` thêm index phân trang session và unique partial index bảo đảm
-mỗi session có tối đa một refresh token chưa consumed/chưa revoked. Cần chạy `database update`
-khi nâng cấp. Nếu DB cũ có nhiều token như vậy trong cùng session, migration sẽ từ chối
-thay vì tự chọn/xóa dữ liệu; cần xử lý dữ liệu không hợp lệ trước khi nâng cấp.
+API không tự chạy migration khi startup. `InitialCreate` tạo schema auth và các index/constraint
+session/refresh token. `AddAiConnections` tạo bảng kết nối AI; `AddAiConnectionCreationReceipts`
+tạo bảng receipt idempotency. Chạy `database update` vào đúng DB đích khi triển khai.
 
 ## Luồng Facebook login
 
@@ -334,7 +365,8 @@ Không có Redis/cache trạng thái session. Snapshot user chỉ tồn tại tr
 ## CORS và triển khai
 
 `Cors:AllowedOrigins` là allowlist origin đầy đủ, không dùng wildcard/trailing slash.
-Credentials được cho phép để gửi cookie correlation; header chỉ cho `Authorization`, `Content-Type`.
+Credentials được cho phép để gửi cookie correlation; request headers cho phép `Authorization`,
+`Content-Type`, `Idempotency-Key`; response expose `Retry-After` cho JavaScript phía FE.
 Đổi allowlist sang origin frontend thật khi deploy. CORS không thay thế xác thực.
 
 `RateLimiting:Authentication` mặc định 30 request/IP/60 giây cho controller auth, có Retry-After.
@@ -349,34 +381,12 @@ correlation vẫn đọc được sau restart hoặc khi callback vào instance 
 Dùng HTTPS, signing key mạnh và cùng key trên các instance. Mỗi instance cần Snowflake GeneratorId
 riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
-## Kiểm tra tích hợp
+## Tài liệu chi tiết
 
-Runner dùng pipeline thật, PostgreSQL thật, Google HTTP/JWKS giả lập với ID token ký RS256.
-Nó kiểm tra login GET/POST, PKCE/state/nonce, token sai chữ ký/issuer/audience/hết hạn/email unverified,
-CORS, prefix, rotate/hash/history, replay, refresh đồng thời, revoke/logout, user suspended,
-session hết hạn, multi-device logout/ownership/rollback, pagination, query-count budgets,
-DB constraint, nhiều API instance và rate limit. Có kiểm tra 64 request get-me đồng thời và
-16 thiết bị của cùng user refresh đồng thời; đây là concurrency smoke check trên môi trường local,
-không phải cam kết throughput production. Không cần credential Google thật.
-
-Runner chỉ chấp nhận tên database chứa `auth_tests`; hãy dùng database riêng vì runner tạo
-bảng bằng migrations và ghi dữ liệu kiểm tra. Không dùng database phát triển/production.
-
-```bash
-docker run --rm -d --name realityloop-auth-tests \
-  -p 127.0.0.1:55439:5432 \
-  -e POSTGRES_DB=reality_loop_auth_tests \
-  -e POSTGRES_USER=auth_test \
-  -e POSTGRES_PASSWORD=integration-only postgres:17-alpine
-
-AUTH_TEST_DATABASE='Host=127.0.0.1;Port=55439;Database=reality_loop_auth_tests;Username=auth_test;Password=integration-only' \
-  dotnet run --project tests/Authentication.IntegrationTests
-
-docker stop realityloop-auth-tests
-```
-
-Runner kết thúc bằng `PASS` và exit code 0 khi tất cả kiểm tra thành công.
-Login Google thật cần kiểm tra tiếp bằng Google client và redirect URI của môi trường bạn triển khai.
+- [Ghép API setup AI cho FE](docs/ai-setup-api.md): luồng màn hình, 7 endpoint, payload/response, TypeScript, xử lý lỗi và retry.
+- [AI setup: model, DB và vận hành](docs/ai-setup-architecture.md): schema, migration, mã hóa, transaction, concurrency, rate limit và kiểm tra.
+- [Microsoft OAuth](docs/microsoft-oauth.md).
+- [Facebook OAuth](docs/facebook-oauth.md).
 
 ## Tài liệu tham khảo
 

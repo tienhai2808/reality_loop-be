@@ -1,3 +1,5 @@
+using Api.Common.RateLimiting;
+using Api.Filters;
 using System.Net;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -65,7 +67,8 @@ public static class DependencyInjection
             throw new InvalidOperationException("Cors:AllowedOrigins must contain explicit origins without trailing slashes or wildcards.");
         services.AddCors(options => options.AddPolicy("Frontend", policy => policy.WithOrigins(origins)
             .WithMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-            .WithHeaders("Authorization", "Content-Type")
+            .WithHeaders("Authorization", "Content-Type", "Idempotency-Key")
+            .WithExposedHeaders("Retry-After")
             .AllowCredentials().SetPreflightMaxAge(TimeSpan.FromMinutes(10))));
 
         var permitLimit = configuration.GetValue("RateLimiting:Authentication:PermitLimit", 30);
@@ -82,7 +85,9 @@ public static class DependencyInjection
                 }));
             options.OnRejected = async (context, ct) =>
             {
-                context.HttpContext.Response.Headers.RetryAfter = windowSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                var retrySeconds = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retry)
+                    ? Math.Max(1, (int)Math.Ceiling(retry.TotalSeconds)) : windowSeconds;
+                context.HttpContext.Response.Headers.RetryAfter = retrySeconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 await Results.Problem(statusCode: 429, title: "Too many requests",
                     detail: "Please retry after the rate limit window resets.").ExecuteAsync(context.HttpContext);
             };
@@ -96,6 +101,15 @@ public static class DependencyInjection
             foreach (var proxy in configuration.GetSection("ReverseProxy:KnownProxies").Get<string[]>() ?? [])
                 options.KnownProxies.Add(IPAddress.Parse(proxy));
         });
+        services.AddOptions<AiSetupLimitsOptions>().BindConfiguration(AiSetupLimitsOptions.SectionName)
+            .ValidateDataAnnotations().ValidateOnStart();
+        var limits = configuration.GetSection(AiSetupLimitsOptions.SectionName).Get<AiSetupLimitsOptions>() ?? new();
+        services.AddSingleton<AiSetupLimiter>();
+        services.AddScoped<AiSetupAuditFilter>();
+        services.AddRateLimiter(options => options.AddPolicy("ai-ip", context =>
+            RateLimitPartition.GetFixedWindowLimiter(context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ =>
+                new FixedWindowRateLimiterOptions { PermitLimit = limits.IpPermitLimit,
+                    Window = TimeSpan.FromSeconds(limits.WindowSeconds), AutoReplenishment = true, QueueLimit = 0 })));
         return services;
     }
 }

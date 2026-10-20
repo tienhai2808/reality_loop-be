@@ -1,4 +1,6 @@
 bin/
 obj/
-docs/
+docs/*
+!docs/ai-setup-api.md
+!docs/ai-setup-architecture.md
 .idea/

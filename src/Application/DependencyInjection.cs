@@ -1,3 +1,11 @@
+using Application.AI.Commands.CreateAiConnection;
+using Application.AI.Commands.DeleteAiConnection;
+using Application.AI.Commands.UpdateAiConnection;
+using Application.AI.Commands.VerifyAiConnection;
+using Application.AI.Queries.GetAiConnections;
+using Application.AI.Queries.GetAiModels;
+using Application.AI.Queries.GetAiProviders;
+using Application.AI.Services;
 using Application.Authentication.Commands.GoogleLogin;
 using Application.Authentication.Commands.FacebookLogin;
 using Application.Authentication.Queries.GetFacebookAuthorizationUrl;
@@ -37,6 +45,14 @@ public static class DependencyInjection
         services.AddScoped<GetSessionsQueryHandler>();
         services.AddScoped<RevokeRefreshTokenCommandHandler>();
         services.AddScoped<GetCurrentUserQueryHandler>();
+        services.AddScoped<AiProviderRegistry>();
+        services.AddScoped<GetAiProvidersQueryHandler>();
+        services.AddScoped<GetAiModelsQueryHandler>();
+        services.AddScoped<GetAiConnectionsQueryHandler>();
+        services.AddScoped<CreateAiConnectionCommandHandler>();
+        services.AddScoped<UpdateAiConnectionCommandHandler>();
+        services.AddScoped<VerifyAiConnectionCommandHandler>();
+        services.AddScoped<DeleteAiConnectionCommandHandler>();
         return services;
     }
 }

@@ -1,6 +1,50 @@
 @baseUrl = http://localhost:5285/api/v1
 @accessToken = REPLACE_AFTER_LOGIN
 @refreshToken = REPLACE_AFTER_LOGIN
+@aiConnectionId = REPLACE_AI_CONNECTION_ID
+@aiConnectionVersion = 1
+@aiRequestId = 11111111-1111-4111-8111-111111111111
+
+### Supported AI providers
+GET {{baseUrl}}/ai/providers
+Authorization: Bearer {{accessToken}}
+
+### Discover models using a key (not persisted at this step)
+POST {{baseUrl}}/ai/providers/OpenAI/models
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "apiKey": "REPLACE_PROVIDER_API_KEY" }
+
+### Connect one model. Use a new UUID for a new connection; reuse it only to retry this same request.
+POST {{baseUrl}}/ai/connections
+Authorization: Bearer {{accessToken}}
+Idempotency-Key: {{aiRequestId}}
+Content-Type: application/json
+
+{ "provider": "OpenAI", "apiKey": "REPLACE_PROVIDER_API_KEY", "modelId": "REPLACE_MODEL_FROM_CATALOG", "displayName": "My AI" }
+
+### List AI connections; use nextCursor as after to load the next page
+GET {{baseUrl}}/ai/connections?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Update settings. Use the latest version returned by list/update/verify.
+PATCH {{baseUrl}}/ai/connections/{{aiConnectionId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "version": {{aiConnectionVersion}}, "isEnabled": false }
+
+### Verify stored key/model (may consume a small amount of provider tokens)
+POST {{baseUrl}}/ai/connections/{{aiConnectionId}}/verify
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "version": {{aiConnectionVersion}} }
+
+### Delete the connection from the application
+DELETE {{baseUrl}}/ai/connections/{{aiConnectionId}}?version={{aiConnectionVersion}}
+Authorization: Bearer {{accessToken}}
 
 ### Start Google login: fetch with credentials or navigate to /auth/google in a browser.
 GET {{baseUrl}}/auth/google/authorize

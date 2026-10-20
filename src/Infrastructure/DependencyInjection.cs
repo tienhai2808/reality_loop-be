@@ -1,3 +1,6 @@
+using Infrastructure.AI.Providers;
+using Infrastructure.AI.Security;
+using Infrastructure.Persistence.BackgroundServices;
 using System.Text;
 using Application.Common.Interfaces;
 using IdGen;
@@ -90,6 +93,31 @@ public static class DependencyInjection
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })
             .RemoveAllLoggers();
         services.AddScoped<IFacebookOAuthClient, FacebookOAuthClient>();
+        services.AddOptions<AiKeyOptions>().BindConfiguration(AiKeyOptions.SectionName)
+            .Validate(x => x.IsValid(), "AI key protection requires a valid active key ID, a 32-byte Base64 encryption key ring, and a separate 32-byte Base64 fingerprint key.")
+            .ValidateOnStart();
+        services.AddOptions<AiProviderOptions>().BindConfiguration(AiProviderOptions.SectionName)
+            .Validate(x => new[] { x.OpenAiFallbackModels, x.AnthropicFallbackModels, x.GoogleFallbackModels }
+                .All(models => models is not null && models.Length <= 1000 && models.All(m =>
+                    !string.IsNullOrWhiteSpace(m) && m.Length <= 200 && !m.Any(char.IsWhiteSpace) && !m.Any(char.IsControl))),
+                "AI fallback model IDs must be non-empty identifiers of at most 200 characters.").ValidateOnStart();
+        services.AddSingleton<IAiKeyProtector, AiKeyProtector>();
+        services.AddScoped<IAiConnectionRepository, AiConnectionRepository>();
+        services.AddSingleton<AiHttpTransport>();
+        services.AddScoped<IAiProviderClient, OpenAiProviderClient>();
+        services.AddScoped<IAiProviderClient, AnthropicProviderClient>();
+        services.AddScoped<IAiProviderClient, GoogleAiProviderClient>();
+        services.AddHttpClient("AiProviders", client =>
+            {
+                client.Timeout = TimeSpan.FromSeconds(20);
+                client.MaxResponseContentBufferSize = 1024 * 1024;
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+            {
+                AllowAutoRedirect = false, UseCookies = false, ConnectTimeout = TimeSpan.FromSeconds(5),
+                PooledConnectionLifetime = TimeSpan.FromMinutes(5), MaxConnectionsPerServer = 32
+            }).RemoveAllLoggers();
+        services.AddHostedService<AiReceiptCleanupService>();
         return services;
     }
 }

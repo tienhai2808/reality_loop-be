@@ -6,6 +6,6 @@
     <Project Path="src/Infrastructure/Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Authentication.IntegrationTests/Authentication.IntegrationTests.csproj" />
+    <Project Path="tests/AiSetup.Tests/AiSetup.Tests.csproj" />
   </Folder>
 </Solution>

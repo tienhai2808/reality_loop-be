@@ -23,6 +23,165 @@ namespace Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.AI.AiConnection", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<string>("ApiKeyLast4")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)")
+                        .HasColumnName("api_key_last4");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("display_name");
+
+                    b.Property<string>("EncryptedApiKey")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("encrypted_api_key");
+
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_enabled");
+
+                    b.Property<string>("LastFailureCode")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("last_failure_code");
+
+                    b.Property<string>("ModelId")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("model_id");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("provider");
+
+                    b.Property<DateTimeOffset?>("RetryAfterAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("retry_after_at");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("Ready")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "SortOrder", "Id")
+                        .HasDatabaseName("ix_ai_connections_user_id_sort_order_id");
+
+                    b.ToTable("ai_connections", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_ai_connections_failure_code", "last_failure_code IS NULL OR last_failure_code IN ('InvalidApiKey', 'QuotaExceeded', 'RateLimited', 'ProviderUnavailable', 'ModelUnavailable')");
+
+                            t.HasCheckConstraint("ck_ai_connections_key_hint", "char_length(api_key_last4) = 4 AND octet_length(api_key_last4) = 4 AND api_key_last4 !~ '[[:space:][:cntrl:]]'");
+
+                            t.HasCheckConstraint("ck_ai_connections_positive_ids", "id > 0 AND user_id > 0");
+
+                            t.HasCheckConstraint("ck_ai_connections_provider", "provider IN ('OpenAI', 'Anthropic', 'Google')");
+
+                            t.HasCheckConstraint("ck_ai_connections_required_text", "length(btrim(display_name)) > 0 AND length(btrim(model_id)) > 0 AND length(btrim(encrypted_api_key)) > 0");
+
+                            t.HasCheckConstraint("ck_ai_connections_retry_time", "retry_after_at IS NULL OR retry_after_at > created_at");
+
+                            t.HasCheckConstraint("ck_ai_connections_sort_order", "sort_order >= 0");
+
+                            t.HasCheckConstraint("ck_ai_connections_state", "(status = 'Ready' AND retry_after_at IS NULL AND last_failure_code IS NULL)\nOR (status = 'CoolingDown' AND retry_after_at IS NOT NULL AND last_failure_code IS NOT NULL\n    AND last_failure_code IN ('QuotaExceeded', 'RateLimited', 'ProviderUnavailable'))\nOR (status = 'NeedsAttention' AND retry_after_at IS NULL AND last_failure_code IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_ai_connections_status", "status IN ('Ready', 'CoolingDown', 'NeedsAttention')");
+
+                            t.HasCheckConstraint("ck_ai_connections_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_ai_connections_version", "version > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("request_id");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("fingerprint");
+
+                    b.Property<DateTimeOffset?>("LeaseExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lease_expires_at");
+
+                    b.Property<Guid?>("LeaseToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lease_token");
+
+                    b.Property<string>("ResponseJson")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("response_json");
+
+                    b.HasKey("UserId", "RequestId");
+
+                    b.HasIndex("ExpiresAt")
+                        .HasDatabaseName("ix_ai_connection_creations_expires_at");
+
+                    b.ToTable("ai_connection_creations", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_ai_connection_creations_fingerprint", "fingerprint ~ '^[0-9a-f]{64}$'");
+
+                            t.HasCheckConstraint("ck_ai_connection_creations_state", "(response_json IS NULL AND lease_token IS NOT NULL AND lease_expires_at IS NOT NULL)\nOR (response_json IS NOT NULL AND lease_token IS NULL AND lease_expires_at IS NULL)");
+                        });
+                });
+
             modelBuilder.Entity("Domain.Users.OAuthAccount", b =>
                 {
                     b.Property<long>("Id")
@@ -255,6 +414,24 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ux_users_email");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.AI.AiConnection", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Users.OAuthAccount", b =>
