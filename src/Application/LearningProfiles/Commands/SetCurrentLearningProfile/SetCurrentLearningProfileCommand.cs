@@ -1,0 +1,3 @@
+namespace Application.LearningProfiles.Commands.SetCurrentLearningProfile;
+
+public sealed record SetCurrentLearningProfileCommand(string ProfileId);

@@ -19,6 +19,7 @@ src/
     Common/                         Entity nền tảng
     Users/                          User, OAuthAccount, Session, RefreshToken và invariant
     AI/                             AiConnection, provider/status/failure enum và invariant
+    LearningProfiles/               Profile theo ngôn ngữ và lựa chọn profile hiện tại
   Application/
     Common/
       Interfaces/                   Contract repository, transaction, OAuth, token, current user
@@ -54,6 +55,11 @@ src/
         GetAiConnections/
       Models/                       DTO/result, mỗi type một file
       Services/                     Provider registry và validation use case
+    LearningProfiles/
+      Commands/                     Tạo, sửa preferences, xóa, chọn current
+      Queries/                      Options, list, detail và current
+      Models/                       DTO/result
+      Validation/                   Kiểm tra ID/version/cursor
     DependencyInjection.cs
   Infrastructure/
     Authentication/
@@ -82,6 +88,7 @@ src/
     Contracts/
       Authentication/               Request HTTP và validation
       AI/                           Request setup AI, mỗi type một file
+      LearningProfiles/             Request profile/preferences/selection
     Filters/                        Audit filter cho AI setup
     Controllers/                    Controller gọi handler
     Infrastructure/                 ProblemDetails/exception handler
@@ -366,7 +373,7 @@ Không có Redis/cache trạng thái session. Snapshot user chỉ tồn tại tr
 
 `Cors:AllowedOrigins` là allowlist origin đầy đủ, không dùng wildcard/trailing slash.
 Credentials được cho phép để gửi cookie correlation; request headers cho phép `Authorization`,
-`Content-Type`, `Idempotency-Key`; response expose `Retry-After` cho JavaScript phía FE.
+`Content-Type`, `Idempotency-Key`; response expose `Retry-After` và `Location` cho JavaScript phía FE.
 Đổi allowlist sang origin frontend thật khi deploy. CORS không thay thế xác thực.
 
 `RateLimiting:Authentication` mặc định 30 request/IP/60 giây cho controller auth, có Retry-After.
@@ -383,6 +390,7 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [Learning Profile API cho FE](docs/learning-profiles-api.md): 8 endpoint, payload/response, current selection, version và transaction.
 - [Ghép API setup AI cho FE](docs/ai-setup-api.md): luồng màn hình, 7 endpoint, payload/response, TypeScript, xử lý lỗi và retry.
 - [AI setup: model, DB và vận hành](docs/ai-setup-architecture.md): schema, migration, mã hóa, transaction, concurrency, rate limit và kiểm tra.
 - [Microsoft OAuth](docs/microsoft-oauth.md).

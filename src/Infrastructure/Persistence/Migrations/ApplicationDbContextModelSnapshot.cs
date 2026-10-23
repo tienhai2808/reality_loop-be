@@ -137,48 +137,113 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+            modelBuilder.Entity("Domain.LearningProfiles.LearningProfile", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("ExplanationLanguage")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("character varying(35)")
+                        .HasColumnName("explanation_language");
+
+                    b.Property<string>("GoalNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("goal_note");
+
+                    b.Property<string>("NativeLanguage")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("character varying(35)")
+                        .HasColumnName("native_language");
+
+                    b.Property<string>("PrimaryGoal")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("primary_goal");
+
+                    b.Property<string>("ProficiencyLevel")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("proficiency_level");
+
+                    b.Property<string>("TargetLanguage")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("character varying(35)")
+                        .HasColumnName("target_language");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("UserId", "Id")
+                        .HasName("ak_learning_profiles_user_id_id");
+
+                    b.HasIndex("UserId", "TargetLanguage")
+                        .IsUnique()
+                        .HasDatabaseName("ux_learning_profiles_user_id_target_language");
+
+                    b.ToTable("learning_profiles", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_learning_profiles_language_tags", "target_language ~ '^[a-z]{2,8}(-[a-z0-9]{1,8})*$'\nAND native_language ~ '^[a-z]{2,8}(-[a-z0-9]{1,8})*$'\nAND explanation_language ~ '^[a-z]{2,8}(-[a-z0-9]{1,8})*$'");
+
+                            t.HasCheckConstraint("ck_learning_profiles_positive_ids", "id > 0 AND user_id > 0");
+
+                            t.HasCheckConstraint("ck_learning_profiles_primary_goal", "primary_goal IN ('Travel', 'Work', 'Study', 'DailyLife', 'Social', 'Media', 'Relocation', 'Other')");
+
+                            t.HasCheckConstraint("ck_learning_profiles_proficiency_level", "proficiency_level IN ('Beginner', 'Elementary', 'Intermediate', 'UpperIntermediate', 'Advanced')");
+
+                            t.HasCheckConstraint("ck_learning_profiles_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_learning_profiles_version", "version > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.LearningProfiles.LearningProfileSelection", b =>
                 {
                     b.Property<long>("UserId")
                         .HasColumnType("bigint")
                         .HasColumnName("user_id");
 
-                    b.Property<Guid>("RequestId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("request_id");
+                    b.Property<long>("ActiveProfileId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("active_profile_id");
 
-                    b.Property<DateTimeOffset>("ExpiresAt")
+                    b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expires_at");
+                        .HasColumnName("updated_at");
 
-                    b.Property<string>("Fingerprint")
-                        .IsRequired()
-                        .HasMaxLength(64)
-                        .HasColumnType("character varying(64)")
-                        .HasColumnName("fingerprint");
+                    b.HasKey("UserId");
 
-                    b.Property<DateTimeOffset?>("LeaseExpiresAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("lease_expires_at");
+                    b.HasIndex("UserId", "ActiveProfileId");
 
-                    b.Property<Guid?>("LeaseToken")
-                        .HasColumnType("uuid")
-                        .HasColumnName("lease_token");
-
-                    b.Property<string>("ResponseJson")
-                        .HasColumnType("jsonb")
-                        .HasColumnName("response_json");
-
-                    b.HasKey("UserId", "RequestId");
-
-                    b.HasIndex("ExpiresAt")
-                        .HasDatabaseName("ix_ai_connection_creations_expires_at");
-
-                    b.ToTable("ai_connection_creations", null, t =>
+                    b.ToTable("learning_profile_selections", null, t =>
                         {
-                            t.HasCheckConstraint("ck_ai_connection_creations_fingerprint", "fingerprint ~ '^[0-9a-f]{64}$'");
-
-                            t.HasCheckConstraint("ck_ai_connection_creations_state", "(response_json IS NULL AND lease_token IS NOT NULL AND lease_expires_at IS NOT NULL)\nOR (response_json IS NOT NULL AND lease_token IS NULL AND lease_expires_at IS NULL)");
+                            t.HasCheckConstraint("ck_learning_profile_selections_positive_ids", "user_id > 0 AND active_profile_id > 0");
                         });
                 });
 
@@ -416,6 +481,51 @@ namespace Infrastructure.Persistence.Migrations
                     b.ToTable("users", (string)null);
                 });
 
+            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("user_id");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("request_id");
+
+                    b.Property<DateTimeOffset>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<string>("Fingerprint")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("fingerprint");
+
+                    b.Property<DateTimeOffset?>("LeaseExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("lease_expires_at");
+
+                    b.Property<Guid?>("LeaseToken")
+                        .HasColumnType("uuid")
+                        .HasColumnName("lease_token");
+
+                    b.Property<string>("ResponseJson")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("response_json");
+
+                    b.HasKey("UserId", "RequestId");
+
+                    b.HasIndex("ExpiresAt")
+                        .HasDatabaseName("ix_ai_connection_creations_expires_at");
+
+                    b.ToTable("ai_connection_creations", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_ai_connection_creations_fingerprint", "fingerprint ~ '^[0-9a-f]{64}$'");
+
+                            t.HasCheckConstraint("ck_ai_connection_creations_state", "(response_json IS NULL AND lease_token IS NOT NULL AND lease_expires_at IS NOT NULL)\nOR (response_json IS NOT NULL AND lease_token IS NULL AND lease_expires_at IS NULL)");
+                        });
+                });
+
             modelBuilder.Entity("Domain.AI.AiConnection", b =>
                 {
                     b.HasOne("Domain.Users.User", null)
@@ -425,11 +535,27 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+            modelBuilder.Entity("Domain.LearningProfiles.LearningProfile", b =>
                 {
                     b.HasOne("Domain.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.LearningProfiles.LearningProfileSelection", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("Domain.LearningProfiles.LearningProfileSelection", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.LearningProfiles.LearningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("UserId", "ActiveProfileId")
+                        .HasPrincipalKey("UserId", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -461,6 +587,15 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Domain.Users.User", null)
                         .WithMany("Sessions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Infrastructure.Persistence.Entities.AiConnectionCreation", b =>
+                {
+                    b.HasOne("Domain.Users.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

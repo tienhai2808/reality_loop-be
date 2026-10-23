@@ -1,3 +1,11 @@
+using Application.LearningProfiles.Commands.CreateLearningProfile;
+using Application.LearningProfiles.Commands.DeleteLearningProfile;
+using Application.LearningProfiles.Commands.SetCurrentLearningProfile;
+using Application.LearningProfiles.Commands.UpdateLearningProfilePreferences;
+using Application.LearningProfiles.Queries.GetCurrentLearningProfile;
+using Application.LearningProfiles.Queries.GetLearningProfile;
+using Application.LearningProfiles.Queries.GetLearningProfileOptions;
+using Application.LearningProfiles.Queries.GetLearningProfiles;
 using Application.AI.Commands.CreateAiConnection;
 using Application.AI.Commands.DeleteAiConnection;
 using Application.AI.Commands.UpdateAiConnection;
@@ -53,6 +61,14 @@ public static class DependencyInjection
         services.AddScoped<UpdateAiConnectionCommandHandler>();
         services.AddScoped<VerifyAiConnectionCommandHandler>();
         services.AddScoped<DeleteAiConnectionCommandHandler>();
+        services.AddScoped<CreateLearningProfileCommandHandler>();
+        services.AddScoped<DeleteLearningProfileCommandHandler>();
+        services.AddScoped<SetCurrentLearningProfileCommandHandler>();
+        services.AddScoped<UpdateLearningProfilePreferencesCommandHandler>();
+        services.AddScoped<GetCurrentLearningProfileQueryHandler>();
+        services.AddScoped<GetLearningProfileQueryHandler>();
+        services.AddScoped<GetLearningProfileOptionsQueryHandler>();
+        services.AddScoped<GetLearningProfilesQueryHandler>();
         return services;
     }
 }

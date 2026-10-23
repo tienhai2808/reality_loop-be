@@ -27,6 +27,7 @@ public static class DependencyInjection
             throw new InvalidOperationException("Connection string 'Database' is required.");
         services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString,
             npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history")));
+        services.AddScoped<ILearningProfileRepository, LearningProfileRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();

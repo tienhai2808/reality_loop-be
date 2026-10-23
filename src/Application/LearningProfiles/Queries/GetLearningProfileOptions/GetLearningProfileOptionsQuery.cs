@@ -1,0 +1,3 @@
+namespace Application.LearningProfiles.Queries.GetLearningProfileOptions;
+
+public sealed record GetLearningProfileOptionsQuery;

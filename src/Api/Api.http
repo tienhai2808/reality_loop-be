@@ -3,6 +3,8 @@
 @refreshToken = REPLACE_AFTER_LOGIN
 @aiConnectionId = REPLACE_AI_CONNECTION_ID
 @aiConnectionVersion = 1
+@learningProfileId = REPLACE_LEARNING_PROFILE_ID
+@learningProfileVersion = 1
 @aiRequestId = 11111111-1111-4111-8111-111111111111
 
 ### Supported AI providers
@@ -104,4 +106,60 @@ Authorization: Bearer {{accessToken}}
 
 ### Logout every session, including the current one
 POST {{baseUrl}}/auth/logout/all
+Authorization: Bearer {{accessToken}}
+
+
+### Learning profile options (self-assessed proficiency and goals)
+GET {{baseUrl}}/learning-profiles/options
+Authorization: Bearer {{accessToken}}
+
+### Create a profile; this does not change the current selection
+POST {{baseUrl}}/learning-profiles
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "targetLanguage": "ja",
+  "nativeLanguage": "vi",
+  "explanationLanguage": "vi",
+  "proficiencyLevel": "Beginner",
+  "primaryGoal": "Travel",
+  "goalNote": "Practice speaking while travelling"
+}
+
+### List profiles; use nextCursor as after for the next page
+GET {{baseUrl}}/learning-profiles?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Get one owned profile
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}
+Authorization: Bearer {{accessToken}}
+
+### Replace all preferences using the latest version; null clears goalNote
+PUT {{baseUrl}}/learning-profiles/{{learningProfileId}}/preferences
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "version": {{learningProfileVersion}},
+  "nativeLanguage": "vi",
+  "explanationLanguage": "en-us",
+  "proficiencyLevel": "Elementary",
+  "primaryGoal": "DailyLife",
+  "goalNote": null
+}
+
+### Current learning profile; returns 204 if no profile is selected
+GET {{baseUrl}}/learning-profiles/current
+Authorization: Bearer {{accessToken}}
+
+### Select an owned profile without modifying its preferences/version
+PUT {{baseUrl}}/learning-profiles/current
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "profileId": "{{learningProfileId}}" }
+
+### Delete using the latest version; deleting current also clears the selection
+DELETE {{baseUrl}}/learning-profiles/{{learningProfileId}}?version={{learningProfileVersion}}
 Authorization: Bearer {{accessToken}}
