@@ -14,7 +14,8 @@ public static class WebApplicationExtensions
         app.Use(async (context, next) =>
         {
             if (context.Request.Path.StartsWithSegments("/api/v1/auth") || context.Request.Path.StartsWithSegments("/api/v1/ai") ||
-                context.Request.Path.StartsWithSegments("/api/v1/learning-profiles"))
+                context.Request.Path.StartsWithSegments("/api/v1/learning-profiles") ||
+                context.Request.Path.StartsWithSegments("/api/v1/languages"))
             {
                 context.Response.Headers.CacheControl = "no-store";
                 context.Response.Headers.Pragma = "no-cache";

@@ -2,6 +2,9 @@ using Infrastructure.Persistence.Entities;
 using Domain.Users;
 using Domain.AI;
 using Domain.LearningProfiles;
+using Domain.Languages;
+using Domain.WritingSystems;
+using Domain.Pronunciation;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -16,6 +19,16 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<AiConnectionCreation> AiConnectionCreations => Set<AiConnectionCreation>();
     public DbSet<LearningProfile> LearningProfiles => Set<LearningProfile>();
     public DbSet<LearningProfileSelection> LearningProfileSelections => Set<LearningProfileSelection>();
+
+    public DbSet<Language> Languages => Set<Language>();
+    public DbSet<LanguageTranslation> LanguageTranslations => Set<LanguageTranslation>();
+    public DbSet<WritingSystem> WritingSystems => Set<WritingSystem>();
+    public DbSet<WritingSystemTranslation> WritingSystemTranslations => Set<WritingSystemTranslation>();
+    public DbSet<WritingSystemItem> WritingSystemItems => Set<WritingSystemItem>();
+    public DbSet<WritingSystemItemReading> WritingSystemItemReadings => Set<WritingSystemItemReading>();
+    public DbSet<PronunciationRule> PronunciationRules => Set<PronunciationRule>();
+    public DbSet<PronunciationRuleTranslation> PronunciationRuleTranslations => Set<PronunciationRuleTranslation>();
+    public DbSet<PronunciationExample> PronunciationExamples => Set<PronunciationExample>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

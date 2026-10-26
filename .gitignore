@@ -1,7 +1,15 @@
 bin/
 obj/
+artifacts/
+src/Infrastructure/Persistence/Seeding/Audio/manifest.json.tmp
 docs/*
 !docs/ai-setup-api.md
 !docs/ai-setup-architecture.md
 !docs/learning-profiles-api.md
+!docs/language-foundations-model.md
+!docs/language-foundations-api.md
+!docs/pronunciation-model.md
+!docs/pronunciation-api.md
+!docs/r2-storage-setup.md
+!docs/foundation-audio-seeding.md
 .idea/

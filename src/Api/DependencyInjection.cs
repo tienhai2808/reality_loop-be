@@ -79,6 +79,10 @@ public static class DependencyInjection
         var profileWindowSeconds = configuration.GetValue("RateLimiting:LearningProfiles:WindowSeconds", 60);
         if (profilePermitLimit is < 1 or > 10000 || profileWindowSeconds is < 1 or > 3600)
             throw new InvalidOperationException("Learning profile rate limit settings are invalid.");
+        var contentPermitLimit = configuration.GetValue("RateLimiting:LearningContent:PermitLimit", 240);
+        var contentWindowSeconds = configuration.GetValue("RateLimiting:LearningContent:WindowSeconds", 60);
+        if (contentPermitLimit is < 1 or > 10000 || contentWindowSeconds is < 1 or > 3600)
+            throw new InvalidOperationException("Learning content rate limit settings are invalid.");
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
@@ -93,12 +97,20 @@ public static class DependencyInjection
                     PermitLimit = profilePermitLimit, Window = TimeSpan.FromSeconds(profileWindowSeconds),
                     QueueLimit = 0, AutoReplenishment = true
                 }));
+            options.AddPolicy("learning-content", context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = contentPermitLimit, Window = TimeSpan.FromSeconds(contentWindowSeconds),
+                    QueueLimit = 0, AutoReplenishment = true
+                }));
             options.OnRejected = async (context, ct) =>
             {
                 var retrySeconds = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out var retry)
                     ? Math.Max(1, (int)Math.Ceiling(retry.TotalSeconds))
                     : context.HttpContext.Request.Path.StartsWithSegments("/api/v1/learning-profiles")
-                        ? profileWindowSeconds : windowSeconds;
+                        ? profileWindowSeconds
+                        : context.HttpContext.Request.Path.StartsWithSegments("/api/v1/languages")
+                            ? contentWindowSeconds : windowSeconds;
                 context.HttpContext.Response.Headers.RetryAfter = retrySeconds.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 await Results.Problem(statusCode: 429, title: "Too many requests",
                     detail: "Please retry after the rate limit window resets.").ExecuteAsync(context.HttpContext);

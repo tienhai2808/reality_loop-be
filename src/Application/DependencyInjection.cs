@@ -1,3 +1,12 @@
+using Application.Pronunciation.Queries.GetPronunciationRules;
+using Application.Pronunciation.Queries.GetPronunciationRule;
+using Application.Pronunciation.Queries.GetPronunciationExamples;
+using Application.Languages.Queries.GetLanguage;
+using Application.Languages.Queries.GetLanguages;
+using Application.WritingSystems.Queries.GetWritingSystem;
+using Application.WritingSystems.Queries.GetWritingSystems;
+using Application.WritingSystems.Queries.GetWritingSystemItems;
+using Application.WritingSystems.Queries.GetWritingSystemItemReadings;
 using Application.LearningProfiles.Commands.CreateLearningProfile;
 using Application.LearningProfiles.Commands.DeleteLearningProfile;
 using Application.LearningProfiles.Commands.SetCurrentLearningProfile;
@@ -69,6 +78,15 @@ public static class DependencyInjection
         services.AddScoped<GetLearningProfileQueryHandler>();
         services.AddScoped<GetLearningProfileOptionsQueryHandler>();
         services.AddScoped<GetLearningProfilesQueryHandler>();
+        services.AddScoped<GetLanguageQueryHandler>();
+        services.AddScoped<GetLanguagesQueryHandler>();
+        services.AddScoped<GetWritingSystemQueryHandler>();
+        services.AddScoped<GetWritingSystemsQueryHandler>();
+        services.AddScoped<GetWritingSystemItemsQueryHandler>();
+        services.AddScoped<GetWritingSystemItemReadingsQueryHandler>();
+        services.AddScoped<GetPronunciationRulesQueryHandler>();
+        services.AddScoped<GetPronunciationRuleQueryHandler>();
+        services.AddScoped<GetPronunciationExamplesQueryHandler>();
         return services;
     }
 }

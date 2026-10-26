@@ -20,6 +20,9 @@ src/
     Users/                          User, OAuthAccount, Session, RefreshToken và invariant
     AI/                             AiConnection, provider/status/failure enum và invariant
     LearningProfiles/               Profile theo ngôn ngữ và lựa chọn profile hiện tại
+    Languages/                      Danh mục ngôn ngữ và bản dịch
+    WritingSystems/                 Bộ chữ, mục chữ và cách đọc
+    Pronunciation/                  Quy tắc phát âm, bản dịch và ví dụ
   Application/
     Common/
       Interfaces/                   Contract repository, transaction, OAuth, token, current user
@@ -60,6 +63,15 @@ src/
       Queries/                      Options, list, detail và current
       Models/                       DTO/result
       Validation/                   Kiểm tra ID/version/cursor
+    Languages/
+      Queries/                      Danh mục và chi tiết ngôn ngữ
+      Models/                       DTO/result
+    WritingSystems/
+      Queries/                      Bộ chữ, ký tự và cách đọc
+      Models/                       DTO/result
+    Pronunciation/
+      Queries/                      Danh sách, chi tiết quy tắc và ví dụ
+      Models/                       Summary/detail/page DTO
     DependencyInjection.cs
   Infrastructure/
     Authentication/
@@ -70,6 +82,8 @@ src/
     AI/
       Providers/                    HttpClient adapter OpenAI, Anthropic, Google
       Security/                     AES-GCM, key ring và fingerprint
+    Storage/
+      R2/                           Cloudflare R2 options, validation và S3 SDK client factory
     IdGeneration/
     Persistence/
       Entities/                     Receipt idempotency kỹ thuật
@@ -77,6 +91,7 @@ src/
       Configurations/
       Migrations/
       Repositories/
+      Seeding/                      Dữ liệu nền tảng theo migration và bộ audio kana/init job
       ApplicationDbContext.cs
       UnitOfWork.cs
     DependencyInjection.cs
@@ -89,6 +104,9 @@ src/
       Authentication/               Request HTTP và validation
       AI/                           Request setup AI, mỗi type một file
       LearningProfiles/             Request profile/preferences/selection
+      Languages/                    Locale/cursor cho catalog ngôn ngữ
+      WritingSystems/               Locale/cursor cho bộ chữ và cách đọc
+      Pronunciation/                Locale/cursor cho quy tắc và ví dụ
     Filters/                        Audit filter cho AI setup
     Controllers/                    Controller gọi handler
     Infrastructure/                 ProblemDetails/exception handler
@@ -390,6 +408,12 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 46 file cho 92 reading, lệnh init migration/upload/seed và nối FE.
+- [Cloudflare R2 storage setup](docs/r2-storage-setup.md): tạo bucket, credentials, cấu hình bắt buộc, domain audio, CORS và triển khai.
+- [Pronunciation API cho FE](docs/pronunciation-api.md): 3 API đọc, fallback bản dịch, pagination và luồng nối LearningProfile.
+- [Pronunciation: model, DB và seed](docs/pronunciation-model.md): 3 bảng quy tắc phát âm và seed nhập môn tiếng Nhật.
+- [API ngôn ngữ và bảng chữ cho FE](docs/language-foundations-api.md): 6 API đọc, fallback bản dịch, pagination và luồng màn hình.
+- [Ngôn ngữ và bảng chữ: model, DB, seed](docs/language-foundations-model.md): 6 bảng dùng chung, constraints và seed kana cơ bản.
 - [Learning Profile API cho FE](docs/learning-profiles-api.md): 8 endpoint, payload/response, current selection, version và transaction.
 - [Ghép API setup AI cho FE](docs/ai-setup-api.md): luồng màn hình, 7 endpoint, payload/response, TypeScript, xử lý lỗi và retry.
 - [AI setup: model, DB và vận hành](docs/ai-setup-architecture.md): schema, migration, mã hóa, transaction, concurrency, rate limit và kiểm tra.

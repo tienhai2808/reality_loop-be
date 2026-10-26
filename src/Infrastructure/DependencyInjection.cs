@@ -15,6 +15,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Amazon.S3;
+using Infrastructure.Storage.R2;
+using Infrastructure.Persistence.Seeding.Audio;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure;
 
@@ -22,11 +27,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Database");
-        if (string.IsNullOrWhiteSpace(connectionString))
-            throw new InvalidOperationException("Connection string 'Database' is required.");
-        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString,
-            npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history")));
+        services.AddDatabase(configuration);
+        services.AddScoped<IPronunciationReadRepository, PronunciationReadRepository>();
+        services.AddScoped<ILanguageReadRepository, LanguageReadRepository>();
+        services.AddScoped<IWritingSystemReadRepository, WritingSystemReadRepository>();
         services.AddScoped<ILearningProfileRepository, LearningProfileRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ISessionRepository, SessionRepository>();
@@ -39,6 +43,8 @@ public static class DependencyInjection
         services.AddSingleton(new IdGenerator(snowflake.GeneratorId));
         services.AddSingleton<IIdGenerator, SnowflakeIdGenerator>();
         services.AddSingleton(TimeProvider.System);
+
+        services.AddR2Storage();
 
         services.AddOptions<JwtOptions>().BindConfiguration(JwtOptions.SectionName).ValidateDataAnnotations()
             .Validate(x => Encoding.UTF8.GetByteCount(x.SigningKey) >= 32 && !x.SigningKey.StartsWith("__"),
@@ -120,5 +126,43 @@ public static class DependencyInjection
             }).RemoveAllLoggers();
         services.AddHostedService<AiReceiptCleanupService>();
         return services;
+    }
+
+    // Dedicated initialization mode does not start the API, Redis or unrelated hosted services.
+    public static IServiceCollection AddFoundationAudioInitialization(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddDatabase(configuration);
+        services.AddR2Storage();
+        services.AddSingleton(TimeProvider.System);
+        services.AddOptions<FoundationAudioSeedOptions>()
+            .BindConfiguration(FoundationAudioSeedOptions.SectionName)
+            .Validate(options => options.IsValid(),
+                "FoundationAudioSeed:PublicBaseUrl must be the HTTPS public bucket root (for example https://pub-xxx.r2.dev), without a path, query or credentials.");
+        services.AddScoped<R2FoundationAudioUploader>();
+        services.AddScoped(provider => new FoundationAudioInitializer(
+            provider.GetRequiredService<ApplicationDbContext>(),
+            provider.GetRequiredService<R2FoundationAudioUploader>(),
+            provider.GetRequiredService<IOptions<FoundationAudioSeedOptions>>(),
+            provider.GetRequiredService<TimeProvider>(),
+            provider.GetRequiredService<ILogger<FoundationAudioInitializer>>()));
+        return services;
+    }
+
+    private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("Database");
+        if (string.IsNullOrWhiteSpace(connectionString))
+            throw new InvalidOperationException("Connection string 'Database' is required.");
+        services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString,
+            npgsql => npgsql.MigrationsHistoryTable("__ef_migrations_history")));
+    }
+
+    private static void AddR2Storage(this IServiceCollection services)
+    {
+        services.AddSingleton<IValidateOptions<R2Options>, R2OptionsValidator>();
+        services.AddOptions<R2Options>().BindConfiguration(R2Options.SectionName).ValidateOnStart();
+        services.AddSingleton<IAmazonS3>(provider =>
+            R2ClientFactory.Create(provider.GetRequiredService<IOptions<R2Options>>().Value));
     }
 }

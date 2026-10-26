@@ -4,7 +4,7 @@ namespace Domain.LearningProfiles;
 
 public sealed class LearningProfile : Entity
 {
-    public const int LanguageMaxLength = 35;
+    public const int LanguageMaxLength = LanguageTag.MaxLength;
     public const int GoalNoteMaxLength = 500;
 
     private LearningProfile()
@@ -68,21 +68,8 @@ public sealed class LearningProfile : Entity
         Version = nextVersion;
     }
 
-    private static string NormalizeLanguage(string value, string parameterName)
-    {
-        ArgumentException.ThrowIfNullOrWhiteSpace(value, parameterName);
-        var language = value.Trim().ToLowerInvariant();
-        if (language.Length > LanguageMaxLength)
-            throw new ArgumentException($"Language tags cannot exceed {LanguageMaxLength} characters.", parameterName);
-
-        // Validate tag syntax without depending on the host's installed culture catalog.
-        var subtags = language.Split('-');
-        if (subtags[0].Length is < 2 or > 8 || subtags[0].Any(c => c is < 'a' or > 'z') ||
-            subtags.Skip(1).Any(subtag => subtag.Length is < 1 or > 8 ||
-                subtag.Any(c => c is not (>= 'a' and <= 'z') and not (>= '0' and <= '9'))))
-            throw new ArgumentException("Use a language tag with hyphen-separated ASCII subtags, such as en-us or zh-hant.", parameterName);
-        return language;
-    }
+    private static string NormalizeLanguage(string value, string parameterName) =>
+        LanguageTag.Normalize(value, parameterName);
 
     private static string? NormalizeGoalNote(string? value)
     {
