@@ -2,6 +2,8 @@ using Infrastructure.Persistence.Entities;
 using Domain.Users;
 using Domain.AI;
 using Domain.LearningProfiles;
+using Domain.LearningProgress;
+using Domain.WritingSystemPractice;
 using Domain.Languages;
 using Domain.WritingSystems;
 using Domain.Pronunciation;
@@ -26,6 +28,9 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<WritingSystemTranslation> WritingSystemTranslations => Set<WritingSystemTranslation>();
     public DbSet<WritingSystemItem> WritingSystemItems => Set<WritingSystemItem>();
     public DbSet<WritingSystemItemReading> WritingSystemItemReadings => Set<WritingSystemItemReading>();
+    public DbSet<WritingSystemItemProgress> WritingSystemItemProgress => Set<WritingSystemItemProgress>();
+    public DbSet<WritingSystemPracticeSession> WritingSystemPracticeSessions => Set<WritingSystemPracticeSession>();
+    public DbSet<WritingSystemPracticeSessionItem> WritingSystemPracticeSessionItems => Set<WritingSystemPracticeSessionItem>();
     public DbSet<PronunciationRule> PronunciationRules => Set<PronunciationRule>();
     public DbSet<PronunciationRuleTranslation> PronunciationRuleTranslations => Set<PronunciationRuleTranslation>();
     public DbSet<PronunciationExample> PronunciationExamples => Set<PronunciationExample>();

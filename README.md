@@ -20,6 +20,8 @@ src/
     Users/                          User, OAuthAccount, Session, RefreshToken và invariant
     AI/                             AiConnection, provider/status/failure enum và invariant
     LearningProfiles/               Profile theo ngôn ngữ và lựa chọn profile hiện tại
+    LearningProgress/               Tiến độ học từng chữ theo profile và invariant
+    WritingSystemPractice/          Lượt luyện bảng chữ, đề snapshot và câu trả lời duy nhất
     Languages/                      Danh mục ngôn ngữ và bản dịch
     WritingSystems/                 Bộ chữ, mục chữ và cách đọc
     Pronunciation/                  Quy tắc phát âm, bản dịch và ví dụ
@@ -63,6 +65,16 @@ src/
       Queries/                      Options, list, detail và current
       Models/                       DTO/result
       Validation/                   Kiểm tra ID/version/cursor
+    LearningProgress/
+      Commands/                     Ghi nhận học/hoàn thành/học lại có version
+      Queries/                      Summary, page và tiến độ từng chữ
+      Models/                       Read model gồm NotStarted và DTO
+    WritingSystemPractice/
+      Commands/                     Tạo lượt, nộp đáp án và bỏ lượt có version
+      Queries/                      Lịch sử cursor và chi tiết để tiếp tục/xem kết quả
+      Models/                       DTO che đáp án chưa nộp và context catalog
+      Services/                     Chọn câu/đáp án nhiễu không nhập nhằng
+      Validation/                   Kiểm tra ID/version/số câu/cursor
     Languages/
       Queries/                      Danh mục và chi tiết ngôn ngữ
       Models/                       DTO/result
@@ -104,6 +116,8 @@ src/
       Authentication/               Request HTTP và validation
       AI/                           Request setup AI, mỗi type một file
       LearningProfiles/             Request profile/preferences/selection
+      LearningProgress/             Request action/version và filter/cursor
+      WritingSystemPractice/        Request tạo lượt, đáp án/version và lịch sử
       Languages/                    Locale/cursor cho catalog ngôn ngữ
       WritingSystems/               Locale/cursor cho bộ chữ và cách đọc
       Pronunciation/                Locale/cursor cho quy tắc và ví dụ
@@ -118,6 +132,8 @@ src/
 docs/                               Tài liệu tích hợp và vận hành
 tests/
   AiSetup.Tests/                    Console runner AI; PostgreSQL checks bật qua biến môi trường
+  LearningProgress.Tests/           HTTP/PostgreSQL, ownership, query count và concurrency
+  WritingSystemPractice.Tests/      Domain/EF/PostgreSQL/HTTP, chấm bài, query budget và concurrency
 ```
 
 Dependency: `Application → Domain`, `Infrastructure → Application/Domain`,
@@ -407,6 +423,11 @@ Dùng HTTPS, signing key mạnh và cùng key trên các instance. Mỗi instanc
 riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
+
+- [API luyện tập bảng chữ cho FE](docs/writing-system-practice-api.md): 5 API, sinh đề, che đáp án, version/transaction và luồng nối FE.
+- [Luyện tập bảng chữ: Domain và DB](docs/writing-system-practice-model.md): hai bảng lượt/câu, chụp đề, chấm điểm, version và migration.
+- [API tiến độ học bảng chữ cho FE](docs/learning-progress-api.md): 4 endpoint, action/version, query budget, conflict và cách ghép chart.
+- [Tiến độ học bảng chữ: model và DB](docs/learning-progress-model.md): trạng thái Learning/Completed, invariant, concurrency, constraint và migration.
 
 - [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 46 file cho 92 reading, lệnh init migration/upload/seed và nối FE.
 - [Cloudflare R2 storage setup](docs/r2-storage-setup.md): tạo bucket, credentials, cấu hình bắt buộc, domain audio, CORS và triển khai.

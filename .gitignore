@@ -12,4 +12,8 @@ docs/*
 !docs/pronunciation-api.md
 !docs/r2-storage-setup.md
 !docs/foundation-audio-seeding.md
+!docs/learning-progress-model.md
+!docs/learning-progress-api.md
+!docs/writing-system-practice-model.md
+!docs/writing-system-practice-api.md
 .idea/

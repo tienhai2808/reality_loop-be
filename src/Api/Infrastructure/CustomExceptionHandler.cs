@@ -11,6 +11,8 @@ internal sealed class CustomExceptionHandler(IProblemDetailsService problems, IL
     {
         var (status, title) = exception switch
         {
+            BadHttpRequestException ex when ex.StatusCode == StatusCodes.Status413PayloadTooLarge
+                => (413, "Payload too large"),
             RequestValidationException => (400, "Invalid request"),
             AuthenticationException => (401, "Unauthorized"),
             ForbiddenException => (403, "Forbidden"),

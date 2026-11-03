@@ -1,0 +1,3 @@
+namespace Application.LearningProgress.Queries.GetWritingSystemProgressSummary;
+
+public sealed record GetWritingSystemProgressSummaryQuery(long ProfileId);

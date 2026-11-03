@@ -6,11 +6,45 @@
 @languageCode = ja
 @writingSystemCode = hiragana
 @writingItemCode = kana-r0-c0
+@writingItemId = REPLACE_WRITING_SYSTEM_ITEM_ID
+@writingItemProgressVersion = 0
 @contentLocale = vi
 @pronunciationRuleCode = dakuten-handakuten
 @learningProfileId = REPLACE_LEARNING_PROFILE_ID
 @learningProfileVersion = 1
+@practiceSessionId = REPLACE_PRACTICE_SESSION_ID
+@practiceSessionItemId = REPLACE_SESSION_ITEM_ID
+@practiceSessionVersion = 1
 @aiRequestId = 11111111-1111-4111-8111-111111111111
+
+### Start writing-system practice. Each successful POST creates a new session; disable automatic retries.
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/practice-sessions
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "questionCount": 10 }
+
+### Practice history. Pass nextCursor as before for subsequent pages; keep filters unchanged.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/practice-sessions?status=InProgress&systemCode={{writingSystemCode}}&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Resume/review a saved practice session. Answers remain hidden for questions not submitted.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/practice-sessions/{{practiceSessionId}}
+Authorization: Bearer {{accessToken}}
+
+### Submit zero-based option index. Use items[].id (not writingSystemItemId) and the latest session.version.
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/practice-sessions/{{practiceSessionId}}/items/{{practiceSessionItemId}}/answer
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "selectedOptionIndex": 0, "version": {{practiceSessionVersion}} }
+
+### Abandon incomplete practice. Use the latest session.version returned by GET/answer.
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/practice-sessions/{{practiceSessionId}}/abandon
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "version": {{practiceSessionVersion}} }
 
 ### Supported AI providers
 GET {{baseUrl}}/ai/providers
@@ -206,3 +240,50 @@ Authorization: Bearer {{accessToken}}
 ### Examples for the selected published rule; audioUrl may be null
 GET {{baseUrl}}/languages/{{languageCode}}/pronunciation-rules/{{pronunciationRuleCode}}/examples?pageSize=20
 Authorization: Bearer {{accessToken}}
+
+
+### Progress summary of the owned learning profile
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-system-progress
+Authorization: Bearer {{accessToken}}
+
+### Chart progress including NotStarted (no per-cell requests)
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/progress?pageSize=100
+Authorization: Bearer {{accessToken}}
+
+### Only items not started; copy nextCursor into after to paginate
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/progress?status=NotStarted&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Reload one item after 409; copy the item ID from the catalog response
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/items/{{writingItemId}}/progress
+Authorization: Bearer {{accessToken}}
+
+### Record study; use version 0 only when GET returns NotStarted/version 0
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/items/{{writingItemId}}/progress
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "action": "Study",
+  "version": {{writingItemProgressVersion}}
+}
+
+### Mark completed; replace version with the current item progress version
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/items/{{writingItemId}}/progress
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "action": "Complete",
+  "version": {{writingItemProgressVersion}}
+}
+
+### Restart learning; replace version with the current item progress version
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/items/{{writingItemId}}/progress
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "action": "Restart",
+  "version": {{writingItemProgressVersion}}
+}

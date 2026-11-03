@@ -5,7 +5,8 @@
 Phạm vi hiện tại gồm hai phần: `Domain/Languages` và `Domain/WritingSystems`.
 Tài liệu này mô tả domain entity, validation, EF Core mapping và migration/seed.
 Nội dung dùng chung, không chứa UserId/LearningProfileId. API đọc được mô tả riêng tại
-[API ngôn ngữ và bảng chữ cho FE](language-foundations-api.md); chưa có bài luyện, tiến độ hoặc AI cho hai phần này.
+[API ngôn ngữ và bảng chữ cho FE](language-foundations-api.md); chưa có bài luyện hoặc AI cho hai phần này. Tiến độ học bảng chữ được tách thành
+[module riêng](learning-progress-model.md), có [API cho FE](learning-progress-api.md).
 
 ## Quy ước chung
 

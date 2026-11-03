@@ -406,3 +406,11 @@ dotnet ef database update --project src/Infrastructure --startup-project src/Api
 Migration cần có: `20261025123943_AddLanguagesAndWritingSystems`.
 Build được kiểm tra riêng; chưa chạy integration test HTTP/PostgreSQL cho các API này.
 Request mẫu có trong src/Api/Api.http.
+
+
+## Ghép tiến độ học vào chart
+
+Dùng thêm [API tiến độ học bảng chữ](learning-progress-api.md) để lấy trạng thái từng item
+của LearningProfile. Tải catalog items và progress page song song, ghép theo string
+`item.id === progress.writingSystemItemId`. Nội dung/âm thanh giữ từ catalog, state/version
+lấy từ progress API; không gọi GET tiến độ cho từng ô trong chart.

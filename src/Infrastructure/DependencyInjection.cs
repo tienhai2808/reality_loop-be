@@ -28,6 +28,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDatabase(configuration);
+        services.AddScoped<IWritingSystemItemProgressRepository, WritingSystemItemProgressRepository>();
+        services.AddScoped<IWritingSystemPracticeRepository, WritingSystemPracticeRepository>();
         services.AddScoped<IPronunciationReadRepository, PronunciationReadRepository>();
         services.AddScoped<ILanguageReadRepository, LanguageReadRepository>();
         services.AddScoped<IWritingSystemReadRepository, WritingSystemReadRepository>();

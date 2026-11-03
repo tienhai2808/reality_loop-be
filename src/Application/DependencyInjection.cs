@@ -1,3 +1,12 @@
+using Application.WritingSystemPractice.Commands.CreateWritingSystemPracticeSession;
+using Application.WritingSystemPractice.Commands.AnswerWritingSystemPracticeQuestion;
+using Application.WritingSystemPractice.Commands.AbandonWritingSystemPracticeSession;
+using Application.WritingSystemPractice.Queries.GetWritingSystemPracticeSession;
+using Application.WritingSystemPractice.Queries.GetWritingSystemPracticeSessions;
+using Application.LearningProgress.Commands.RecordWritingSystemItemProgress;
+using Application.LearningProgress.Queries.GetWritingSystemItemProgress;
+using Application.LearningProgress.Queries.GetWritingSystemItemProgressPage;
+using Application.LearningProgress.Queries.GetWritingSystemProgressSummary;
 using Application.Pronunciation.Queries.GetPronunciationRules;
 using Application.Pronunciation.Queries.GetPronunciationRule;
 using Application.Pronunciation.Queries.GetPronunciationExamples;
@@ -87,6 +96,15 @@ public static class DependencyInjection
         services.AddScoped<GetPronunciationRulesQueryHandler>();
         services.AddScoped<GetPronunciationRuleQueryHandler>();
         services.AddScoped<GetPronunciationExamplesQueryHandler>();
+        services.AddScoped<RecordWritingSystemItemProgressCommandHandler>();
+        services.AddScoped<GetWritingSystemItemProgressQueryHandler>();
+        services.AddScoped<GetWritingSystemItemProgressPageQueryHandler>();
+        services.AddScoped<GetWritingSystemProgressSummaryQueryHandler>();
+        services.AddScoped<CreateWritingSystemPracticeSessionCommandHandler>();
+        services.AddScoped<AnswerWritingSystemPracticeQuestionCommandHandler>();
+        services.AddScoped<AbandonWritingSystemPracticeSessionCommandHandler>();
+        services.AddScoped<GetWritingSystemPracticeSessionQueryHandler>();
+        services.AddScoped<GetWritingSystemPracticeSessionsQueryHandler>();
         return services;
     }
 }

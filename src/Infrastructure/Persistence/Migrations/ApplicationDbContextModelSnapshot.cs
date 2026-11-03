@@ -416,6 +416,78 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.LearningProgress.WritingSystemItemProgress", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("CompletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("completed_at");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset>("LastStudiedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_studied_at");
+
+                    b.Property<long>("LearningProfileId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("learning_profile_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("Learning")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.Property<long>("WritingSystemItemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("writing_system_item_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WritingSystemItemId")
+                        .HasDatabaseName("ix_writing_system_item_progress_writing_system_item_id");
+
+                    b.HasIndex("LearningProfileId", "WritingSystemItemId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_writing_system_item_progress_profile_id_item_id");
+
+                    b.ToTable("writing_system_item_progress", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_writing_system_item_progress_completion_state", "(status = 'Learning' AND completed_at IS NULL)\nOR (status = 'Completed' AND completed_at IS NOT NULL)");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_completion_time", "completed_at IS NULL OR (completed_at >= created_at AND completed_at <= last_studied_at)");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_positive_ids", "id > 0 AND learning_profile_id > 0 AND writing_system_item_id > 0");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_status", "status IN ('Learning', 'Completed')");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_study_time", "last_studied_at >= created_at AND last_studied_at <= updated_at");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_writing_system_item_progress_version", "version > 0");
+                        });
+                });
+
             modelBuilder.Entity("Domain.Pronunciation.PronunciationExample", b =>
                 {
                     b.Property<long>("Id")
@@ -1266,6 +1338,178 @@ namespace Infrastructure.Persistence.Migrations
                         .HasDatabaseName("ux_users_email");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSession", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTimeOffset?>("EndedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("ended_at");
+
+                    b.Property<long>("LearningProfileId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("learning_profile_id");
+
+                    b.Property<int>("QuestionCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("question_count");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("InProgress")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.Property<long>("WritingSystemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("writing_system_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WritingSystemId")
+                        .HasDatabaseName("ix_ws_practice_sessions_writing_system_id");
+
+                    b.HasIndex("LearningProfileId", "Id")
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ix_ws_practice_sessions_profile_id_id");
+
+                    b.ToTable("writing_system_practice_sessions", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_ws_practice_sessions_end_state", "(status = 'InProgress' AND ended_at IS NULL)\nOR (status IN ('Completed', 'Abandoned') AND ended_at IS NOT NULL\n    AND ended_at >= created_at AND ended_at = updated_at)");
+
+                            t.HasCheckConstraint("ck_ws_practice_sessions_positive_ids", "id > 0 AND learning_profile_id > 0 AND writing_system_id > 0");
+
+                            t.HasCheckConstraint("ck_ws_practice_sessions_question_count", "question_count BETWEEN 1 AND 20");
+
+                            t.HasCheckConstraint("ck_ws_practice_sessions_status", "status IN ('InProgress', 'Completed', 'Abandoned')");
+
+                            t.HasCheckConstraint("ck_ws_practice_sessions_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_ws_practice_sessions_version", "version > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSessionItem", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset?>("AnsweredAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("answered_at");
+
+                    b.Property<int>("CorrectOptionIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("correct_option_index");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.PrimitiveCollection<string[]>("Options")
+                        .IsRequired()
+                        .HasColumnType("character varying(200)[]")
+                        .HasColumnName("options");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer")
+                        .HasColumnName("position");
+
+                    b.Property<int?>("SelectedOptionIndex")
+                        .HasColumnType("integer")
+                        .HasColumnName("selected_option_index");
+
+                    b.Property<long>("SessionId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("session_id");
+
+                    b.Property<string>("Symbol")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("symbol");
+
+                    b.Property<string>("TranscriptionSystem")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("transcription_system");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.Property<long>("WritingSystemItemId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("writing_system_item_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WritingSystemItemId")
+                        .HasDatabaseName("ix_ws_practice_items_writing_system_item_id");
+
+                    b.HasIndex("SessionId", "Position")
+                        .IsUnique()
+                        .HasDatabaseName("ux_ws_practice_items_session_id_position");
+
+                    b.HasIndex("SessionId", "WritingSystemItemId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_ws_practice_items_session_id_item_id");
+
+                    b.ToTable("writing_system_practice_session_items", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_ws_practice_items_answer_state", "(selected_option_index IS NULL AND answered_at IS NULL AND version = 1 AND updated_at = created_at)\nOR (selected_option_index IS NOT NULL AND answered_at IS NOT NULL\n    AND selected_option_index >= 0 AND selected_option_index < cardinality(options)\n    AND answered_at >= created_at AND answered_at = updated_at AND version = 2)");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_correct_option", "correct_option_index >= 0 AND correct_option_index < cardinality(options)");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_options_distinct", "options[1] <> options[2]\nAND (cardinality(options) < 3 OR (options[1] <> options[3] AND options[2] <> options[3]))\nAND (cardinality(options) < 4 OR (options[1] <> options[4] AND options[2] <> options[4] AND options[3] <> options[4]))");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_options_shape", "CASE WHEN array_ndims(options) = 1 AND array_lower(options, 1) = 1\n    THEN cardinality(options) BETWEEN 2 AND 4\n        AND array_position(options, NULL) IS NULL\n    ELSE FALSE END");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_options_text", "options[1] ~ '[^[:space:]]' AND options[2] ~ '[^[:space:]]'\nAND (cardinality(options) < 3 OR options[3] ~ '[^[:space:]]')\nAND (cardinality(options) < 4 OR options[4] ~ '[^[:space:]]')");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_position", "position >= 0 AND position < 20");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_positive_ids", "id > 0 AND session_id > 0 AND writing_system_item_id > 0");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_symbol", "length(btrim(symbol)) > 0");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_transcription_system", "transcription_system ~ '^[a-z][a-z0-9-]*$'");
+
+                            t.HasCheckConstraint("ck_ws_practice_items_version", "version > 0");
+                        });
                 });
 
             modelBuilder.Entity("Domain.WritingSystems.WritingSystem", b =>
@@ -4029,6 +4273,21 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.LearningProgress.WritingSystemItemProgress", b =>
+                {
+                    b.HasOne("Domain.LearningProfiles.LearningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("LearningProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.WritingSystems.WritingSystemItem", null)
+                        .WithMany()
+                        .HasForeignKey("WritingSystemItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Pronunciation.PronunciationExample", b =>
                 {
                     b.HasOne("Domain.Pronunciation.PronunciationRule", null)
@@ -4088,6 +4347,36 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSession", b =>
+                {
+                    b.HasOne("Domain.LearningProfiles.LearningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("LearningProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.WritingSystems.WritingSystem", null)
+                        .WithMany()
+                        .HasForeignKey("WritingSystemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSessionItem", b =>
+                {
+                    b.HasOne("Domain.WritingSystemPractice.WritingSystemPracticeSession", null)
+                        .WithMany("Items")
+                        .HasForeignKey("SessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.WritingSystems.WritingSystemItem", null)
+                        .WithMany()
+                        .HasForeignKey("WritingSystemItemId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.WritingSystems.WritingSystem", b =>
                 {
                     b.HasOne("Domain.Languages.Language", null)
@@ -4143,6 +4432,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Navigation("OAuthAccounts");
 
                     b.Navigation("Sessions");
+                });
+
+            modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSession", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
