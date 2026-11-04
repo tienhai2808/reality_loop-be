@@ -9,13 +9,59 @@
 @writingItemId = REPLACE_WRITING_SYSTEM_ITEM_ID
 @writingItemProgressVersion = 0
 @contentLocale = vi
+@vocabularyEntryCode = mizu
 @pronunciationRuleCode = dakuten-handakuten
 @learningProfileId = REPLACE_LEARNING_PROFILE_ID
 @learningProfileVersion = 1
 @practiceSessionId = REPLACE_PRACTICE_SESSION_ID
 @practiceSessionItemId = REPLACE_SESSION_ITEM_ID
 @practiceSessionVersion = 1
+@handwritingTemplateId = REPLACE_HANDWRITING_TEMPLATE_ID
+@handwritingAttemptId = REPLACE_HANDWRITING_ATTEMPT_ID
 @aiRequestId = 11111111-1111-4111-8111-111111111111
+
+### Handwriting: latest published reference per item, metadata only; copy nextCursor into after.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/handwriting-templates?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Reference geometry, attribution/license and scoring/input policy.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/handwriting-templates/{{handwritingTemplateId}}
+Authorization: Bearer {{accessToken}}
+
+### Submit an intentionally blank character: 201 with MissingDrawing. Replace strokes with real Point[][] to practice.
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/handwriting-attempts
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "characters": [
+    { "templateId": "{{handwritingTemplateId}}", "strokes": [] }
+  ]
+}
+
+### Handwriting history: root summaries only; copy nextCursor into before and retain filters.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/handwriting-attempts?systemCode={{writingSystemCode}}&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Replay submitted ink and inspect server feedback, even if the reference is later unpublished.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/handwriting-attempts/{{handwritingAttemptId}}
+Authorization: Bearer {{accessToken}}
+
+### Vocabulary cards: use the current profile's targetLanguage and explanationLanguage.
+GET {{baseUrl}}/languages/{{languageCode}}/vocabulary?locale={{contentLocale}}&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Filter by any matching sense; primarySense also matches this part of speech.
+GET {{baseUrl}}/languages/{{languageCode}}/vocabulary?locale={{contentLocale}}&partOfSpeech=Verb&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Vocabulary metadata. GET this and the senses endpoint in parallel on the detail screen.
+GET {{baseUrl}}/languages/{{languageCode}}/vocabulary/{{vocabularyEntryCode}}
+Authorization: Bearer {{accessToken}}
+
+### All senses, with independent locale -> English -> null fallback. Send nextCursor as after to load more.
+GET {{baseUrl}}/languages/{{languageCode}}/vocabulary/{{vocabularyEntryCode}}/senses?locale={{contentLocale}}&pageSize=20
+Authorization: Bearer {{accessToken}}
 
 ### Start writing-system practice. Each successful POST creates a new session; disable automatic retries.
 POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/writing-systems/{{writingSystemCode}}/practice-sessions

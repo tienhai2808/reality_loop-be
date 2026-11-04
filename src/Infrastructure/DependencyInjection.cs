@@ -30,7 +30,9 @@ public static class DependencyInjection
         services.AddDatabase(configuration);
         services.AddScoped<IWritingSystemItemProgressRepository, WritingSystemItemProgressRepository>();
         services.AddScoped<IWritingSystemPracticeRepository, WritingSystemPracticeRepository>();
+        services.AddScoped<IHandwritingRepository, HandwritingRepository>();
         services.AddScoped<IPronunciationReadRepository, PronunciationReadRepository>();
+        services.AddScoped<IVocabularyReadRepository, VocabularyReadRepository>();
         services.AddScoped<ILanguageReadRepository, LanguageReadRepository>();
         services.AddScoped<IWritingSystemReadRepository, WritingSystemReadRepository>();
         services.AddScoped<ILearningProfileRepository, LearningProfileRepository>();

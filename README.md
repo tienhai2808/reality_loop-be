@@ -22,9 +22,11 @@ src/
     LearningProfiles/               Profile theo ngôn ngữ và lựa chọn profile hiện tại
     LearningProgress/               Tiến độ học từng chữ theo profile và invariant
     WritingSystemPractice/          Lượt luyện bảng chữ, đề snapshot và câu trả lời duy nhất
+    Handwriting/                    Mẫu nét theo revision, lượt nộp và feedback immutable
     Languages/                      Danh mục ngôn ngữ và bản dịch
     WritingSystems/                 Bộ chữ, mục chữ và cách đọc
     Pronunciation/                  Quy tắc phát âm, bản dịch và ví dụ
+    Vocabulary/                     Từ, từng nghĩa/từ loại và diễn giải đa ngôn ngữ
   Application/
     Common/
       Interfaces/                   Contract repository, transaction, OAuth, token, current user
@@ -75,6 +77,12 @@ src/
       Models/                       DTO che đáp án chưa nộp và context catalog
       Services/                     Chọn câu/đáp án nhiễu không nhập nhằng
       Validation/                   Kiểm tra ID/version/số câu/cursor
+    Handwriting/
+      Commands/                     Nộp nét, chấm tại server và ghi lượt hoàn chỉnh
+      Queries/                      Mẫu nét, lịch sử cursor và chi tiết bài nộp theo owner
+      Models/                       DTO, provenance và context chấm bài
+      Scoring/                      Bộ chấm hình học/policy dùng chung với lab, không AI
+      Validation/                   Giới hạn geometry, Snowflake string và cursor
     Languages/
       Queries/                      Danh mục và chi tiết ngôn ngữ
       Models/                       DTO/result
@@ -84,6 +92,9 @@ src/
     Pronunciation/
       Queries/                      Danh sách, chi tiết quy tắc và ví dụ
       Models/                       Summary/detail/page DTO
+    Vocabulary/
+      Queries/                      Danh sách từ, metadata và các nghĩa có phân trang
+      Models/                       Entry/primary sense, bản dịch fallback và page DTO
     DependencyInjection.cs
   Infrastructure/
     Authentication/
@@ -118,9 +129,11 @@ src/
       LearningProfiles/             Request profile/preferences/selection
       LearningProgress/             Request action/version và filter/cursor
       WritingSystemPractice/        Request tạo lượt, đáp án/version và lịch sử
+      Handwriting/                  Request nét chuẩn hóa, JSON strict và filter/cursor
       Languages/                    Locale/cursor cho catalog ngôn ngữ
       WritingSystems/               Locale/cursor cho bộ chữ và cách đọc
       Pronunciation/                Locale/cursor cho quy tắc và ví dụ
+      Vocabulary/                   Locale, từ loại và cursor cho danh mục từ/nghĩa
     Filters/                        Audit filter cho AI setup
     Controllers/                    Controller gọi handler
     Infrastructure/                 ProblemDetails/exception handler
@@ -134,6 +147,11 @@ tests/
   AiSetup.Tests/                    Console runner AI; PostgreSQL checks bật qua biến môi trường
   LearningProgress.Tests/           HTTP/PostgreSQL, ownership, query count và concurrency
   WritingSystemPractice.Tests/      Domain/EF/PostgreSQL/HTTP, chấm bài, query budget và concurrency
+  Vocabulary.Tests/                 Domain/EF/PostgreSQL/HTTP, seed, fallback, publication và query budget
+  HandwritingLab.Tests/             Kiểm tra hình học/HTTP cho prototype chấm nét
+  Handwriting.Tests/                Domain/scoring/EF/PostgreSQL/HTTP, ownership, rollback và query budget
+tools/
+  HandwritingLab/                   Bảng viết và bộ chấm .NET cục bộ, độc lập DB/API chính
 ```
 
 Dependency: `Application → Domain`, `Infrastructure → Application/Domain`,
@@ -424,6 +442,11 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [API luyện viết và tích hợp FE](docs/handwriting-api.md): danh sách/mẫu nét, nộp bài, feedback, lịch sử và canvas.
+- [Model và DB luyện viết](docs/handwriting-model.md): mẫu nét theo revision, lượt nộp, feedback JSONB, seed và ràng buộc dữ liệu.
+- [Lab chấm nét viết không AI](docs/handwriting-lab.md): bảng viết chạy localhost, bốn chữ mẫu, thuật toán, dữ liệu hiệu chỉnh và kiểm thử.
+- [API từ vựng cho FE](docs/vocabulary-api.md): 3 GET, preview nghĩa, lọc từ loại, locale fallback và cách nối LearningProfile.
+- [Từ vựng cơ bản: Domain, DB và seed](docs/vocabulary-model.md): ba bảng từ/nghĩa/bản dịch, 40 từ tiếng Nhật, migration và kiểm thử.
 - [API luyện tập bảng chữ cho FE](docs/writing-system-practice-api.md): 5 API, sinh đề, che đáp án, version/transaction và luồng nối FE.
 - [Luyện tập bảng chữ: Domain và DB](docs/writing-system-practice-model.md): hai bảng lượt/câu, chụp đề, chấm điểm, version và migration.
 - [API tiến độ học bảng chữ cho FE](docs/learning-progress-api.md): 4 endpoint, action/version, query budget, conflict và cách ghép chart.

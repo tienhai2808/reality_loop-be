@@ -83,9 +83,19 @@ public static class DependencyInjection
         var contentWindowSeconds = configuration.GetValue("RateLimiting:LearningContent:WindowSeconds", 60);
         if (contentPermitLimit is < 1 or > 10000 || contentWindowSeconds is < 1 or > 3600)
             throw new InvalidOperationException("Learning content rate limit settings are invalid.");
+        var handwritingPermitLimit = configuration.GetValue("RateLimiting:Handwriting:PermitLimit", 30);
+        var handwritingWindowSeconds = configuration.GetValue("RateLimiting:Handwriting:WindowSeconds", 60);
+        if (handwritingPermitLimit is < 1 or > 10000 || handwritingWindowSeconds is < 1 or > 3600)
+            throw new InvalidOperationException("Handwriting rate limit settings are invalid.");
         services.AddRateLimiter(options =>
         {
             options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+            options.AddPolicy("handwriting", context => RateLimitPartition.GetFixedWindowLimiter(
+                context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = handwritingPermitLimit, Window = TimeSpan.FromSeconds(handwritingWindowSeconds),
+                    QueueLimit = 0, AutoReplenishment = true
+                }));
             options.AddPolicy("authentication", context => RateLimitPartition.GetFixedWindowLimiter(
                 context.Connection.RemoteIpAddress?.ToString() ?? "unknown", _ => new FixedWindowRateLimiterOptions
                 {

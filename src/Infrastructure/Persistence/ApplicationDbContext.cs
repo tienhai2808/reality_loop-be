@@ -7,6 +7,8 @@ using Domain.WritingSystemPractice;
 using Domain.Languages;
 using Domain.WritingSystems;
 using Domain.Pronunciation;
+using Domain.Vocabulary;
+using Domain.Handwriting;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
@@ -34,6 +36,12 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<PronunciationRule> PronunciationRules => Set<PronunciationRule>();
     public DbSet<PronunciationRuleTranslation> PronunciationRuleTranslations => Set<PronunciationRuleTranslation>();
     public DbSet<PronunciationExample> PronunciationExamples => Set<PronunciationExample>();
+    public DbSet<VocabularyEntry> VocabularyEntries => Set<VocabularyEntry>();
+    public DbSet<VocabularySense> VocabularySenses => Set<VocabularySense>();
+    public DbSet<VocabularySenseTranslation> VocabularySenseTranslations => Set<VocabularySenseTranslation>();
+    public DbSet<HandwritingTemplate> HandwritingTemplates => Set<HandwritingTemplate>();
+    public DbSet<HandwritingPracticeAttempt> HandwritingPracticeAttempts => Set<HandwritingPracticeAttempt>();
+    public DbSet<HandwritingPracticeCharacter> HandwritingPracticeCharacters => Set<HandwritingPracticeCharacter>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

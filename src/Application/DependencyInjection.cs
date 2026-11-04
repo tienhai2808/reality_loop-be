@@ -1,3 +1,6 @@
+using Application.Vocabulary.Queries.GetVocabularyEntries;
+using Application.Vocabulary.Queries.GetVocabularyEntry;
+using Application.Vocabulary.Queries.GetVocabularySenses;
 using Application.WritingSystemPractice.Commands.CreateWritingSystemPracticeSession;
 using Application.WritingSystemPractice.Commands.AnswerWritingSystemPracticeQuestion;
 using Application.WritingSystemPractice.Commands.AbandonWritingSystemPracticeSession;
@@ -48,6 +51,12 @@ using Application.Authentication.Commands.RevokeRefreshToken;
 using Application.Authentication.Queries.GetCurrentUser;
 using Application.Authentication.Queries.GetGoogleAuthorizationUrl;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Handwriting.Commands.CreateHandwritingAttempt;
+using Application.Handwriting.Queries.GetHandwritingAttempt;
+using Application.Handwriting.Queries.GetHandwritingAttempts;
+using Application.Handwriting.Queries.GetHandwritingTemplate;
+using Application.Handwriting.Queries.GetHandwritingTemplates;
+using Application.Handwriting.Scoring;
 
 namespace Application;
 
@@ -105,6 +114,16 @@ public static class DependencyInjection
         services.AddScoped<AbandonWritingSystemPracticeSessionCommandHandler>();
         services.AddScoped<GetWritingSystemPracticeSessionQueryHandler>();
         services.AddScoped<GetWritingSystemPracticeSessionsQueryHandler>();
+        services.AddScoped<GetVocabularyEntriesQueryHandler>();
+        services.AddScoped<GetVocabularyEntryQueryHandler>();
+        services.AddScoped<GetVocabularySensesQueryHandler>();
+        services.AddSingleton<HandwritingScoringPolicy>();
+        services.AddSingleton<HandwritingGrader>();
+        services.AddScoped<CreateHandwritingAttemptCommandHandler>();
+        services.AddScoped<GetHandwritingAttemptQueryHandler>();
+        services.AddScoped<GetHandwritingAttemptsQueryHandler>();
+        services.AddScoped<GetHandwritingTemplateQueryHandler>();
+        services.AddScoped<GetHandwritingTemplatesQueryHandler>();
         return services;
     }
 }

@@ -1,4 +1,5 @@
 bin/
+__pycache__/
 obj/
 artifacts/
 src/Infrastructure/Persistence/Seeding/Audio/manifest.json.tmp
@@ -16,4 +17,9 @@ docs/*
 !docs/learning-progress-api.md
 !docs/writing-system-practice-model.md
 !docs/writing-system-practice-api.md
+!docs/vocabulary-model.md
+!docs/vocabulary-api.md
+!docs/handwriting-lab.md
+!docs/handwriting-model.md
+!docs/handwriting-api.md
 .idea/

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RealityLoop · Thử nét viết</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="topbar"><a class="brand" href="/">reality<span>loop</span><i></i></a><span class="badge">HANDWRITING LAB · 01</span></header>
+    <section class="intro"><div><p class="eyebrow">TỪ MỘT NÉT, THÀNH MỘT CHỮ</p><h1>Tập đúng từng nét.</h1><p class="description">Chọn chữ, viết lên bảng trắng rồi xem nét nào cần sửa.<br>Mỗi lần chạm xuống và nhấc lên được tính là một nét.</p></div><div class="intro-note"><span>あ</span><p>Chậm một chút.<br>Nhớ lâu hơn.</p></div></section>
+    <div id="connection" role="status" class="connection">Đang tải mẫu nét…</div>
+    <section class="workspace" aria-label="Bàn luyện viết">
+      <aside class="selection"><p class="eyebrow">01 / CHỌN BÀI</p><div id="targets" class="targets"></div><div class="small-note"><strong>Hai cặp dễ nhầm</strong><p>あ / お và ぬ / め.<br>Bài あお gồm hai ô viết riêng.</p></div></aside>
+      <section class="board-panel">
+        <div class="board-heading"><div><p class="eyebrow">02 / VIẾT TỪ TRÍ NHỚ</p><h2 id="prompt">Viết chữ …</h2></div><label class="toggle"><input id="show-template" type="checkbox"> Hiện mẫu</label></div>
+        <div id="character-tabs" class="character-tabs" aria-label="Chọn ô chữ"></div>
+        <div class="canvas-wrap"><canvas id="board" width="440" height="440" tabindex="0" aria-label="Bảng trắng để viết bằng chuột, ngón tay hoặc bút"></canvas><span class="canvas-corner" aria-hidden="true">＋</span></div>
+        <div class="board-meta"><span id="stroke-count">0 nét đã viết</span><span>Chuột · Cảm ứng · Bút</span></div>
+        <div class="actions"><button id="undo" class="secondary" type="button">↶ Hoàn tác nét</button><button id="clear" class="secondary" type="button">Xóa ô này</button><button id="grade" class="primary" type="button">Chấm bài <span>↗</span></button></div>
+      </section>
+      <aside class="feedback-panel"><p class="eyebrow">03 / NHÌN LẠI NÉT VIẾT</p><div id="feedback" aria-live="polite"><div class="empty-mark">✳</div><h2>Đến lượt bạn.</h2><p>Viết xong rồi bấm “Chấm bài”. Bạn sẽ thấy kết quả riêng cho từng chữ và từng nét.</p></div><div class="feedback-footnote">Bộ chấm đang thử nghiệm. “Mức khớp” là chỉ số hình học, chưa phải đánh giá chất lượng chữ viết đã được hiệu chỉnh.</div></aside>
+    </section>
+    <details class="diagnostics"><summary>Kiểm tra bộ chấm &amp; lưu mẫu viết</summary><div class="diagnostic-content"><p>Các nút sau dùng dữ liệu mẫu sinh sẵn để kiểm tra hoạt động, không thay thế kiểm chứng chữ viết thật.</p><div class="sample-buttons"><button data-scenario="correct" type="button">Mẫu chuẩn</button><button data-scenario="reverse" type="button">Đảo chiều nét</button><button data-scenario="order" type="button">Đảo thứ tự nét</button><button data-scenario="confusable" type="button">Chữ dễ nhầm</button></div><div class="capture"><label>Nhãn để hiệu chỉnh <select id="human-label"><option value="unknown">Chưa gắn nhãn</option><option value="correct">Tôi viết đúng</option><option value="incorrect">Tôi cố tình viết sai</option></select></label><button id="export" type="button">Xuất bài viết JSON</button><button id="import" type="button">Mở mẫu JSON</button><input id="import-file" type="file" accept="application/json,.json" hidden></div><p id="versions" class="version-note"></p></div></details>
+    <footer><p>Dữ liệu nét: <a id="source-link" href="https://kanjivg.tagaini.net/" target="_blank" rel="noreferrer">KanjiVG · Ulrich Apel</a> · <a href="/data-license" target="_blank" rel="noreferrer">CC BY-SA 3.0</a><br>Đường SVG được lấy mẫu thành tọa độ chuẩn hóa bởi RealityLoop.</p><span>MỘT NÉT TIẾN BỘ MỖI NGÀY.</span></footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/Application/Application.csproj" />
+    <EmbeddedResource Include="Data/templates.json" LogicalName="HandwritingLab.templates.json" />
+    <EmbeddedResource Include="Data/KanjiVG/COPYING" LogicalName="HandwritingLab.COPYING" />
+    <EmbeddedResource Include="Web/*" LogicalName="HandwritingLab.Web.%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>
