@@ -22,4 +22,8 @@ docs/*
 !docs/handwriting-lab.md
 !docs/handwriting-model.md
 !docs/handwriting-api.md
+!docs/vocabulary-learning-model.md
+!docs/vocabulary-learning-api.md
+!docs/grammar-model.md
+!docs/grammar-api.md
 .idea/

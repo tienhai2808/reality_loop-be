@@ -137,6 +137,682 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Grammar.GrammarPoint", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("code");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("IsPublished")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_published");
+
+                    b.Property<long>("LanguageId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("language_id");
+
+                    b.Property<string>("NativeName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("native_name");
+
+                    b.Property<string>("Pattern")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("pattern");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LanguageId", "Code")
+                        .IsUnique()
+                        .HasDatabaseName("ux_grammar_points_language_id_code");
+
+                    b.HasIndex("LanguageId", "SortOrder", "Id")
+                        .HasDatabaseName("ix_grammar_points_language_id_sort_order_id");
+
+                    b.ToTable("grammar_points", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_grammar_points_code", "code ~ '^[a-z][a-z0-9-]*$'");
+
+                            t.HasCheckConstraint("ck_grammar_points_native_name", "native_name ~ '[^[:space:]]'");
+
+                            t.HasCheckConstraint("ck_grammar_points_pattern", "pattern ~ '[^[:space:]]'");
+
+                            t.HasCheckConstraint("ck_grammar_points_positive_ids", "id > 0 AND language_id > 0");
+
+                            t.HasCheckConstraint("ck_grammar_points_sort_order", "sort_order >= 0");
+
+                            t.HasCheckConstraint("ck_grammar_points_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_grammar_points_version", "version > 0");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1563703640068193708L,
+                            Code = "noun-copula",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "名詞文の肯定",
+                            Pattern = "N1 は N2 です",
+                            SortOrder = 0,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193709L,
+                            Code = "noun-negation",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "名詞文の否定",
+                            Pattern = "N1 は N2 ではありません",
+                            SortOrder = 1,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193710L,
+                            Code = "question-ka",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "疑問の助詞か",
+                            Pattern = "N は N ですか／Vますか",
+                            SortOrder = 2,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193711L,
+                            Code = "noun-modifier-no",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "名詞をつなぐの",
+                            Pattern = "N1 の N2",
+                            SortOrder = 3,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193712L,
+                            Code = "additive-mo",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "追加を表すも",
+                            Pattern = "N も …",
+                            SortOrder = 4,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193713L,
+                            Code = "demonstratives",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "指示詞",
+                            Pattern = "これ・それ・あれ／この・その・あの + N",
+                            SortOrder = 5,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193714L,
+                            Code = "polite-verbs",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "動詞の丁寧形",
+                            Pattern = "Vます",
+                            SortOrder = 6,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193715L,
+                            Code = "polite-verb-negation",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "動詞の丁寧な否定",
+                            Pattern = "Vません",
+                            SortOrder = 7,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193716L,
+                            Code = "polite-verb-past",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "動詞の丁寧な過去",
+                            Pattern = "Vました／Vませんでした",
+                            SortOrder = 8,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193717L,
+                            Code = "object-o",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "目的語のを",
+                            Pattern = "N を Vます",
+                            SortOrder = 9,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193718L,
+                            Code = "time-ni",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "時を表すに",
+                            Pattern = "時刻 に Vます",
+                            SortOrder = 10,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193719L,
+                            Code = "action-location-de",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "動作の場所を表すで",
+                            Pattern = "場所 で Vます",
+                            SortOrder = 11,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193720L,
+                            Code = "existence-arimasu",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "存在を表すあります",
+                            Pattern = "場所 に N が あります",
+                            SortOrder = 12,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193721L,
+                            Code = "existence-imasu",
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            IsPublished = true,
+                            LanguageId = 1563703640068190208L,
+                            NativeName = "存在を表すいます",
+                            Pattern = "場所 に N が います",
+                            SortOrder = 13,
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Version = 1L
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Grammar.GrammarPointTranslation", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Explanation")
+                        .IsRequired()
+                        .HasMaxLength(8000)
+                        .HasColumnType("character varying(8000)")
+                        .HasColumnName("explanation");
+
+                    b.Property<long>("GrammarPointId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("grammar_point_id");
+
+                    b.Property<string>("Locale")
+                        .IsRequired()
+                        .HasMaxLength(35)
+                        .HasColumnType("character varying(35)")
+                        .HasColumnName("locale");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UsageNote")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("usage_note");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GrammarPointId", "Locale")
+                        .IsUnique()
+                        .HasDatabaseName("ux_grammar_point_translations_point_id_locale");
+
+                    b.ToTable("grammar_point_translations", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_grammar_point_translations_explanation", "explanation ~ '[^[:space:]]'");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_locale", "locale ~ '^[a-z]{2,8}(-[a-z0-9]{1,8})*$'");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_name", "name ~ '[^[:space:]]'");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_positive_ids", "id > 0 AND grammar_point_id > 0");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_usage_note", "usage_note IS NULL OR usage_note ~ '[^[:space:]]'");
+
+                            t.HasCheckConstraint("ck_grammar_point_translations_version", "version > 0");
+                        });
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1563703640068193758L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng は để nêu chủ đề và kết thúc bằng danh từ kèm です khi giới thiệu tên, nghề nghiệp hoặc phân loại. N1 và N2 là các danh từ.",
+                            GrammarPointId = 1563703640068193708L,
+                            Locale = "vi",
+                            Name = "Câu khẳng định với danh từ",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Trợ từ は được đọc là wa. Có thể lược chủ đề đã rõ trong hội thoại.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193759L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Use は to introduce a topic and a noun followed by です to identify or classify it. N1 and N2 stand for nouns.",
+                            GrammarPointId = 1563703640068193708L,
+                            Locale = "en",
+                            Name = "Affirmative noun sentences",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "The particle は is pronounced wa. A topic already clear from context can be omitted.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193760L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng ではありません sau danh từ để phủ định việc đồng nhất hay phân loại chủ đề. Đây là dạng lịch sự.",
+                            GrammarPointId = 1563703640068193709L,
+                            Locale = "vi",
+                            Name = "Phủ định câu danh từ",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Trong hội thoại cũng gặp じゃありません và じゃないです.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193761L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Follow a noun with ではありません to politely deny an identity or classification.",
+                            GrammarPointId = 1563703640068193709L,
+                            Locale = "en",
+                            Name = "Negative noun sentences",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Conversational alternatives include じゃありません and じゃないです.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193762L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Thêm か vào cuối câu lịch sự để đặt câu hỏi. Giữ dạng động từ hoặc です phù hợp với câu.",
+                            GrammarPointId = 1563703640068193710L,
+                            Locale = "vi",
+                            Name = "Câu hỏi với か",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Khi trả lời, có thể lược phần thông tin đã rõ và dùng はい hoặc いいえ cùng câu trả lời.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193763L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Add か to a polite sentence to form a question, retaining the appropriate verb or です form.",
+                            GrammarPointId = 1563703640068193710L,
+                            Locale = "en",
+                            Name = "Questions with ka",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "A response can omit understood information and combine はい or いいえ with the answer.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193764L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "N1 の bổ nghĩa cho N2, thể hiện quan hệ sở hữu, thuộc về, nguồn gốc hoặc loại tùy ngữ cảnh. Danh từ chính là N2.",
+                            GrammarPointId = 1563703640068193711L,
+                            Locale = "vi",
+                            Name = "Nối danh từ bằng の",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Ý nghĩa cụ thể của quan hệ phụ thuộc hai danh từ và tình huống sử dụng.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193765L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "N1 の modifies N2, expressing a relationship such as possession, affiliation, origin or type. N2 is the head noun.",
+                            GrammarPointId = 1563703640068193711L,
+                            Locale = "en",
+                            Name = "Linking nouns with no",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Interpret the relationship from the nouns and the context.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193766L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng も sau danh từ để thêm một đối tượng có cùng đặc điểm hay hành động đã đề cập.",
+                            GrammarPointId = 1563703640068193712L,
+                            Locale = "vi",
+                            Name = "Bổ sung ý với も",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Trong mẫu nhập môn này, も thay vị trí của は hoặc が.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193767L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Attach も to a noun to include another item sharing a previously mentioned property or action.",
+                            GrammarPointId = 1563703640068193712L,
+                            Locale = "en",
+                            Name = "Adding information with mo",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "In this introductory pattern, も occupies the position of は or が.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193768L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "これ, それ, あれ lần lượt chỉ vật gần người nói, gần người nghe và xa cả hai. この, その, あの đứng trước danh từ.",
+                            GrammarPointId = 1563703640068193713L,
+                            Locale = "vi",
+                            Name = "Chỉ định sự vật",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Chọn cách chỉ định theo vị trí và thông tin chung giữa những người đang nói chuyện.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193769L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "これ, それ and あれ identify things near the speaker, near the listener and distant from both. この, その and あの precede a noun.",
+                            GrammarPointId = 1563703640068193713L,
+                            Locale = "en",
+                            Name = "Demonstratives",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Choose the form using physical position and the speakers’ shared context.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193770L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dạng ます dùng trong lời nói lịch sự để diễn đạt hành động theo thói quen, hiện tại hoặc tương lai tùy ngữ cảnh.",
+                            GrammarPointId = 1563703640068193714L,
+                            Locale = "vi",
+                            Name = "Động từ lịch sự với ます",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Học cách tạo dạng ます theo nhóm động từ và dùng từ chỉ thời gian để làm rõ mốc thời gian.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193771L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "The ます form expresses actions politely, including habits and present or future situations according to context.",
+                            GrammarPointId = 1563703640068193714L,
+                            Locale = "en",
+                            Name = "Polite verbs with masu",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Learn the form for each verb group and use time expressions to clarify when the action occurs.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193772L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dạng kết thúc bằng ません diễn đạt phủ định lịch sự ở thời không quá khứ.",
+                            GrammarPointId = 1563703640068193715L,
+                            Locale = "vi",
+                            Name = "Phủ định động từ lịch sự",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Đối chiếu các dạng khẳng định và phủ định của cùng một động từ.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193773L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "The ending ません expresses a polite negative in the non-past.",
+                            GrammarPointId = 1563703640068193715L,
+                            Locale = "en",
+                            Name = "Polite negative verbs",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Study the affirmative and negative forms of the same verb together.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193774L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng ました để diễn đạt khẳng định quá khứ và ませんでした để diễn đạt phủ định quá khứ trong lời nói lịch sự.",
+                            GrammarPointId = 1563703640068193716L,
+                            Locale = "vi",
+                            Name = "Quá khứ động từ lịch sự",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Từ chỉ thời gian giúp người nghe xác định hành động được nói tới.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193775L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Use ました for a polite affirmative past and ませんでした for a polite negative past.",
+                            GrammarPointId = 1563703640068193716L,
+                            Locale = "en",
+                            Name = "Polite past verbs",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Time expressions help identify the action being discussed.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193776L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Đặt を sau danh từ chỉ đối tượng trực tiếp của một động từ phù hợp. Động từ thường đứng cuối câu.",
+                            GrammarPointId = 1563703640068193717L,
+                            Locale = "vi",
+                            Name = "Tân ngữ với を",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Trong cách dùng trợ từ này, を được đọc là o.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193777L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Place を after the noun serving as the direct object of an appropriate verb. The verb normally comes at the end.",
+                            GrammarPointId = 1563703640068193717L,
+                            Locale = "en",
+                            Name = "Direct objects with o",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "The particle を is pronounced o.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193778L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng に sau một thời điểm xác định để nói khi hành động xảy ra, chẳng hạn giờ trên đồng hồ.",
+                            GrammarPointId = 1563703640068193718L,
+                            Locale = "vi",
+                            Name = "Thời điểm với に",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Các từ thời gian tương đối như 今日 và 明日 thường đứng trực tiếp trong câu.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193779L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Use に after a specific time point, such as a clock time, to indicate when an action takes place.",
+                            GrammarPointId = 1563703640068193718L,
+                            Locale = "en",
+                            Name = "Time points with ni",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Relative time words such as 今日 and 明日 commonly stand directly in the sentence.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193780L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Đặt で sau tên địa điểm để chỉ nơi một hành động diễn ra.",
+                            GrammarPointId = 1563703640068193719L,
+                            Locale = "vi",
+                            Name = "Nơi diễn ra hành động với で",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Các cách diễn đạt sự tồn tại với あります và います thường dùng に để đánh dấu vị trí.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193781L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Attach で to a place to identify where an action takes place.",
+                            GrammarPointId = 1563703640068193719L,
+                            Locale = "en",
+                            Name = "Action locations with de",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Existence expressions with あります and います commonly mark location with に.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193782L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng mẫu này để nói một vật hoặc cây cối tồn tại ở địa điểm nào. が đánh dấu vật được giới thiệu.",
+                            GrammarPointId = 1563703640068193720L,
+                            Locale = "vi",
+                            Name = "Sự tồn tại với あります",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Một chủ đề đã biết cũng có thể được nêu bằng は rồi đến địa điểm và にあります.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193783L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Use this pattern to introduce an object or plant at a location. が marks what is being introduced.",
+                            GrammarPointId = 1563703640068193720L,
+                            Locale = "en",
+                            Name = "Existence with arimasu",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "An established topic can instead be marked with は, followed by the location and にあります.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193784L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Dùng mẫu này để giới thiệu người hoặc động vật ở một địa điểm. が đánh dấu người hay con vật được giới thiệu.",
+                            GrammarPointId = 1563703640068193721L,
+                            Locale = "vi",
+                            Name = "Sự tồn tại với います",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "Một chủ đề đã biết có thể dùng mẫu N は 場所 に います.",
+                            Version = 1L
+                        },
+                        new
+                        {
+                            Id = 1563703640068193785L,
+                            CreatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            Explanation = "Use this pattern to introduce a person or animal at a location. が marks the person or animal being introduced.",
+                            GrammarPointId = 1563703640068193721L,
+                            Locale = "en",
+                            Name = "Existence with imasu",
+                            UpdatedAt = new DateTimeOffset(new DateTime(2026, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            UsageNote = "For an established topic, use N は 場所 に います.",
+                            Version = 1L
+                        });
+                });
+
             modelBuilder.Entity("Domain.Handwriting.HandwritingPracticeAttempt", b =>
                 {
                     b.Property<long>("Id")
@@ -5321,6 +5997,232 @@ namespace Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.VocabularyLearning.VocabularyLearningProgress", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<long>("AgainCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("again_count");
+
+                    b.Property<long>("ConsecutiveRecallCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("consecutive_recall_count");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("IntervalMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("interval_minutes");
+
+                    b.Property<DateTimeOffset?>("LastReviewedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_reviewed_at");
+
+                    b.Property<long>("LearningProfileId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("learning_profile_id");
+
+                    b.Property<DateTimeOffset>("NextReviewAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("next_review_at");
+
+                    b.Property<long>("ReviewCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("review_count");
+
+                    b.Property<string>("SchedulerVersion")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("scheduler_version");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.Property<long>("VocabularySenseId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("vocabulary_sense_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("VocabularySenseId")
+                        .HasDatabaseName("ix_vocabulary_progress_sense");
+
+                    b.HasIndex("LearningProfileId", "VocabularySenseId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_vocabulary_progress_profile_sense");
+
+                    b.HasIndex("LearningProfileId", "NextReviewAt", "Id")
+                        .HasDatabaseName("ix_vocabulary_progress_profile_due_id");
+
+                    b.ToTable("vocabulary_learning_progress", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_vocabulary_progress_counts", "review_count >= 0 AND again_count >= 0 AND consecutive_recall_count >= 0 AND consecutive_recall_count <= review_count AND again_count <= review_count - consecutive_recall_count");
+
+                            t.HasCheckConstraint("ck_vocabulary_progress_ids", "id > 0 AND learning_profile_id > 0 AND vocabulary_sense_id > 0");
+
+                            t.HasCheckConstraint("ck_vocabulary_progress_state", "(status = 'New' AND review_count = 0 AND again_count = 0 AND consecutive_recall_count = 0\n    AND last_reviewed_at IS NULL AND interval_minutes = 0 AND next_review_at = created_at\n    AND scheduler_version IS NULL AND version = 1 AND updated_at = created_at)\nOR (status IN ('Learning', 'Reviewing') AND review_count > 0 AND last_reviewed_at IS NOT NULL\n    AND last_reviewed_at >= created_at AND last_reviewed_at = updated_at\n    AND interval_minutes > 0 AND next_review_at = last_reviewed_at + interval_minutes * interval '1 minute'\n    AND scheduler_version IS NOT NULL AND scheduler_version ~ '^[a-z][a-z0-9-]*$')");
+
+                            t.HasCheckConstraint("ck_vocabulary_progress_status", "status IN ('New', 'Learning', 'Reviewing')");
+
+                            t.HasCheckConstraint("ck_vocabulary_progress_timestamps", "updated_at >= created_at");
+
+                            t.HasCheckConstraint("ck_vocabulary_progress_version", "version > 0 AND review_count < version");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.VocabularyLearning.VocabularyReview", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<long>("AgainCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("again_count");
+
+                    b.Property<long>("ConsecutiveRecallCount")
+                        .HasColumnType("bigint")
+                        .HasColumnName("consecutive_recall_count");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<int>("IntervalMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("interval_minutes");
+
+                    b.Property<DateTimeOffset>("NextReviewAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("next_review_at");
+
+                    b.Property<DateTimeOffset>("PreviousDueAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("previous_due_at");
+
+                    b.Property<int>("PreviousIntervalMinutes")
+                        .HasColumnType("integer")
+                        .HasColumnName("previous_interval_minutes");
+
+                    b.Property<string>("PreviousStatus")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("previous_status");
+
+                    b.Property<long>("ProgressId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("progress_id");
+
+                    b.Property<long>("ProgressVersionAfter")
+                        .HasColumnType("bigint")
+                        .HasColumnName("progress_version_after");
+
+                    b.Property<long>("ProgressVersionBefore")
+                        .HasColumnType("bigint")
+                        .HasColumnName("progress_version_before");
+
+                    b.Property<string>("Rating")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("rating");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("request_id");
+
+                    b.Property<long>("ReviewNumber")
+                        .HasColumnType("bigint")
+                        .HasColumnName("review_number");
+
+                    b.Property<DateTimeOffset>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("reviewed_at");
+
+                    b.Property<string>("SchedulerVersion")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)")
+                        .HasColumnName("scheduler_version");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(1L)
+                        .HasColumnName("version");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProgressId", "ProgressVersionBefore")
+                        .IsUnique()
+                        .HasDatabaseName("ux_vocabulary_reviews_progress_version");
+
+                    b.HasIndex("ProgressId", "RequestId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_vocabulary_reviews_progress_request");
+
+                    b.HasIndex("ProgressId", "ReviewNumber")
+                        .IsUnique()
+                        .IsDescending(false, true)
+                        .HasDatabaseName("ux_vocabulary_reviews_progress_number");
+
+                    b.ToTable("vocabulary_reviews", null, t =>
+                        {
+                            t.HasCheckConstraint("ck_vocabulary_reviews_counts", "review_number > 0 AND again_count >= 0 AND consecutive_recall_count >= 0 AND consecutive_recall_count <= review_number AND again_count <= review_number - consecutive_recall_count");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_ids", "id > 0 AND progress_id > 0 AND request_id <> '00000000-0000-0000-0000-000000000000'::uuid");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_immutable_state", "version = 1 AND reviewed_at = created_at AND updated_at = created_at");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_outcome", "(rating = 'Again' AND status = 'Learning' AND consecutive_recall_count = 0 AND again_count > 0)\nOR (rating <> 'Again' AND consecutive_recall_count > 0)");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_previous", "(review_number = 1 AND previous_status = 'New' AND previous_interval_minutes = 0)\nOR (review_number > 1 AND previous_status IN ('Learning', 'Reviewing') AND previous_interval_minutes > 0)");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_rating", "rating IN ('Again', 'Hard', 'Good', 'Easy')");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_schedule", "interval_minutes > 0 AND next_review_at = reviewed_at + interval_minutes * interval '1 minute'");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_scheduler", "scheduler_version ~ '^[a-z][a-z0-9-]*$'");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_status", "previous_status IN ('New', 'Learning', 'Reviewing') AND status IN ('Learning', 'Reviewing')");
+
+                            t.HasCheckConstraint("ck_vocabulary_reviews_versions", "progress_version_before > 0 AND review_number <= progress_version_before AND progress_version_after > progress_version_before AND progress_version_after - progress_version_before = 1");
+                        });
+                });
+
             modelBuilder.Entity("Domain.WritingSystemPractice.WritingSystemPracticeSession", b =>
                 {
                     b.Property<long>("Id")
@@ -8220,6 +9122,24 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Grammar.GrammarPoint", b =>
+                {
+                    b.HasOne("Domain.Languages.Language", null)
+                        .WithMany()
+                        .HasForeignKey("LanguageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Grammar.GrammarPointTranslation", b =>
+                {
+                    b.HasOne("Domain.Grammar.GrammarPoint", null)
+                        .WithMany()
+                        .HasForeignKey("GrammarPointId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Handwriting.HandwritingPracticeAttempt", b =>
                 {
                     b.HasOne("Domain.LearningProfiles.LearningProfile", null)
@@ -8390,6 +9310,30 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasOne("Domain.Vocabulary.VocabularySense", null)
                         .WithMany()
                         .HasForeignKey("VocabularySenseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.VocabularyLearning.VocabularyLearningProgress", b =>
+                {
+                    b.HasOne("Domain.LearningProfiles.LearningProfile", null)
+                        .WithMany()
+                        .HasForeignKey("LearningProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Vocabulary.VocabularySense", null)
+                        .WithMany()
+                        .HasForeignKey("VocabularySenseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.VocabularyLearning.VocabularyReview", b =>
+                {
+                    b.HasOne("Domain.VocabularyLearning.VocabularyLearningProgress", null)
+                        .WithMany()
+                        .HasForeignKey("ProgressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

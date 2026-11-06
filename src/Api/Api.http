@@ -11,8 +11,13 @@
 @contentLocale = vi
 @vocabularyEntryCode = mizu
 @pronunciationRuleCode = dakuten-handakuten
+@grammarPointCode = noun-copula
 @learningProfileId = REPLACE_LEARNING_PROFILE_ID
 @learningProfileVersion = 1
+@vocabularySenseId = REPLACE_SENSE_ID_FROM_VOCABULARY_API
+@vocabularyProgressId = REPLACE_PROGRESS_ID
+@vocabularyProgressVersion = 1
+@vocabularyReviewRequestId = 44c73d27-5395-4dfe-bc7c-4c167e9a0d45
 @practiceSessionId = REPLACE_PRACTICE_SESSION_ID
 @practiceSessionItemId = REPLACE_SESSION_ITEM_ID
 @practiceSessionVersion = 1
@@ -333,3 +338,46 @@ Content-Type: application/json
   "action": "Restart",
   "version": {{writingItemProgressVersion}}
 }
+
+### Add a meaning to learning (idempotent PUT, no body): 201 new, 200 already added.
+PUT {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-senses/{{vocabularySenseId}}/learning-progress
+Authorization: Bearer {{accessToken}}
+
+### Due flashcards; default locale is profile.ExplanationLanguage. Copy nextCursor into after.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### All added cards, including future schedules.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning?dueOnly=false&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Active learning summary; server clock controls the due cutoff.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning/summary
+Authorization: Bearer {{accessToken}}
+
+### Card and answer for a single meaning.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning/{{vocabularyProgressId}}
+Authorization: Bearer {{accessToken}}
+
+### Rate after flipping: Again/Hard/Good/Easy. On retry keep this exact requestId/version/rating.
+POST {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning/{{vocabularyProgressId}}/reviews
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "requestId": "{{vocabularyReviewRequestId}}",
+  "version": {{vocabularyProgressVersion}},
+  "rating": "Good"
+}
+
+### Immutable review history; copy nextCursor into before. A new rating needs a NEW UUID and latest version.
+GET {{baseUrl}}/learning-profiles/{{learningProfileId}}/vocabulary-learning/{{vocabularyProgressId}}/reviews?pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Grammar cards: use profile.targetLanguage and profile.explanationLanguage. Copy nextCursor into after.
+GET {{baseUrl}}/languages/{{languageCode}}/grammar-points?locale={{contentLocale}}&pageSize=20
+Authorization: Bearer {{accessToken}}
+
+### Grammar detail: full explanation and usage note for the selected locale.
+GET {{baseUrl}}/languages/{{languageCode}}/grammar-points/{{grammarPointCode}}?locale={{contentLocale}}
+Authorization: Bearer {{accessToken}}

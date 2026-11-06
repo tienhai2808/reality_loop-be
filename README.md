@@ -26,7 +26,9 @@ src/
     Languages/                      Danh mục ngôn ngữ và bản dịch
     WritingSystems/                 Bộ chữ, mục chữ và cách đọc
     Pronunciation/                  Quy tắc phát âm, bản dịch và ví dụ
+    Grammar/                        Điểm ngữ pháp, cấu trúc mẫu và giải thích đa ngôn ngữ
     Vocabulary/                     Từ, từng nghĩa/từ loại và diễn giải đa ngôn ngữ
+    VocabularyLearning/             Tiến độ từng nghĩa, lịch đến hạn và lịch sử tự đánh giá
   Application/
     Common/
       Interfaces/                   Contract repository, transaction, OAuth, token, current user
@@ -67,6 +69,12 @@ src/
       Queries/                      Options, list, detail và current
       Models/                       DTO/result
       Validation/                   Kiểm tra ID/version/cursor
+    VocabularyLearning/
+      Commands/                     Thêm nghĩa vào học, ghi review có request ID/version
+      Queries/                      Queue đến hạn, card, summary và history
+      Models/                       Flashcard/receipt/cursor DTO
+      Services/                     Scheduler simple-v1 thuần .NET
+      Validation/                   ID, input và due cursor
     LearningProgress/
       Commands/                     Ghi nhận học/hoàn thành/học lại có version
       Queries/                      Summary, page và tiến độ từng chữ
@@ -91,6 +99,9 @@ src/
       Models/                       DTO/result
     Pronunciation/
       Queries/                      Danh sách, chi tiết quy tắc và ví dụ
+      Models/                       Summary/detail/page DTO
+    Grammar/
+      Queries/                      Danh sách có cursor và chi tiết điểm ngữ pháp theo locale
       Models/                       Summary/detail/page DTO
     Vocabulary/
       Queries/                      Danh sách từ, metadata và các nghĩa có phân trang
@@ -127,12 +138,14 @@ src/
       Authentication/               Request HTTP và validation
       AI/                           Request setup AI, mỗi type một file
       LearningProfiles/             Request profile/preferences/selection
+      VocabularyLearning/           Request review strict và filter/due cursor
       LearningProgress/             Request action/version và filter/cursor
       WritingSystemPractice/        Request tạo lượt, đáp án/version và lịch sử
       Handwriting/                  Request nét chuẩn hóa, JSON strict và filter/cursor
       Languages/                    Locale/cursor cho catalog ngôn ngữ
       WritingSystems/               Locale/cursor cho bộ chữ và cách đọc
       Pronunciation/                Locale/cursor cho quy tắc và ví dụ
+      Grammar/                      Locale/cursor cho danh mục ngữ pháp
       Vocabulary/                   Locale, từ loại và cursor cho danh mục từ/nghĩa
     Filters/                        Audit filter cho AI setup
     Controllers/                    Controller gọi handler
@@ -144,10 +157,12 @@ src/
     appsettings.json
 docs/                               Tài liệu tích hợp và vận hành
 tests/
+  Grammar.Tests/                    Domain/EF/PostgreSQL/HTTP, locale, cursor và query budget
   AiSetup.Tests/                    Console runner AI; PostgreSQL checks bật qua biến môi trường
   LearningProgress.Tests/           HTTP/PostgreSQL, ownership, query count và concurrency
   WritingSystemPractice.Tests/      Domain/EF/PostgreSQL/HTTP, chấm bài, query budget và concurrency
   Vocabulary.Tests/                 Domain/EF/PostgreSQL/HTTP, seed, fallback, publication và query budget
+  VocabularyLearning.Tests/         Domain/scheduler/EF/PostgreSQL/HTTP, replay/CAS và query budget
   HandwritingLab.Tests/             Kiểm tra hình học/HTTP cho prototype chấm nét
   Handwriting.Tests/                Domain/scoring/EF/PostgreSQL/HTTP, ownership, rollback và query budget
 tools/
@@ -442,6 +457,10 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [API ngữ pháp và tích hợp FE](docs/grammar-api.md) gồm endpoint, payload, locale fallback và ví dụ TypeScript.
+- [Model danh mục ngữ pháp](docs/grammar-model.md) gồm field, seed nhập môn, constraints và migration.
+- [API flashcard và ôn từ vựng](docs/vocabulary-learning-api.md): endpoint, simple-v1, retry và tích hợp FE.
+- [Model tiến độ từ vựng và ôn tập](docs/vocabulary-learning-model.md): field, enum, lịch sử, constraints và transaction protocol.
 - [API luyện viết và tích hợp FE](docs/handwriting-api.md): danh sách/mẫu nét, nộp bài, feedback, lịch sử và canvas.
 - [Model và DB luyện viết](docs/handwriting-model.md): mẫu nét theo revision, lượt nộp, feedback JSONB, seed và ràng buộc dữ liệu.
 - [Lab chấm nét viết không AI](docs/handwriting-lab.md): bảng viết chạy localhost, bốn chữ mẫu, thuật toán, dữ liệu hiệu chỉnh và kiểm thử.

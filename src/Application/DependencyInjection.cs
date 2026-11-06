@@ -1,3 +1,12 @@
+using Application.Grammar.Queries.GetGrammarPoints;
+using Application.Grammar.Queries.GetGrammarPoint;
+using Application.VocabularyLearning.Services;
+using Application.VocabularyLearning.Queries.GetVocabularyReviewHistory;
+using Application.VocabularyLearning.Queries.GetVocabularyLearningSummary;
+using Application.VocabularyLearning.Queries.GetVocabularyLearningCard;
+using Application.VocabularyLearning.Queries.GetVocabularyLearningPage;
+using Application.VocabularyLearning.Commands.RecordVocabularyReview;
+using Application.VocabularyLearning.Commands.AddVocabularyLearning;
 using Application.Vocabulary.Queries.GetVocabularyEntries;
 using Application.Vocabulary.Queries.GetVocabularyEntry;
 using Application.Vocabulary.Queries.GetVocabularySenses;
@@ -103,6 +112,8 @@ public static class DependencyInjection
         services.AddScoped<GetWritingSystemItemsQueryHandler>();
         services.AddScoped<GetWritingSystemItemReadingsQueryHandler>();
         services.AddScoped<GetPronunciationRulesQueryHandler>();
+        services.AddScoped<GetGrammarPointsQueryHandler>();
+        services.AddScoped<GetGrammarPointQueryHandler>();
         services.AddScoped<GetPronunciationRuleQueryHandler>();
         services.AddScoped<GetPronunciationExamplesQueryHandler>();
         services.AddScoped<RecordWritingSystemItemProgressCommandHandler>();
@@ -124,6 +135,13 @@ public static class DependencyInjection
         services.AddScoped<GetHandwritingAttemptsQueryHandler>();
         services.AddScoped<GetHandwritingTemplateQueryHandler>();
         services.AddScoped<GetHandwritingTemplatesQueryHandler>();
+        services.AddScoped<AddVocabularyLearningCommandHandler>();
+        services.AddScoped<RecordVocabularyReviewCommandHandler>();
+        services.AddScoped<GetVocabularyLearningPageQueryHandler>();
+        services.AddScoped<GetVocabularyLearningCardQueryHandler>();
+        services.AddScoped<GetVocabularyLearningSummaryQueryHandler>();
+        services.AddScoped<GetVocabularyReviewHistoryQueryHandler>();
+        services.AddSingleton<VocabularyReviewScheduler>();
         return services;
     }
 }

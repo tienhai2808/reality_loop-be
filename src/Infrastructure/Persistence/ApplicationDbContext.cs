@@ -8,6 +8,8 @@ using Domain.Languages;
 using Domain.WritingSystems;
 using Domain.Pronunciation;
 using Domain.Vocabulary;
+using Domain.Grammar;
+using Domain.VocabularyLearning;
 using Domain.Handwriting;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,6 +44,12 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<HandwritingTemplate> HandwritingTemplates => Set<HandwritingTemplate>();
     public DbSet<HandwritingPracticeAttempt> HandwritingPracticeAttempts => Set<HandwritingPracticeAttempt>();
     public DbSet<HandwritingPracticeCharacter> HandwritingPracticeCharacters => Set<HandwritingPracticeCharacter>();
+
+    public DbSet<VocabularyLearningProgress> VocabularyLearningProgress => Set<VocabularyLearningProgress>();
+    public DbSet<VocabularyReview> VocabularyReviews => Set<VocabularyReview>();
+
+    public DbSet<GrammarPoint> GrammarPoints => Set<GrammarPoint>();
+    public DbSet<GrammarPointTranslation> GrammarPointTranslations => Set<GrammarPointTranslation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
