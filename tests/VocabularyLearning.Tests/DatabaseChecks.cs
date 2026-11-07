@@ -46,7 +46,7 @@ internal static class DatabaseChecks
         await migrator.MigrateAsync();
         Check.That(!db.Database.HasPendingModelChanges(), "Model matches snapshot.");
         Check.That(await db.Users.CountAsync() == 1 && await db.LearningProfiles.CountAsync() == 1 &&
-            await db.HandwritingTemplates.CountAsync() == 92 && await db.VocabularySenses.CountAsync() == 42, "Upgrade preserves user/catalog data.");
+            await db.HandwritingTemplates.CountAsync() == 208 && await db.VocabularySenses.CountAsync() == 202, "Upgrade preserves user/catalog data.");
         var assembly = db.GetService<IMigrationsAssembly>();
         var migration = assembly.CreateMigration(assembly.Migrations.Single(x => x.Key.EndsWith("_AddVocabularyLearningProgress")).Value, db.Database.ProviderName!);
         var tables = new[] { "vocabulary_learning_progress", "vocabulary_reviews" };
@@ -132,7 +132,7 @@ internal static class DatabaseChecks
         // Explicit profile deletion removes only personal graph; catalog remains shared.
         await db.Database.ExecuteSqlRawAsync("DELETE FROM learning_profiles WHERE id = 8001");
         Check.That(await db.VocabularyLearningProgress.CountAsync() == 0 && await db.VocabularyReviews.CountAsync() == 0 &&
-            await db.VocabularySenses.CountAsync() == 42, "Profile cascade preserves vocabulary catalog.");
+            await db.VocabularySenses.CountAsync() == 202, "Profile cascade preserves vocabulary catalog.");
         await migrator.MigrateAsync(previous);
         Check.That(await Scalar("SELECT count(*) FROM information_schema.tables WHERE table_name IN ('vocabulary_learning_progress','vocabulary_reviews')") == 0 &&
             await db.HandwritingTemplates.CountAsync() == 92 && await db.Users.CountAsync() == 1, "Down affects only new module.");

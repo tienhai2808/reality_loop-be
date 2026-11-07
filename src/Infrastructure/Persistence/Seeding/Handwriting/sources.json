@@ -828,6 +828,1612 @@
       "itemSequence": 245,
       "strokeCount": 2,
       "sha256": "0e6ea9722247514cc5068ac2b409882c6e47ccc12530e69da680246f72884229"
+    },
+    {
+      "key": "u304c",
+      "symbol": "が",
+      "components": [
+        {
+          "file": "0304c.svg",
+          "sha256": "5f3515b087ff7a410b71c17de893299a8bafa3a51e8ad9e68283c69a7060bbb5",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u304e",
+      "symbol": "ぎ",
+      "components": [
+        {
+          "file": "0304e.svg",
+          "sha256": "d61feabb3f7bbae307153b7db7fe5e07389a3f98b8be1c9f126d628de72a3222",
+          "strokeCount": 6
+        }
+      ]
+    },
+    {
+      "key": "u3050",
+      "symbol": "ぐ",
+      "components": [
+        {
+          "file": "03050.svg",
+          "sha256": "9860648a825c19c1b5aab0aa4b8cbb790161df69b40b5972d2be1878cb01e6bd",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3052",
+      "symbol": "げ",
+      "components": [
+        {
+          "file": "03052.svg",
+          "sha256": "96a7c368573af542d3795f891b790596af732dda93c11935a301b849661ea531",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u3054",
+      "symbol": "ご",
+      "components": [
+        {
+          "file": "03054.svg",
+          "sha256": "87ce8b064ac5f96b695a60f96ade91a2c6120afefce8ecb7fdac5828b4624c14",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u3056",
+      "symbol": "ざ",
+      "components": [
+        {
+          "file": "03056.svg",
+          "sha256": "23b26a2f4185d85e36d124e4760db24671d57c57984f2db7d15caf21fcc28a58",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u3058",
+      "symbol": "じ",
+      "components": [
+        {
+          "file": "03058.svg",
+          "sha256": "d76e5165262a696b625e14fcb86cf6bc35ba20e3f998b0abcb690e86df8037af",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u305a",
+      "symbol": "ず",
+      "components": [
+        {
+          "file": "0305a.svg",
+          "sha256": "af7469a7891e39391f2d059e710878999f47b78a125a01586d8d49c96dc2156d",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u305c",
+      "symbol": "ぜ",
+      "components": [
+        {
+          "file": "0305c.svg",
+          "sha256": "1caa5a9f8ec5d5aaa32db6cae36ba4416f6fb74112d5167ab720a1545cd68df1",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u305e",
+      "symbol": "ぞ",
+      "components": [
+        {
+          "file": "0305e.svg",
+          "sha256": "4a21f853e15b0c4e8e34c5bb078d0669aa8721cd6df3568bc4c672c4cea8e54f",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3060",
+      "symbol": "だ",
+      "components": [
+        {
+          "file": "03060.svg",
+          "sha256": "cb9c2545f3a82d26088a075bc8d4ead26c06dff7936ed87822822333023cabe7",
+          "strokeCount": 6
+        }
+      ]
+    },
+    {
+      "key": "u3062",
+      "symbol": "ぢ",
+      "components": [
+        {
+          "file": "03062.svg",
+          "sha256": "49429f9606c40571842fdf71f693a388ac8e5ea93f31b5cd234f770a932c490a",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u3065",
+      "symbol": "づ",
+      "components": [
+        {
+          "file": "03065.svg",
+          "sha256": "2f8deff41c6f9eb6cf5f2f884e3407c1cc0c0a5666953f39a3d3105c106e85ef",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3067",
+      "symbol": "で",
+      "components": [
+        {
+          "file": "03067.svg",
+          "sha256": "44a115e7f8975f50b1555b2d6c3773da97fb7cefbab161b341b8eb375444b207",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3069",
+      "symbol": "ど",
+      "components": [
+        {
+          "file": "03069.svg",
+          "sha256": "726ab315bad6ca3d40bcd60ad1d285b1314853f29e488ec5c1cc12c2e1652acd",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u3070",
+      "symbol": "ば",
+      "components": [
+        {
+          "file": "03070.svg",
+          "sha256": "a3c97970a53aed5e9a8a7084c5105123763a2061aded42095194cd826459a208",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u3073",
+      "symbol": "び",
+      "components": [
+        {
+          "file": "03073.svg",
+          "sha256": "db4a69a80ec7105112086be72400e115796aa01da9a035dca9c33b9c19b2a2aa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3076",
+      "symbol": "ぶ",
+      "components": [
+        {
+          "file": "03076.svg",
+          "sha256": "662b41babbd9fe52f4973faa992066043a569b3892012087e719a42a2f4dcf2d",
+          "strokeCount": 6
+        }
+      ]
+    },
+    {
+      "key": "u3079",
+      "symbol": "べ",
+      "components": [
+        {
+          "file": "03079.svg",
+          "sha256": "08fb59cf2568a05b5fd1871830d0261c6d398cff5058996eb8653b527e491dd9",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u307c",
+      "symbol": "ぼ",
+      "components": [
+        {
+          "file": "0307c.svg",
+          "sha256": "eb53e5287e33aff91c463d4e69976317c3a02ad722c7468cdbd8f38db3a4a2a0",
+          "strokeCount": 6
+        }
+      ]
+    },
+    {
+      "key": "u3071",
+      "symbol": "ぱ",
+      "components": [
+        {
+          "file": "03071.svg",
+          "sha256": "c20e2bc1ccc6dc80398e50f7561966851f69ac85156c9061292d273cf2f25791",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u3074",
+      "symbol": "ぴ",
+      "components": [
+        {
+          "file": "03074.svg",
+          "sha256": "9e36aabe0696cbc6ed6944bec6516240e16c4dc27b9f298f54010c3f2a67c3bc",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3077",
+      "symbol": "ぷ",
+      "components": [
+        {
+          "file": "03077.svg",
+          "sha256": "bcbb4d19c2a3c3f1dc47fc10ad72ec69e56d5d55dfc36845bc1af25ae1a6791f",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u307a",
+      "symbol": "ぺ",
+      "components": [
+        {
+          "file": "0307a.svg",
+          "sha256": "4cb806a028d49b9da46cff3d852fd262e65ff514993b7d154ad23e91c4ccc441",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u307d",
+      "symbol": "ぽ",
+      "components": [
+        {
+          "file": "0307d.svg",
+          "sha256": "3e441195a86e98c74baf07ddc95d71cdb4387f515728fe7a1e32bb0592b1d2cf",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u304du3083",
+      "symbol": "きゃ",
+      "components": [
+        {
+          "file": "0304d.svg",
+          "sha256": "8f4376853a758ce9710d8b312d93deef512a36a9626bad2f180b46655d23e76a",
+          "strokeCount": 4
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u304du3085",
+      "symbol": "きゅ",
+      "components": [
+        {
+          "file": "0304d.svg",
+          "sha256": "8f4376853a758ce9710d8b312d93deef512a36a9626bad2f180b46655d23e76a",
+          "strokeCount": 4
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u304du3087",
+      "symbol": "きょ",
+      "components": [
+        {
+          "file": "0304d.svg",
+          "sha256": "8f4376853a758ce9710d8b312d93deef512a36a9626bad2f180b46655d23e76a",
+          "strokeCount": 4
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3057u3083",
+      "symbol": "しゃ",
+      "components": [
+        {
+          "file": "03057.svg",
+          "sha256": "f5aae137cbd752963535a0724ad9675d15895940b3960eb730dec1f78274bfca",
+          "strokeCount": 1
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3057u3085",
+      "symbol": "しゅ",
+      "components": [
+        {
+          "file": "03057.svg",
+          "sha256": "f5aae137cbd752963535a0724ad9675d15895940b3960eb730dec1f78274bfca",
+          "strokeCount": 1
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3057u3087",
+      "symbol": "しょ",
+      "components": [
+        {
+          "file": "03057.svg",
+          "sha256": "f5aae137cbd752963535a0724ad9675d15895940b3960eb730dec1f78274bfca",
+          "strokeCount": 1
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3061u3083",
+      "symbol": "ちゃ",
+      "components": [
+        {
+          "file": "03061.svg",
+          "sha256": "2b5557a06674bce0cc8140930a945c4d17a840ef97354627c6daa1d13475d4b6",
+          "strokeCount": 2
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3061u3085",
+      "symbol": "ちゅ",
+      "components": [
+        {
+          "file": "03061.svg",
+          "sha256": "2b5557a06674bce0cc8140930a945c4d17a840ef97354627c6daa1d13475d4b6",
+          "strokeCount": 2
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3061u3087",
+      "symbol": "ちょ",
+      "components": [
+        {
+          "file": "03061.svg",
+          "sha256": "2b5557a06674bce0cc8140930a945c4d17a840ef97354627c6daa1d13475d4b6",
+          "strokeCount": 2
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u306bu3083",
+      "symbol": "にゃ",
+      "components": [
+        {
+          "file": "0306b.svg",
+          "sha256": "c7582cd0309b80826201eea391abd426d8fa44f2d35b2d5e649a1d4fbdfcbaae",
+          "strokeCount": 3
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u306bu3085",
+      "symbol": "にゅ",
+      "components": [
+        {
+          "file": "0306b.svg",
+          "sha256": "c7582cd0309b80826201eea391abd426d8fa44f2d35b2d5e649a1d4fbdfcbaae",
+          "strokeCount": 3
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u306bu3087",
+      "symbol": "にょ",
+      "components": [
+        {
+          "file": "0306b.svg",
+          "sha256": "c7582cd0309b80826201eea391abd426d8fa44f2d35b2d5e649a1d4fbdfcbaae",
+          "strokeCount": 3
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3072u3083",
+      "symbol": "ひゃ",
+      "components": [
+        {
+          "file": "03072.svg",
+          "sha256": "971ad9d36adae9db86899cddeec4295cea33f9993e58d561e5532fe31f4d608c",
+          "strokeCount": 1
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3072u3085",
+      "symbol": "ひゅ",
+      "components": [
+        {
+          "file": "03072.svg",
+          "sha256": "971ad9d36adae9db86899cddeec4295cea33f9993e58d561e5532fe31f4d608c",
+          "strokeCount": 1
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3072u3087",
+      "symbol": "ひょ",
+      "components": [
+        {
+          "file": "03072.svg",
+          "sha256": "971ad9d36adae9db86899cddeec4295cea33f9993e58d561e5532fe31f4d608c",
+          "strokeCount": 1
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u307fu3083",
+      "symbol": "みゃ",
+      "components": [
+        {
+          "file": "0307f.svg",
+          "sha256": "be6a88aa3983f5d1a4d2cd93d0d2c06506dcf09d5d183967a020b39a09841c19",
+          "strokeCount": 2
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u307fu3085",
+      "symbol": "みゅ",
+      "components": [
+        {
+          "file": "0307f.svg",
+          "sha256": "be6a88aa3983f5d1a4d2cd93d0d2c06506dcf09d5d183967a020b39a09841c19",
+          "strokeCount": 2
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u307fu3087",
+      "symbol": "みょ",
+      "components": [
+        {
+          "file": "0307f.svg",
+          "sha256": "be6a88aa3983f5d1a4d2cd93d0d2c06506dcf09d5d183967a020b39a09841c19",
+          "strokeCount": 2
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u308au3083",
+      "symbol": "りゃ",
+      "components": [
+        {
+          "file": "0308a.svg",
+          "sha256": "4884e6b9eb7b49c58b421741803ea1fa2186b5e3025068073f881d401791e633",
+          "strokeCount": 2
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u308au3085",
+      "symbol": "りゅ",
+      "components": [
+        {
+          "file": "0308a.svg",
+          "sha256": "4884e6b9eb7b49c58b421741803ea1fa2186b5e3025068073f881d401791e633",
+          "strokeCount": 2
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u308au3087",
+      "symbol": "りょ",
+      "components": [
+        {
+          "file": "0308a.svg",
+          "sha256": "4884e6b9eb7b49c58b421741803ea1fa2186b5e3025068073f881d401791e633",
+          "strokeCount": 2
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u304eu3083",
+      "symbol": "ぎゃ",
+      "components": [
+        {
+          "file": "0304e.svg",
+          "sha256": "d61feabb3f7bbae307153b7db7fe5e07389a3f98b8be1c9f126d628de72a3222",
+          "strokeCount": 6
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u304eu3085",
+      "symbol": "ぎゅ",
+      "components": [
+        {
+          "file": "0304e.svg",
+          "sha256": "d61feabb3f7bbae307153b7db7fe5e07389a3f98b8be1c9f126d628de72a3222",
+          "strokeCount": 6
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u304eu3087",
+      "symbol": "ぎょ",
+      "components": [
+        {
+          "file": "0304e.svg",
+          "sha256": "d61feabb3f7bbae307153b7db7fe5e07389a3f98b8be1c9f126d628de72a3222",
+          "strokeCount": 6
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3058u3083",
+      "symbol": "じゃ",
+      "components": [
+        {
+          "file": "03058.svg",
+          "sha256": "d76e5165262a696b625e14fcb86cf6bc35ba20e3f998b0abcb690e86df8037af",
+          "strokeCount": 3
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3058u3085",
+      "symbol": "じゅ",
+      "components": [
+        {
+          "file": "03058.svg",
+          "sha256": "d76e5165262a696b625e14fcb86cf6bc35ba20e3f998b0abcb690e86df8037af",
+          "strokeCount": 3
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3058u3087",
+      "symbol": "じょ",
+      "components": [
+        {
+          "file": "03058.svg",
+          "sha256": "d76e5165262a696b625e14fcb86cf6bc35ba20e3f998b0abcb690e86df8037af",
+          "strokeCount": 3
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3073u3083",
+      "symbol": "びゃ",
+      "components": [
+        {
+          "file": "03073.svg",
+          "sha256": "db4a69a80ec7105112086be72400e115796aa01da9a035dca9c33b9c19b2a2aa",
+          "strokeCount": 3
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3073u3085",
+      "symbol": "びゅ",
+      "components": [
+        {
+          "file": "03073.svg",
+          "sha256": "db4a69a80ec7105112086be72400e115796aa01da9a035dca9c33b9c19b2a2aa",
+          "strokeCount": 3
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3073u3087",
+      "symbol": "びょ",
+      "components": [
+        {
+          "file": "03073.svg",
+          "sha256": "db4a69a80ec7105112086be72400e115796aa01da9a035dca9c33b9c19b2a2aa",
+          "strokeCount": 3
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3074u3083",
+      "symbol": "ぴゃ",
+      "components": [
+        {
+          "file": "03074.svg",
+          "sha256": "9e36aabe0696cbc6ed6944bec6516240e16c4dc27b9f298f54010c3f2a67c3bc",
+          "strokeCount": 2
+        },
+        {
+          "file": "03083.svg",
+          "sha256": "a538603962ce03a17b1866c40cc9f2626cf59b76338a066e56bdc9f3e707c458",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u3074u3085",
+      "symbol": "ぴゅ",
+      "components": [
+        {
+          "file": "03074.svg",
+          "sha256": "9e36aabe0696cbc6ed6944bec6516240e16c4dc27b9f298f54010c3f2a67c3bc",
+          "strokeCount": 2
+        },
+        {
+          "file": "03085.svg",
+          "sha256": "197b2daf727bedfcaf4f0a3790503af442cdad7d2e419e79bdcf765602b2175d",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u3074u3087",
+      "symbol": "ぴょ",
+      "components": [
+        {
+          "file": "03074.svg",
+          "sha256": "9e36aabe0696cbc6ed6944bec6516240e16c4dc27b9f298f54010c3f2a67c3bc",
+          "strokeCount": 2
+        },
+        {
+          "file": "03087.svg",
+          "sha256": "99be4b976cf7e4673803884da16735b2d82216e10df5e6b93bc87a6f539de757",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30ac",
+      "symbol": "ガ",
+      "components": [
+        {
+          "file": "030ac.svg",
+          "sha256": "5a510a95cb62e39e78002a1c45570e0f35caa2aa8f9fe5b7b06e2970923b7c8f",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30ae",
+      "symbol": "ギ",
+      "components": [
+        {
+          "file": "030ae.svg",
+          "sha256": "1fb35db2db9dabf02b69b4eb200adf541ad10076a90125cc582b180f20ef97ee",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30b0",
+      "symbol": "グ",
+      "components": [
+        {
+          "file": "030b0.svg",
+          "sha256": "aae51415c5b12e91257a5982dbccc41e5fa52b8e0388aa6feb15a1bdb66f89be",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30b2",
+      "symbol": "ゲ",
+      "components": [
+        {
+          "file": "030b2.svg",
+          "sha256": "4e1791c522cc0931ad827124b65784d4bc06f41d75f3727e6e9678c87b28ee33",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30b4",
+      "symbol": "ゴ",
+      "components": [
+        {
+          "file": "030b4.svg",
+          "sha256": "c966389b9de1da140135f2ae3e3b87e5c5c69b000136e51cefa3a2ad7c3d5a4e",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30b6",
+      "symbol": "ザ",
+      "components": [
+        {
+          "file": "030b6.svg",
+          "sha256": "907cb30b18a6183304a6b0d561c9fd51da78e9f0ea5f3bafa7f998664668bacc",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30b8",
+      "symbol": "ジ",
+      "components": [
+        {
+          "file": "030b8.svg",
+          "sha256": "23a4f2fdb553423f21480734e9f079b962f514ed500c88d7743a93845f0eec37",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30ba",
+      "symbol": "ズ",
+      "components": [
+        {
+          "file": "030ba.svg",
+          "sha256": "190edfc63d2c6639d6d3de50b180b55c533d233c5e5552b4df167a439545c797",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30bc",
+      "symbol": "ゼ",
+      "components": [
+        {
+          "file": "030bc.svg",
+          "sha256": "9e79edd421005cf6ccca4ca03963bcb5d416c56ce155bebbc53204b9861c9396",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30be",
+      "symbol": "ゾ",
+      "components": [
+        {
+          "file": "030be.svg",
+          "sha256": "16c9ce72c14660280dfb5a6b08df23a64a6a1d0209e45956f5f4983cfabf172f",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30c0",
+      "symbol": "ダ",
+      "components": [
+        {
+          "file": "030c0.svg",
+          "sha256": "bc683c7df996ce5173701c433fb4b1469ccb3b8d5a9de8a8726634d9d20faec3",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30c2",
+      "symbol": "ヂ",
+      "components": [
+        {
+          "file": "030c2.svg",
+          "sha256": "0dfc0d32331fcf430bc0785b4415abfbd6b63bae587ab60152a0caf85f6dbbd8",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30c5",
+      "symbol": "ヅ",
+      "components": [
+        {
+          "file": "030c5.svg",
+          "sha256": "8544bb4266c69f41d3de92b8b77840c3e9e1f423b26544e943874ae2353b70c7",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30c7",
+      "symbol": "デ",
+      "components": [
+        {
+          "file": "030c7.svg",
+          "sha256": "d684f5060a443acff53427bce12e85863af3bb8e38e0131ad0bf77b607a6c234",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30c9",
+      "symbol": "ド",
+      "components": [
+        {
+          "file": "030c9.svg",
+          "sha256": "c9e5d4b3068477a5d486b12e980a676e356bd70ccfe87a34d1b020b4b3ea8043",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30d0",
+      "symbol": "バ",
+      "components": [
+        {
+          "file": "030d0.svg",
+          "sha256": "cb1202c6865527af3005a55abb5444e31fe701689c30fda5dac1611742a71d07",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30d3",
+      "symbol": "ビ",
+      "components": [
+        {
+          "file": "030d3.svg",
+          "sha256": "4269829df121d518ab0341e45065ed999e69a4da9d85bc42381de15a40549712",
+          "strokeCount": 4
+        }
+      ]
+    },
+    {
+      "key": "u30d6",
+      "symbol": "ブ",
+      "components": [
+        {
+          "file": "030d6.svg",
+          "sha256": "d29693f2f7115dded902217670a8378c24694a4290048c0880d1355a4196ac41",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d9",
+      "symbol": "ベ",
+      "components": [
+        {
+          "file": "030d9.svg",
+          "sha256": "4a9a6a53254bc58d20222c154c39552b440f394e423d766b05900ea719237325",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30dc",
+      "symbol": "ボ",
+      "components": [
+        {
+          "file": "030dc.svg",
+          "sha256": "c0fbef3259dc19e6468e94131d50ce84538c426be37024293d22260a21196646",
+          "strokeCount": 6
+        }
+      ]
+    },
+    {
+      "key": "u30d1",
+      "symbol": "パ",
+      "components": [
+        {
+          "file": "030d1.svg",
+          "sha256": "6bf6050557bec27d9c6808345ab48a6d7f83be7603d49dd40bf8244dad8c79fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d4",
+      "symbol": "ピ",
+      "components": [
+        {
+          "file": "030d4.svg",
+          "sha256": "d25086904386c6b4a492f7c55ec3330085eadf94cb68128efe2a5b53b6f58a6f",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d7",
+      "symbol": "プ",
+      "components": [
+        {
+          "file": "030d7.svg",
+          "sha256": "971f6ef2a66b92cfa83aacaad120430c2ffb0a65a807c4aa3325c1e772765106",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30da",
+      "symbol": "ペ",
+      "components": [
+        {
+          "file": "030da.svg",
+          "sha256": "88ecff74de17f0aa8e5e4202e97a5e5e70755b8c4a11e0b3d45fd239ecc69ff7",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30dd",
+      "symbol": "ポ",
+      "components": [
+        {
+          "file": "030dd.svg",
+          "sha256": "e67acb6f3f0b3e615a151aaa44ba4ea06516e058b6307a90f2cb85fd0650cc8b",
+          "strokeCount": 5
+        }
+      ]
+    },
+    {
+      "key": "u30adu30e3",
+      "symbol": "キャ",
+      "components": [
+        {
+          "file": "030ad.svg",
+          "sha256": "bc7956fc043fa06b1fa2eb7312896c8441d600bc724e709362faf7b67705c2b7",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30adu30e5",
+      "symbol": "キュ",
+      "components": [
+        {
+          "file": "030ad.svg",
+          "sha256": "bc7956fc043fa06b1fa2eb7312896c8441d600bc724e709362faf7b67705c2b7",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30adu30e7",
+      "symbol": "キョ",
+      "components": [
+        {
+          "file": "030ad.svg",
+          "sha256": "bc7956fc043fa06b1fa2eb7312896c8441d600bc724e709362faf7b67705c2b7",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30b7u30e3",
+      "symbol": "シャ",
+      "components": [
+        {
+          "file": "030b7.svg",
+          "sha256": "777a0eef4d858337a43e30a78ee09f265080cb3f33975b6e23148849027b1769",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30b7u30e5",
+      "symbol": "シュ",
+      "components": [
+        {
+          "file": "030b7.svg",
+          "sha256": "777a0eef4d858337a43e30a78ee09f265080cb3f33975b6e23148849027b1769",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30b7u30e7",
+      "symbol": "ショ",
+      "components": [
+        {
+          "file": "030b7.svg",
+          "sha256": "777a0eef4d858337a43e30a78ee09f265080cb3f33975b6e23148849027b1769",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30c1u30e3",
+      "symbol": "チャ",
+      "components": [
+        {
+          "file": "030c1.svg",
+          "sha256": "dffb0a69dd17e7492698fee6c0efafb7f6a910f3f94ed27764a6c5e2c588ee30",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30c1u30e5",
+      "symbol": "チュ",
+      "components": [
+        {
+          "file": "030c1.svg",
+          "sha256": "dffb0a69dd17e7492698fee6c0efafb7f6a910f3f94ed27764a6c5e2c588ee30",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30c1u30e7",
+      "symbol": "チョ",
+      "components": [
+        {
+          "file": "030c1.svg",
+          "sha256": "dffb0a69dd17e7492698fee6c0efafb7f6a910f3f94ed27764a6c5e2c588ee30",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30cbu30e3",
+      "symbol": "ニャ",
+      "components": [
+        {
+          "file": "030cb.svg",
+          "sha256": "150810f2c90970b7e432d4b75da4bb1cc83bce08dd20e02bf1a534da00af605a",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30cbu30e5",
+      "symbol": "ニュ",
+      "components": [
+        {
+          "file": "030cb.svg",
+          "sha256": "150810f2c90970b7e432d4b75da4bb1cc83bce08dd20e02bf1a534da00af605a",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30cbu30e7",
+      "symbol": "ニョ",
+      "components": [
+        {
+          "file": "030cb.svg",
+          "sha256": "150810f2c90970b7e432d4b75da4bb1cc83bce08dd20e02bf1a534da00af605a",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d2u30e3",
+      "symbol": "ヒャ",
+      "components": [
+        {
+          "file": "030d2.svg",
+          "sha256": "58b7eddec372f7ae621ff65a2fa0075857f658e084d6d95b8a261c6a88ec0bd8",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d2u30e5",
+      "symbol": "ヒュ",
+      "components": [
+        {
+          "file": "030d2.svg",
+          "sha256": "58b7eddec372f7ae621ff65a2fa0075857f658e084d6d95b8a261c6a88ec0bd8",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d2u30e7",
+      "symbol": "ヒョ",
+      "components": [
+        {
+          "file": "030d2.svg",
+          "sha256": "58b7eddec372f7ae621ff65a2fa0075857f658e084d6d95b8a261c6a88ec0bd8",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30dfu30e3",
+      "symbol": "ミャ",
+      "components": [
+        {
+          "file": "030df.svg",
+          "sha256": "358cdedf0fb052b35c22d35bdde8f004cadbd9b4e230b48143bc811b53056397",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30dfu30e5",
+      "symbol": "ミュ",
+      "components": [
+        {
+          "file": "030df.svg",
+          "sha256": "358cdedf0fb052b35c22d35bdde8f004cadbd9b4e230b48143bc811b53056397",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30dfu30e7",
+      "symbol": "ミョ",
+      "components": [
+        {
+          "file": "030df.svg",
+          "sha256": "358cdedf0fb052b35c22d35bdde8f004cadbd9b4e230b48143bc811b53056397",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30eau30e3",
+      "symbol": "リャ",
+      "components": [
+        {
+          "file": "030ea.svg",
+          "sha256": "2958cc8c5ee1cd5289ee82cfb33b1b6842c2d2a7afb4e54158dc269ad6d52138",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30eau30e5",
+      "symbol": "リュ",
+      "components": [
+        {
+          "file": "030ea.svg",
+          "sha256": "2958cc8c5ee1cd5289ee82cfb33b1b6842c2d2a7afb4e54158dc269ad6d52138",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30eau30e7",
+      "symbol": "リョ",
+      "components": [
+        {
+          "file": "030ea.svg",
+          "sha256": "2958cc8c5ee1cd5289ee82cfb33b1b6842c2d2a7afb4e54158dc269ad6d52138",
+          "strokeCount": 2
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30aeu30e3",
+      "symbol": "ギャ",
+      "components": [
+        {
+          "file": "030ae.svg",
+          "sha256": "1fb35db2db9dabf02b69b4eb200adf541ad10076a90125cc582b180f20ef97ee",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30aeu30e5",
+      "symbol": "ギュ",
+      "components": [
+        {
+          "file": "030ae.svg",
+          "sha256": "1fb35db2db9dabf02b69b4eb200adf541ad10076a90125cc582b180f20ef97ee",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30aeu30e7",
+      "symbol": "ギョ",
+      "components": [
+        {
+          "file": "030ae.svg",
+          "sha256": "1fb35db2db9dabf02b69b4eb200adf541ad10076a90125cc582b180f20ef97ee",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30b8u30e3",
+      "symbol": "ジャ",
+      "components": [
+        {
+          "file": "030b8.svg",
+          "sha256": "23a4f2fdb553423f21480734e9f079b962f514ed500c88d7743a93845f0eec37",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30b8u30e5",
+      "symbol": "ジュ",
+      "components": [
+        {
+          "file": "030b8.svg",
+          "sha256": "23a4f2fdb553423f21480734e9f079b962f514ed500c88d7743a93845f0eec37",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30b8u30e7",
+      "symbol": "ジョ",
+      "components": [
+        {
+          "file": "030b8.svg",
+          "sha256": "23a4f2fdb553423f21480734e9f079b962f514ed500c88d7743a93845f0eec37",
+          "strokeCount": 5
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d3u30e3",
+      "symbol": "ビャ",
+      "components": [
+        {
+          "file": "030d3.svg",
+          "sha256": "4269829df121d518ab0341e45065ed999e69a4da9d85bc42381de15a40549712",
+          "strokeCount": 4
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d3u30e5",
+      "symbol": "ビュ",
+      "components": [
+        {
+          "file": "030d3.svg",
+          "sha256": "4269829df121d518ab0341e45065ed999e69a4da9d85bc42381de15a40549712",
+          "strokeCount": 4
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d3u30e7",
+      "symbol": "ビョ",
+      "components": [
+        {
+          "file": "030d3.svg",
+          "sha256": "4269829df121d518ab0341e45065ed999e69a4da9d85bc42381de15a40549712",
+          "strokeCount": 4
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
+    },
+    {
+      "key": "u30d4u30e3",
+      "symbol": "ピャ",
+      "components": [
+        {
+          "file": "030d4.svg",
+          "sha256": "d25086904386c6b4a492f7c55ec3330085eadf94cb68128efe2a5b53b6f58a6f",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e3.svg",
+          "sha256": "cc8cea202ac2299e64ddae62c23dff1eeb4c64d15a7f9c84f89269b6f6a19b61",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d4u30e5",
+      "symbol": "ピュ",
+      "components": [
+        {
+          "file": "030d4.svg",
+          "sha256": "d25086904386c6b4a492f7c55ec3330085eadf94cb68128efe2a5b53b6f58a6f",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e5.svg",
+          "sha256": "50e74cf4a8fe4049b075b309c6cf4416164ead1551208e739006860a12e1575b",
+          "strokeCount": 2
+        }
+      ]
+    },
+    {
+      "key": "u30d4u30e7",
+      "symbol": "ピョ",
+      "components": [
+        {
+          "file": "030d4.svg",
+          "sha256": "d25086904386c6b4a492f7c55ec3330085eadf94cb68128efe2a5b53b6f58a6f",
+          "strokeCount": 3
+        },
+        {
+          "file": "030e7.svg",
+          "sha256": "cd82b66afe0a6e2d2bc4374655806905b2d95e222928b6e5b9e0f91a25aaf9fa",
+          "strokeCount": 3
+        }
+      ]
     }
   ]
 }

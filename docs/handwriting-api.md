@@ -22,7 +22,7 @@ Không nhận UserId hoặc kết quả chấm từ client.
 Ngôn ngữ suy ra từ profile.TargetLanguage, không có language parameter để client chọn lệch profile.
 Mỗi chữ trong lượt phải thuộc cùng writing system. Chữ lặp trong từ hợp lệ, ví dụ `ああ`.
 
-Hiện có seed đủ **46 Hiragana + 46 Katakana cơ bản** (92 mẫu, 212 nét), tương ứng toàn bộ catalog kana hiện có.
+Hiện có **104 mục Hiragana + 104 mục Katakana** (208 mẫu, 765 nét), gồm chữ cơ bản, âm đục/bán đục và âm ghép thông dụng. Mỗi bảng cần nhiều trang khi tải đủ mẫu. [Phạm vi seed](japanese-seed-content.md)
 Danh sách mặc định 20 mục/trang: dùng nextCursor để tải tiếp, hoặc pageSize=100 để lấy cả bảng.
 FE hiện có nút More characters để tải tiếp. Giới hạn 4 vị trí trong một lượt nộp không giới hạn số mẫu trong danh mục.
 Writing system đã publish nhưng chưa có mẫu trả 200 với items rỗng; FE hiển thị trạng thái chưa có nội dung.

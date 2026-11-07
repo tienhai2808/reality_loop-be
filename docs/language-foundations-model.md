@@ -1,5 +1,7 @@
 # Danh mục ngôn ngữ và bảng chữ: model, DB, seed
 
+Dữ liệu được mở rộng bằng migration `20261107120741_ExpandJapaneseLearningSeed`. Số lượng và phạm vi hiện tại được mô tả trong [Dữ liệu học tiếng Nhật](japanese-seed-content.md). Các số liệu migration gốc bên dưới ghi lại thời điểm khởi tạo module.
+
 [README dự án](../README.md)
 
 Phạm vi hiện tại gồm hai phần: `Domain/Languages` và `Domain/WritingSystems`.

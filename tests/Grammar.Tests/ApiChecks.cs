@@ -99,7 +99,7 @@ internal static class ApiChecks
         Check.That(first.Items[0].Id == "10001" && second.Items[0].Id == "10002" && third.Items[0].Id == "10003" && third.NextCursor is null, "Keyset pages traverse tied sort orders without duplicates.");
         Check.That((await Page(await Get(root + "?after=1:10003", queries: 2))).Items.Count == 0, "Cursor at end returns empty page for an enabled language.");
         var seed = await Page(await Get("/api/v1/languages/ja/grammar-points?locale=vi&pageSize=100"));
-        Check.That(seed.Items.Count == 14 && seed.Items.All(x => x.TranslationLocale == "vi" && !x.IsTranslationFallback && long.Parse(x.Id) > 9007199254740991), "All fourteen Japanese seed points are reachable with string Snowflake IDs.");
+        Check.That(seed.Items.Count == 50 && seed.Items.All(x => x.TranslationLocale == "vi" && !x.IsTranslationFallback && long.Parse(x.Id) > 9007199254740991), "All fifty Japanese seed points are reachable with string Snowflake IDs.");
         foreach (var point in seed.Items)
         {
             var seededDetail = await Detail(await Get("/api/v1/languages/ja/grammar-points/" + point.Code + "?locale=vi"));

@@ -36,7 +36,7 @@ internal static class DatabaseChecks
         await db.Database.MigrateAsync();
         Check.That(!db.Database.HasPendingModelChanges(), "Runtime model must match migration snapshot.");
         Check.That(await db.WritingSystemPracticeSessions.CountAsync() == 0 && await db.WritingSystemPracticeSessionItems.CountAsync() == 0, "No personal practice seed.");
-        Check.That(await db.WritingSystemItems.CountAsync() == 92, "Existing catalog seed preserved.");
+        Check.That(await db.WritingSystemItems.CountAsync() == 208, "Existing catalog seed preserved.");
         var migrator = db.GetService<IMigrator>();
         await migrator.MigrateAsync("20261027114751_AddWritingSystemItemProgress");
         Check.That(await Scalar("SELECT count(*) FROM information_schema.tables WHERE table_name LIKE 'writing_system_practice_%'") == 0, "Migration down removes both tables.");
@@ -209,6 +209,6 @@ internal static class DatabaseChecks
                    !await db.WritingSystemPracticeSessionItems.AnyAsync(x => x.SessionId == profileCascade.Id), "Profile deletion cascades sessions and questions.");
         await db.Users.Where(x => x.Id == 2000).ExecuteDeleteAsync();
         Check.That(!await db.WritingSystemPracticeSessions.AnyAsync() && !await db.WritingSystemPracticeSessionItems.AnyAsync(), "User deletion cascades owned practice through profile.");
-        Check.That(await db.WritingSystemItems.CountAsync() == 92, "Practice cleanup does not delete catalog data.");
+        Check.That(await db.WritingSystemItems.CountAsync() == 208, "Practice cleanup does not delete catalog data.");
     }
 }

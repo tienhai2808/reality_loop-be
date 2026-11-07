@@ -1,5 +1,7 @@
 # Grammar catalog — model và database
 
+Dữ liệu được mở rộng bằng migration `20261107120741_ExpandJapaneseLearningSeed`. Số lượng và phạm vi hiện tại được mô tả trong [Dữ liệu học tiếng Nhật](japanese-seed-content.md). Các số liệu migration gốc bên dưới ghi lại thời điểm khởi tạo module.
+
 Phần triển khai gồm Domain entity, validation, EF Core mapping, migration và seed cho hai bảng
 grammar_points và grammar_point_translations. Cấu trúc bám catalog Pronunciation/Vocabulary hiện có.
 API đọc, payload và luồng tích hợp FE được mô tả trong tài liệu API. [Grammar API](grammar-api.md)

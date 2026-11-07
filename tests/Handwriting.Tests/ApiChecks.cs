@@ -63,7 +63,7 @@ internal static class ApiChecks
         await Send("POST", submitUrl, new { characters = new object[0] }, 401, 0, "none");
         var listResponse = await Send("GET", templatesUrl + "?pageSize=100", key: "templates-summary");
         var page = await Read<HandwritingTemplatePage>(listResponse);
-        Check.That(page.Items.Count == 46 && page.NextCursor is null && page.Policy.Version == "geometry-v1", "Full Hiragana coverage and pinned scoring policy.");
+        Check.That(page.Items.Count == 100 && page.NextCursor is not null && page.Policy.Version == "geometry-v1", "Full Hiragana coverage and pinned scoring policy.");
         Check.That(listResponse.Headers.CacheControl?.NoStore == true && listResponse.Headers.Pragma.Any(x => x.Name == "no-cache"), "No private response caching.");
         Check.That(!counter.Sql("templates-summary").Contains(".drawing", StringComparison.OrdinalIgnoreCase), "Template list never loads geometry.");
         Check.That(page.Items.All(x => x.Reference.Source.License == "CC BY-SA 3.0" && x.Reference.Source.Attribution.Contains("Ulrich Apel")), "Attribution/license reach the frontend.");
@@ -74,22 +74,29 @@ internal static class ApiChecks
         var second = await Read<HandwritingTemplatePage>(await Send("GET", templatesUrl + "?pageSize=1&after=" + first.NextCursor));
         Check.That(first.Items[0].Reference.Symbol == "あ" && second.Items[0].Reference.Symbol == "い", "Template keyset pages preserve catalog order.");
         var allPages = new List<string>();
+        var hiraganaReferences = new List<HandwritingTemplateSummaryDto>();
         string? after = null;
         do
         {
             var batch = await Read<HandwritingTemplatePage>(await Send("GET", templatesUrl + "?pageSize=20" +
                 (after is null ? "" : "&after=" + after)));
             allPages.AddRange(batch.Items.Select(x => x.Reference.Id));
+            hiraganaReferences.AddRange(batch.Items);
             after = batch.NextCursor;
-            if (allPages.Count > 46) throw new InvalidOperationException("Pagination repeated templates.");
+            if (allPages.Count > 104) throw new InvalidOperationException("Pagination repeated templates.");
         } while (after is not null);
-        Check.That(allPages.SequenceEqual(page.Items.Select(x => x.Reference.Id)), "FE's 20-item pagination reaches all 46 characters exactly once.");
+        Check.That(allPages.Count == 104 && allPages.Distinct().Count() == 104 && allPages.Take(100).SequenceEqual(page.Items.Select(x => x.Reference.Id)), "FE's 20-item pagination reaches all 104 items exactly once.");
         await Send("GET", templatesUrl + "?after=999:9223372036854775807", queries: 2);
         await Send("GET", templatesUrl, status: 404, queries: 2, user: "b");
         await Send("GET", templatesUrl + "/" + a.Template.Reference.Id, status: 404, user: "b");
         await Send("GET", templatesUrl.Replace("9001", "9002"), status: 404, queries: 2);
         var empty = await Read<HandwritingTemplatePage>(await Send("GET", templatesUrl.Replace("hiragana", "katakana") + "?pageSize=100"));
-        Check.That(empty.Items.Count == 46, "Full Katakana coverage is available.");
+        Check.That(empty.Items.Count == 100 && empty.NextCursor is not null, "Full Katakana coverage is available.");
+        var katakanaTail = await Read<HandwritingTemplatePage>(await Send("GET",
+            templatesUrl.Replace("hiragana", "katakana") + "?pageSize=100&after=" + empty.NextCursor));
+        var katakanaReferences = empty.Items.Concat(katakanaTail.Items).ToList();
+        Check.That(katakanaReferences.Count == 104 && katakanaTail.NextCursor is null,
+            "Katakana continuation reaches every expanded template.");
         var valid = Submission((a.Template.Reference.Id, a.Strokes), (o.Template.Reference.Id, o.Strokes));
         var createdResponse = await Send("POST", submitUrl, valid, 201, 3, key: "create-word");
         var created = await Read<HandwritingAttemptDto>(createdResponse);
@@ -191,7 +198,7 @@ internal static class ApiChecks
             await Send("GET", templatesUrl + "/9300", status: 404);
             await Send("POST", submitUrl, Submission(("9300", a.Strokes)), 404);
         }
-        foreach (var (code, references) in new[] { ("hiragana", page.Items), ("katakana", empty.Items) })
+        foreach (var (code, references) in new[] { ("hiragana", hiraganaReferences), ("katakana", katakanaReferences) })
         {
             foreach (var reference in references)
             {

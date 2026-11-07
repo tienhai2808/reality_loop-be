@@ -457,6 +457,7 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [Dữ liệu học tiếng Nhật](docs/japanese-seed-content.md) gồm độ phủ seed hiện tại, migration, audio và phân trang FE.
 - [API ngữ pháp và tích hợp FE](docs/grammar-api.md) gồm endpoint, payload, locale fallback và ví dụ TypeScript.
 - [Model danh mục ngữ pháp](docs/grammar-model.md) gồm field, seed nhập môn, constraints và migration.
 - [API flashcard và ôn từ vựng](docs/vocabulary-learning-api.md): endpoint, simple-v1, retry và tích hợp FE.
@@ -465,13 +466,13 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 - [Model và DB luyện viết](docs/handwriting-model.md): mẫu nét theo revision, lượt nộp, feedback JSONB, seed và ràng buộc dữ liệu.
 - [Lab chấm nét viết không AI](docs/handwriting-lab.md): bảng viết chạy localhost, bốn chữ mẫu, thuật toán, dữ liệu hiệu chỉnh và kiểm thử.
 - [API từ vựng cho FE](docs/vocabulary-api.md): 3 GET, preview nghĩa, lọc từ loại, locale fallback và cách nối LearningProfile.
-- [Từ vựng cơ bản: Domain, DB và seed](docs/vocabulary-model.md): ba bảng từ/nghĩa/bản dịch, 40 từ tiếng Nhật, migration và kiểm thử.
+- [Từ vựng cơ bản: Domain, DB và seed](docs/vocabulary-model.md): ba bảng từ/nghĩa/bản dịch, 200 từ tiếng Nhật, migration và kiểm thử.
 - [API luyện tập bảng chữ cho FE](docs/writing-system-practice-api.md): 5 API, sinh đề, che đáp án, version/transaction và luồng nối FE.
 - [Luyện tập bảng chữ: Domain và DB](docs/writing-system-practice-model.md): hai bảng lượt/câu, chụp đề, chấm điểm, version và migration.
 - [API tiến độ học bảng chữ cho FE](docs/learning-progress-api.md): 4 endpoint, action/version, query budget, conflict và cách ghép chart.
 - [Tiến độ học bảng chữ: model và DB](docs/learning-progress-model.md): trạng thái Learning/Completed, invariant, concurrency, constraint và migration.
 
-- [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 46 file cho 92 reading, lệnh init migration/upload/seed và nối FE.
+- [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 71 file cho 142 reading, lệnh init migration/upload/seed và nối FE.
 - [Cloudflare R2 storage setup](docs/r2-storage-setup.md): tạo bucket, credentials, cấu hình bắt buộc, domain audio, CORS và triển khai.
 - [Pronunciation API cho FE](docs/pronunciation-api.md): 3 API đọc, fallback bản dịch, pagination và luồng nối LearningProfile.
 - [Pronunciation: model, DB và seed](docs/pronunciation-model.md): 3 bảng quy tắc phát âm và seed nhập môn tiếng Nhật.

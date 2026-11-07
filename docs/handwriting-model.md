@@ -1,5 +1,7 @@
 # Handwriting — Domain và database
 
+Dữ liệu được mở rộng bằng migration `20261107120741_ExpandJapaneseLearningSeed`. Số lượng và phạm vi hiện tại được mô tả trong [Dữ liệu học tiếng Nhật](japanese-seed-content.md). Các số liệu migration gốc bên dưới ghi lại thời điểm khởi tạo module.
+
 Phạm vi: model, invariant, EF Core mapping, migration và seed cho luyện viết không dùng AI.
 Phần API đã được bổ sung riêng; xem [handwriting-api.md](handwriting-api.md) về use case, bộ chấm và tích hợp FE.
 Prototype và cách chạy bảng viết vẫn ở [handwriting-lab.md](handwriting-lab.md).

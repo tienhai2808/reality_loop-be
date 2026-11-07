@@ -1,5 +1,7 @@
 # Từ vựng cơ bản: Domain, DB và seed
 
+Dữ liệu được mở rộng bằng migration `20261107120741_ExpandJapaneseLearningSeed`. Số lượng và phạm vi hiện tại được mô tả trong [Dữ liệu học tiếng Nhật](japanese-seed-content.md). Các số liệu migration gốc bên dưới ghi lại thời điểm khởi tạo module.
+
 ## Phạm vi và cấu trúc
 
 Danh mục từ vựng dùng chung theo ngôn ngữ, không thuộc một user hoặc LearningProfile.

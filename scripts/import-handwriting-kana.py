@@ -1,4 +1,4 @@
-"""Rebuild the 92-character KanjiVG seed offline; validate every pinned source before writing."""
+"""Rebuild the 208-item KanjiVG seed offline; validate every pinned source before writing."""
 import hashlib
 import importlib.util
 import json
@@ -16,22 +16,33 @@ spec.loader.exec_module(parser)
 
 def main():
     manifest = json.loads((DATA / "sources.json").read_text())
-    if manifest["sourceRevision"] != parser.REVISION or len(manifest["characters"]) != 92:
+    if manifest["sourceRevision"] != parser.REVISION or len(manifest["characters"]) != 208:
         raise ValueError("Unexpected pinned revision or coverage.")
     result = json.loads((ROOT / "tools/HandwritingLab/Data/templates.json").read_text())
     legacy = {c["id"]: c for c in result["characters"]}
     characters = []
     for entry in manifest["characters"]:
-        raw = (DATA / "Sources" / entry["file"]).read_bytes()
-        if hashlib.sha256(raw).hexdigest() != entry["sha256"]:
-            raise ValueError(f"Source checksum mismatch: {entry['file']}")
-        document = ET.fromstring(raw)
-        if document.attrib["viewBox"] != "0 0 109 109":
-            raise ValueError("Unsupported viewBox.")
-        paths = list(document.iter("{http://www.w3.org/2000/svg}path"))
-        if len(paths) != entry["strokeCount"]:
-            raise ValueError("Unexpected stroke count.")
-        strokes = [parser.sample(p.attrib["d"]) for p in paths]
+        components = entry.get("components", [entry])
+        strokes = []
+        for index, component in enumerate(components):
+            raw = (DATA / "Sources" / component["file"]).read_bytes()
+            if hashlib.sha256(raw).hexdigest() != component["sha256"]:
+                raise ValueError(f"Source checksum mismatch: {component['file']}")
+            document = ET.fromstring(raw)
+            if document.attrib["viewBox"] != "0 0 109 109":
+                raise ValueError("Unsupported viewBox.")
+            paths = list(document.iter("{http://www.w3.org/2000/svg}path"))
+            if len(paths) != component["strokeCount"]:
+                raise ValueError("Unexpected stroke count.")
+            drawing = [parser.sample(p.attrib["d"]) for p in paths]
+            if len(components) == 2:
+                # A contracted sound occupies one practice square. Preserve stroke order within
+                # each glyph and write the full-sized first glyph before the small second glyph.
+                scale = 0.6 if index == 0 else 0.4
+                offset_x, offset_y = (0.0, 0.15) if index == 0 else (0.6, 0.45)
+                drawing = [[{"x": round(p["x"] * scale + offset_x, 6),
+                             "y": round(p["y"] * scale + offset_y, 6)} for p in stroke] for stroke in drawing]
+            strokes.extend(drawing)
         if not 1 <= len(strokes) <= 12 or sum(map(len, strokes)) > 4096:
             raise ValueError("Reference exceeds drawing budget.")
         if any(not 2 <= len(s) <= 512 for s in strokes):
@@ -42,7 +53,7 @@ def main():
         if entry["key"] in legacy and character != legacy[entry["key"]]:
             raise ValueError("Legacy reference must remain unchanged.")
         characters.append(character)
-    if len({x["symbol"] for x in characters}) != 92:
+    if len({x["symbol"] for x in characters}) != 208:
         raise ValueError("Duplicate character.")
     result["characters"] = characters
     (DATA / "templates.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")

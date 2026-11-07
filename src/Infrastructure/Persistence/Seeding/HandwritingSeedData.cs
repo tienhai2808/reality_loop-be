@@ -114,19 +114,27 @@ internal static class HandwritingSeedData
         if (root.GetProperty("sourceRevision").GetString() != "70a0b7ae0c18ceb5cb358274b029cce0234a43bc")
             throw new InvalidOperationException("A dataset change requires a new template revision and reviewed migration.");
         var characters = root.GetProperty("characters").EnumerateArray().ToDictionary(x => x.GetProperty("id").GetString()!);
-        if (characters.Count != Keys.Length) throw new InvalidOperationException("Unexpected seed characters.");
-        return Keys.Select(key =>
+        var originalTimestamp = new DateTimeOffset(2026, 11, 4, 0, 0, 0, TimeSpan.Zero);
+        var keys = Keys.Select(key => (Key: key.Key, Id: FoundationSeedData.JapaneseId + key.Sequence,
+                ItemId: FoundationSeedData.JapaneseId + key.ItemSequence, Timestamp: originalTimestamp))
+            .Concat(FoundationSeedData.WritingSystemItemRows
+                .Where(item => item.Id >= FoundationSeedData.ExpansionId && item.Id < FoundationSeedData.ExpansionId + 200)
+                .Select(item => (Key: "u" + string.Join("u", item.Symbol.Select(c => ((int)c).ToString("x4"))),
+                    Id: item.Id + 3000, ItemId: item.Id, Timestamp: FoundationSeedData.ExpandedAt)))
+            .ToArray();
+        if (characters.Count != keys.Length) throw new InvalidOperationException("Unexpected seed characters.");
+        return keys.Select(key =>
         {
             var character = characters[key.Key];
-            var item = FoundationSeedData.WritingSystemItemRows.Single(x => x.Id == FoundationSeedData.JapaneseId + key.ItemSequence);
+            var item = FoundationSeedData.WritingSystemItemRows.Single(x => x.Id == key.ItemId);
             if (item.Symbol != character.GetProperty("symbol").GetString())
                 throw new InvalidOperationException("The template does not match its catalog item.");
             var drawing = new InkDrawing(character.GetProperty("strokes").EnumerateArray().Select(stroke =>
                 stroke.EnumerateArray().Select(point => new InkPoint(point.GetProperty("x").GetDouble(), point.GetProperty("y").GetDouble()))));
-            return HandwritingTemplate.Create(FoundationSeedData.JapaneseId + key.Sequence, item, 1, drawing,
+            return HandwritingTemplate.Create(key.Id, item, 1, drawing,
                 root.GetProperty("sourceUrl").GetString()!, root.GetProperty("sourceRevision").GetString()!,
                 root.GetProperty("attribution").GetString()!, root.GetProperty("license").GetString()!,
-                root.GetProperty("licenseUrl").GetString()!, true, new DateTimeOffset(2026, 11, 4, 0, 0, 0, TimeSpan.Zero));
+                root.GetProperty("licenseUrl").GetString()!, true, key.Timestamp);
         }).ToArray();
     }
 }

@@ -43,7 +43,11 @@ public sealed class FoundationAudioInitializer
         // Never hold database locks across network uploads. Publish URLs only after all uploads succeed.
         await using var transaction = await _db.Database.BeginTransactionAsync(ct);
         await _db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(72584619033201)", ct);
-        var expected = FoundationSeedData.WritingSystemItemReadingRows.ToDictionary(x => x.Id);
+        // Only attach recordings present in the reviewed bundle. Contracted sounds need their own recordings.
+        var recordedItems = FoundationSeedData.WritingSystemItemRows
+            .Where(x => entriesByCode.ContainsKey(x.Code)).Select(x => x.Id).ToHashSet();
+        var expected = FoundationSeedData.WritingSystemItemReadingRows
+            .Where(x => recordedItems.Contains(x.WritingSystemItemId)).ToDictionary(x => x.Id);
         var ids = expected.Keys.ToArray();
         var readings = await _db.WritingSystemItemReadings.FromSqlInterpolated($"""
             SELECT * FROM writing_system_item_readings WHERE id = ANY ({ids}) ORDER BY id FOR UPDATE
@@ -97,6 +101,32 @@ public sealed class FoundationAudioInitializer
             if (updated != patches.Count)
                 throw new DbUpdateConcurrencyException("Foundation audio update conflicted with another writer.");
         }
+        // A syllable recording also applies to an example containing exactly that syllable.
+        var examplesById = PronunciationSeedData.ExampleRows.ToDictionary(x => x.Id);
+        var recordingsBySymbol = entries.SelectMany(entry => new[]
+        {
+            (Symbol: entry.Hiragana, Entry: entry), (Symbol: entry.Katakana, Entry: entry)
+        }).ToDictionary(x => x.Symbol, x => x.Entry);
+        var exampleIds = examplesById.Values.Where(example => recordingsBySymbol.ContainsKey(example.Text))
+            .Select(example => example.Id).ToArray();
+        var examples = await _db.PronunciationExamples.FromSqlInterpolated($"""
+            SELECT * FROM pronunciation_examples WHERE id = ANY ({exampleIds}) ORDER BY id FOR UPDATE
+            """).ToListAsync(ct);
+        foreach (var example in examples)
+        {
+            var seed = examplesById[example.Id];
+            if (example.Text != seed.Text || example.Transcription != seed.Transcription ||
+                example.TranscriptionSystem != "hepburn") continue;
+            var entry = recordingsBySymbol[example.Text];
+            if (example.Transcription != entry.Reading) continue;
+            var url = urls[entry.ItemCode];
+            if (example.AudioUrl == url) continue;
+            if (example.AudioUrl is not null && !example.AudioUrl.EndsWith('/' + entry.ObjectKey, StringComparison.Ordinal))
+                continue;
+            example.Update(example.Text, example.Transcription, example.TranscriptionSystem, url, example.SortOrder,
+                now < example.UpdatedAt ? example.UpdatedAt : now);
+        }
+        await _db.SaveChangesAsync(ct);
         await transaction.CommitAsync(ct);
         _logger.LogInformation("Foundation audio ready: {Recordings} recordings; {Updated} readings updated; {Preserved} custom audio URLs preserved.",
             entries.Length, patches.Count, preserved);

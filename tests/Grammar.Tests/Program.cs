@@ -2,6 +2,7 @@ using Grammar.Tests;
 using Npgsql;
 
 DomainChecks.Run();
+SeedChecks.Run();
 Console.WriteLine($"Passed {Check.Count} Domain checks.");
 var database = Environment.GetEnvironmentVariable("GRAMMAR_TEST_DATABASE");
 if (database is null)
@@ -13,5 +14,6 @@ if (new NpgsqlConnectionStringBuilder(database).Database != "grammar_tests")
     throw new InvalidOperationException("Only an isolated database named grammar_tests is allowed.");
 await DatabaseChecks.RunAsync(database);
 Console.WriteLine($"Passed {Check.Count} Domain/EF/PostgreSQL checks.");
+await SeedAudioChecks.RunAsync(database);
 await ApiChecks.RunAsync(database);
 Console.WriteLine($"Passed {Check.Count} Domain/EF/PostgreSQL/HTTP checks.");

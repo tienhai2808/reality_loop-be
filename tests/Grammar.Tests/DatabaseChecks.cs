@@ -1,4 +1,5 @@
 using Domain.Grammar;
+using Domain.LearningProgress;
 using Domain.Languages;
 using Domain.LearningProfiles;
 using Domain.Users;
@@ -42,14 +43,26 @@ internal static class DatabaseChecks
         db.Users.Add(User.Create(8000, "test@grammar.invalid", "Test", "User", null, DomainChecks.Now));
         db.LearningProfiles.Add(LearningProfile.Create(8001, 8000, "ja", "vi", "vi", ProficiencyLevel.Beginner, LearningGoal.Study, null, DomainChecks.Now));
         await db.SaveChangesAsync();
+        var language = await db.Languages.SingleAsync(x => x.Code == "ja");
+        var system = await db.WritingSystems.SingleAsync(x => x.Code == "hiragana");
+        var item = await db.WritingSystemItems.FirstAsync(x => x.WritingSystemId == system.Id);
+        db.WritingSystemItemProgress.Add(WritingSystemItemProgress.Create(8003,
+            db.LearningProfiles.Local.Single(), item, system, language, DomainChecks.Now));
+        var reading = await db.WritingSystemItemReadings.SingleAsync(x => x.WritingSystemItemId == item.Id);
+        reading.Update(reading.Transcription, reading.TranscriptionSystem, "https://example.invalid/custom-kana.mp3", 0, DomainChecks.Now);
+        await db.SaveChangesAsync();
         await migrator.MigrateAsync();
+        db.ChangeTracker.Clear();
+        Check.That(await db.WritingSystemItemProgress.AnyAsync(x => x.Id == 8003 && x.Version == 1) &&
+            await db.WritingSystemItemReadings.AnyAsync(x => x.Id == reading.Id && x.Version == 2 &&
+                x.AudioUrl == "https://example.invalid/custom-kana.mp3"), "Expansion preserves learning progress and customized audio.");
         Check.That(!db.Database.HasPendingModelChanges(), "Model matches snapshot and deterministic seed.");
         Check.That(await db.Users.CountAsync() == 1 && await db.LearningProfiles.CountAsync() == 1 &&
-            await db.HandwritingTemplates.CountAsync() == 92 && await db.VocabularyEntries.CountAsync() == 40,
+            await db.HandwritingTemplates.CountAsync() == 208 && await db.VocabularyEntries.CountAsync() == 200,
             "Upgrade preserves private data and other catalog modules.");
         var points = await db.GrammarPoints.AsNoTracking().OrderBy(x => x.Id).ToArrayAsync();
         var translations = await db.GrammarPointTranslations.AsNoTracking().ToArrayAsync();
-        Check.That(points.Length == 14 && translations.Length == 28, "Seed contains 14 points and 28 translations.");
+        Check.That(points.Length == 50 && translations.Length == 100, "Seed contains 50 points and 100 translations.");
         Check.That(points.All(x => x.Version == 1 && x.IsPublished && x.CreatedAt == x.UpdatedAt && x.Pattern.Length > 0), "Published initial seed metadata.");
         Check.That(translations.All(x => x.Version == 1 && x.CreatedAt == x.UpdatedAt) &&
             points.All(p => translations.Where(t => t.GrammarPointId == p.Id).Select(t => t.Locale).Order().SequenceEqual(new[] { "en", "vi" })),
@@ -57,7 +70,7 @@ internal static class DatabaseChecks
         var ids = db.GetService<IDesignTimeModel>().Model.GetEntityTypes().SelectMany(x => x.GetSeedData()).Select(x => (long)x["Id"]!).ToArray();
         Check.That(ids.Distinct().Count() == ids.Length, "No seed Snowflake collisions across modules.");
         Check.That(points.Select(x => x.Id).Concat(translations.Select(x => x.Id)).All(id => ((id >> 12) & 1023) == 1023 &&
-            (id & 4095) is >= 3500 and <= 3577), "Reserved Snowflake generator and sequence range.");
+            (id < 1563703640072384512L ? (id & 4095) is >= 3500 and <= 3577 : (id & 4095) is >= 2000 and <= 2171)), "Reserved Snowflake generator and sequence range.");
         var migrationAssembly = db.GetService<IMigrationsAssembly>();
         var migration = migrationAssembly.CreateMigration(migrationAssembly.Migrations.Single(x => x.Key.EndsWith("_AddGrammarCatalog")).Value, db.Database.ProviderName!);
         var tables = new[] { "grammar_points", "grammar_point_translations" };
@@ -147,7 +160,7 @@ internal static class DatabaseChecks
             await db.Users.CountAsync() == 1 && await db.VocabularyEntries.CountAsync() == 40, "Down preserves unrelated user/catalog data.");
         await migrator.MigrateAsync();
         await migrator.MigrateAsync();
-        Check.That(await db.GrammarPoints.CountAsync() == 14 && await db.GrammarPointTranslations.CountAsync() == 28 &&
+        Check.That(await db.GrammarPoints.CountAsync() == 50 && await db.GrammarPointTranslations.CountAsync() == 100 &&
             !db.Database.HasPendingModelChanges(), "Down/up and repeated migrate seed deterministically exactly once.");
     }
 }

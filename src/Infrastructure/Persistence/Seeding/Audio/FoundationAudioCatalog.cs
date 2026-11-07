@@ -13,18 +13,20 @@ internal static class FoundationAudioCatalog
         var manifest = JsonSerializer.Deserialize<FoundationAudioManifest>(stream, JsonSerializerOptions.Web)
             ?? throw new InvalidOperationException("Foundation audio manifest is missing.");
         var entries = manifest.Entries;
-        if (manifest.Bundle != "ja-kana-v1" || entries is not { Length: 46 } ||
-            entries.Select(x => x.Reading).Distinct(StringComparer.Ordinal).Count() != entries.Length ||
+        if (manifest.Bundle != "ja-kana-v2" || entries is not { Length: 71 } ||
+            entries.Select(x => x.FileName).Distinct(StringComparer.Ordinal).Count() != entries.Length ||
             entries.Select(x => x.ItemCode).Distinct(StringComparer.Ordinal).Count() != entries.Length)
             throw new InvalidOperationException("Foundation audio manifest does not match the reviewed kana bundle.");
 
         var header = new byte[4];
         foreach (var entry in entries)
         {
-            if (string.IsNullOrEmpty(entry.Reading) || entry.Reading.Any(c => !char.IsAsciiLetterLower(c)) ||
-                entry.FileName != $"{entry.Reading}.mp3" || entry.Sha256 is not { Length: 64 } ||
+            var fileStem = Path.GetFileNameWithoutExtension(entry.FileName);
+            if (string.IsNullOrEmpty(fileStem) || fileStem.Any(c => !char.IsAsciiLetterLower(c)) ||
+                string.IsNullOrEmpty(entry.Reading) || entry.Reading.Any(c => !char.IsAsciiLetterLower(c)) ||
+                entry.FileName != $"{fileStem}.mp3" || entry.Sha256 is not { Length: 64 } ||
                 entry.Sha256.Any(c => !char.IsAsciiHexDigitLower(c)) ||
-                entry.ObjectKey != $"foundation/ja/kana/v1/{entry.Reading}-{entry.Sha256[..16]}.mp3" ||
+                entry.ObjectKey != $"foundation/ja/kana/v1/{fileStem}-{entry.Sha256[..16]}.mp3" ||
                 entry.ContentType != "audio/mpeg" || entry.Bytes is < 128 or > 1_048_576 ||
                 entry.Author != "Hakatanoshio117117" || entry.License != "Public domain (PD-self)" ||
                 !entry.SourcePage.StartsWith("https://commons.wikimedia.org/wiki/File:", StringComparison.Ordinal))

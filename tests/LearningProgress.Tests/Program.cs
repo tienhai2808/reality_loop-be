@@ -107,9 +107,9 @@ try
     string Item(long id) => root + $"/writing-systems/hiragana/items/{id}/progress";
     var summary = await Send(HttpMethod.Get, root + "/writing-system-progress", expectedQueries: 1);
     Check(summary.GetProperty("writingSystems").GetArrayLength() == 2, "Two published systems in summary");
-    Check(summary.GetProperty("writingSystems")[0].GetProperty("notStartedItems").GetInt32() == 46, "Summary counts missing progress as not started");
+    Check(summary.GetProperty("writingSystems")[0].GetProperty("notStartedItems").GetInt32() == 104, "Summary counts missing progress as not started");
     var page = await Send(HttpMethod.Get, list, expectedQueries: 1);
-    Check(page.GetProperty("items").GetArrayLength() == 46 && page.GetProperty("nextCursor").ValueKind == JsonValueKind.Null, "Full kana progress page");
+    Check(page.GetProperty("items").GetArrayLength() == 100 && page.GetProperty("nextCursor").ValueKind == JsonValueKind.String, "First progress page exposes a continuation cursor");
     Check(page.GetProperty("items")[0].GetProperty("status").GetString() == "NotStarted", "NotStarted is serialized as a string");
     Check((await Send(HttpMethod.Get, Item(a), expectedQueries: 1)).GetProperty("version").GetInt64() == 0, "Missing row has version zero");
     Check((await Send(HttpMethod.Get, "/api/v1/learning-profiles/1002/writing-system-progress", expectedQueries: 1)).GetProperty("writingSystems").GetArrayLength() == 0, "Supported profile without catalog returns an empty summary");
@@ -122,7 +122,7 @@ try
         foreach (var row in part.GetProperty("items").EnumerateArray()) Check(seen.Add(row.GetProperty("writingSystemItemId").GetString()!), "Cursor has no duplicates");
         cursor = part.GetProperty("nextCursor").GetString();
     } while (cursor is not null);
-    Check(seen.Count == 46, "Cursor covers the full chart");
+    Check(seen.Count == 104, "Cursor covers the full chart");
     await Send(HttpMethod.Get, root + "/writing-system-progress", status: HttpStatusCode.Unauthorized, actor: null, expectedQueries: 0);
     await Send(HttpMethod.Get, root + "/writing-system-progress", status: HttpStatusCode.NotFound, actor: "b", expectedQueries: 1);
     await Send(HttpMethod.Get, list, status: HttpStatusCode.NotFound, actor: "b", expectedQueries: 2);
@@ -164,12 +164,12 @@ try
     Check(restart.GetProperty("status").GetString() == "Learning" && restart.GetProperty("completedAt").ValueKind == JsonValueKind.Null, "Restart clears completion");
     Check((await Send(HttpMethod.Get, list + "?status=Learning", expectedQueries: 1)).GetProperty("items").GetArrayLength() == 1, "Filter learning");
     Check((await Send(HttpMethod.Get, list + "?status=Completed", expectedQueries: 2)).GetProperty("items").GetArrayLength() == 0, "Empty status filter is not a missing system");
-    Check((await Send(HttpMethod.Get, list + "?status=NotStarted", expectedQueries: 1)).GetProperty("items").GetArrayLength() == 45, "Filter not started includes absent rows");
+    Check((await Send(HttpMethod.Get, list + "?status=NotStarted", expectedQueries: 1)).GetProperty("items").GetArrayLength() == 100, "Filter not started includes absent rows");
     var directComplete = await Send(HttpMethod.Post, Item(i), new { action = "Complete", version = 0 }, expectedQueries: 2);
     Check(directComplete.GetProperty("version").GetInt64() == 2, "First action can complete without a separate Study request");
     var totals = (await Send(HttpMethod.Get, root + "/writing-system-progress", expectedQueries: 1)).GetProperty("writingSystems")[0];
-    Check(totals.GetProperty("completedItems").GetInt32() == 1 && totals.GetProperty("learningItems").GetInt32() == 1 && totals.GetProperty("notStartedItems").GetInt32() == 44, "Summary counts and user isolation");
-    Check(totals.GetProperty("completionPercentage").GetDecimal() == 2.17m, "Completion percentage is derived from catalog count");
+    Check(totals.GetProperty("completedItems").GetInt32() == 1 && totals.GetProperty("learningItems").GetInt32() == 1 && totals.GetProperty("notStartedItems").GetInt32() == 102, "Summary counts and user isolation");
+    Check(totals.GetProperty("completionPercentage").GetDecimal() == 0.96m, "Completion percentage is derived from catalog count");
     clock.Advance();
     var createRace = await Task.WhenAll(Race(Item(u), 0), Race(Item(u), 0));
     Check(createRace.Count(x => x == HttpStatusCode.OK) == 1 && createRace.Count(x => x == HttpStatusCode.Conflict) == 1, "Concurrent create has one winner");

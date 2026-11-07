@@ -1,7 +1,7 @@
 # Grammar API và tích hợp FE
 
 Module cung cấp danh mục điểm ngữ pháp và trang giải thích theo ngôn ngữ. Nội dung hiện có gồm
-14 điểm nhập môn tiếng Nhật, mỗi điểm có giải thích Việt và Anh, theo seed của model.
+50 điểm nhập môn tiếng Nhật, mỗi điểm có giải thích Việt và Anh, theo seed của model.
 Chi tiết entity/constraint nằm trong tài liệu model. [Grammar model](grammar-model.md)
 
 ## Endpoint và mục đích

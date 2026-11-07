@@ -53,17 +53,19 @@ internal static class DatabaseChecks
             "Coverage upgrade leaves every legacy template field/point unchanged.");
         Check.That(!db.Database.HasPendingModelChanges(), "Runtime model matches snapshot and deterministic JSON seed.");
         Check.That(await db.Users.CountAsync() == 1 && await db.LearningProfiles.CountAsync() == 1, "Upgrade preserves private data.");
-        Check.That(await db.VocabularyEntries.CountAsync() == 40 && await db.WritingSystemItems.CountAsync() == 92, "Upgrade preserves existing catalog.");
+        Check.That(await db.VocabularyEntries.CountAsync() == 200 && await db.WritingSystemItems.CountAsync() == 208, "Upgrade preserves existing catalog.");
 
         var templates = await db.HandwritingTemplates.OrderBy(x => x.Id).ToArrayAsync();
-        Check.That(templates.Length == 92 && string.Concat(templates.Take(4).Select(x => x.Symbol)) == "あおぬめ", "Full kana coverage with stable legacy identities.");
+        Check.That(templates.Length == 208 && string.Concat(templates.Take(4).Select(x => x.Symbol)) == "あおぬめ", "Full kana coverage with stable legacy identities.");
         Check.That(templates.All(x => x.Version == 1 && x.Revision == 1 && x.IsPublished && x.DrawingFormatVersion == 1), "Initial template versions/publication.");
         Check.That(templates.All(x => x.SourceRevision == "70a0b7ae0c18ceb5cb358274b029cce0234a43bc" && x.License == "CC BY-SA 3.0" && x.Attribution.Contains("Ulrich Apel")), "Pinned source/license/attribution retained.");
         Check.That(templates.Take(4).Select(x => x.Drawing.Strokes.Count).SequenceEqual(new[] { 3, 3, 2, 2 }), "Original ordered stroke counts round-trip.");
-        Check.That(templates.All(x => ((x.Id >> 12) & 1023) == 1023 && ((x.Id & 4095) is >= 3000 and <= 3003 or >= 3100 and <= 3145 or >= 3200 and <= 3245)), "Stable Snowflake allocation.");
+        Check.That(templates.All(x => ((x.Id >> 12) & 1023) == 1023 && (x.Id < 1563703640072384512L
+            ? (x.Id & 4095) is >= 3000 and <= 3003 or >= 3100 and <= 3145 or >= 3200 and <= 3245
+            : (x.Id & 4095) is >= 3000 and <= 3057 or >= 3100 and <= 3157)), "Stable Snowflake allocation.");
         var catalogItems = await db.WritingSystemItems.AsNoTracking().ToArrayAsync();
         Check.That(templates.Select(x => x.WritingSystemItemId).Order().SequenceEqual(catalogItems.Select(x => x.Id).Order()),
-            "Exactly one reference covers every one of 92 catalog items.");
+            "Exactly one reference covers every one of 208 catalog items.");
         var grader = new Application.Handwriting.Scoring.HandwritingGrader(new Application.Handwriting.Scoring.HandwritingScoringPolicy());
         foreach (var reference in templates)
         {
@@ -209,19 +211,19 @@ internal static class DatabaseChecks
                    await Scalar("SELECT count(*) FROM handwriting_practice_characters WHERE id = 7081") == 0, "Failed SaveChanges rolls back root and all newly inserted children.");
         await db.Database.ExecuteSqlRawAsync("DELETE FROM learning_profiles WHERE id = 7001");
         Check.That(await db.HandwritingPracticeAttempts.CountAsync() == 0 && await db.HandwritingPracticeCharacters.CountAsync() == 0, "Profile deletion cascades only private handwriting graph.");
-        Check.That(await db.HandwritingTemplates.CountAsync() == 92 && await db.Users.CountAsync() == 1, "Catalog and user unaffected by profile removal.");
+        Check.That(await db.HandwritingTemplates.CountAsync() == 208 && await db.Users.CountAsync() == 1, "Catalog and user unaffected by profile removal.");
 
         db.ChangeTracker.Clear();
         await migrator.MigrateAsync("20261104142057_AddHandwritingPractice");
         Check.That(await db.HandwritingTemplates.CountAsync() == 4, "Coverage down preserves all four legacy templates.");
         await migrator.MigrateAsync();
-        Check.That(await db.HandwritingTemplates.CountAsync() == 92, "Coverage down/up restores exactly 88 added references.");
+        Check.That(await db.HandwritingTemplates.CountAsync() == 208, "Coverage down/up restores all current references.");
         await migrator.MigrateAsync(previous);
         Check.That(await Scalar("SELECT count(*) FROM information_schema.tables WHERE table_name LIKE 'handwriting_%'") == 0, "Down removes handwriting tables.");
         Check.That(await db.Users.CountAsync() == 1 && await db.VocabularyEntries.CountAsync() == 40, "Down preserves previous modules.");
         await migrator.MigrateAsync();
         await migrator.MigrateAsync();
-        Check.That(await db.HandwritingTemplates.CountAsync() == 92 && await db.HandwritingPracticeAttempts.CountAsync() == 0, "Reapply and repeated migrate seed exactly once.");
+        Check.That(await db.HandwritingTemplates.CountAsync() == 208 && await db.HandwritingPracticeAttempts.CountAsync() == 0, "Reapply and repeated migrate seed exactly once.");
         Check.That(!db.Database.HasPendingModelChanges(), "Model still matches snapshot after down/up.");
     }
 }
