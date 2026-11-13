@@ -22,7 +22,7 @@ Infrastructure/Persistence/
   Configurations/VocabularyEntryConfiguration.cs
   Configurations/VocabularySenseConfiguration.cs
   Configurations/VocabularySenseTranslationConfiguration.cs
-  Seeding/VocabularySeedData.cs
+  Seeding/Japanese/VocabularySeedData.cs
   Migrations/20261104064528_AddVocabularyCatalog.cs
 tests/Vocabulary.Tests/
 ```

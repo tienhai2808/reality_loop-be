@@ -1,6 +1,8 @@
-# Khởi tạo audio kana từ Wikimedia Commons lên Cloudflare R2
+# Khởi tạo audio nền tảng lên Cloudflare R2
 
 ## Kết quả
+
+Initializer hiện xử lý manifest theo ngôn ngữ, gồm 71 bản ghi kana Nhật và 30 bản ghi tên chữ Đức, tổng 101 file cho 202 reading. Phần cấu hình R2 và lệnh init bên dưới áp dụng cho cả hai bộ. Phạm vi, license và mapping Đức được mô tả trong [Dữ liệu tiếng Đức](german-seed-content.md). Nội dung nguồn kana Nhật được ghi lại bên dưới.
 
 Bộ `ja-kana-v2` cung cấp 71 bản ghi âm tiếng Nhật cho 142 cách đọc kana đơn đang seed, gồm 46 chữ cơ bản và 25 chữ có dấu ở mỗi bảng. Hai bảng chữ dùng chung âm tương ứng nên không upload hai lần. Ví dụ あ và ア cùng dùng audio `a`.
 
@@ -70,10 +72,10 @@ Lệnh chạy ở chế độ initialization, hoàn tất rồi thoát; không m
 Thứ tự thực hiện:
 
 1. Resolve/validate cấu hình R2 và public URL.
-2. Kiểm tra manifest, mapping với bộ kana hiện tại, đủ 71 file, kích thước, MP3 header và SHA-256.
+2. Kiểm tra manifest, mapping với bộ kana hiện tại, file của từng manifest theo ExpectedRecordings và checksum, kích thước, MP3 header và SHA-256.
 3. `MigrateAsync` áp dụng các migration chưa chạy, bao gồm seed ngôn ngữ/bảng chữ hiện có. Migration dùng cơ chế khóa của EF Core/PostgreSQL.
-4. Upload hoặc xác minh 71 object, tối đa 4 tác vụ đồng thời; object key chứa hash nội dung.
-5. Chỉ sau khi tất cả upload thành công, mở transaction PostgreSQL, lấy advisory lock để các lượt init không ghi đè nhau, khóa 142 reading theo thứ tự ID.
+4. Upload hoặc xác minh 101 object, tối đa 4 tác vụ đồng thời; object key chứa hash nội dung.
+5. Chỉ sau khi tất cả upload thành công, mở transaction PostgreSQL, lấy advisory lock để các lượt init không ghi đè nhau, khóa 202 reading và các ví dụ được khai báo trong manifest theo thứ tự ID.
 6. Kiểm tra mapping ID/item/cách đọc vẫn đúng seed. Dùng method update của Domain để validate URL và tăng Version/UpdatedAt.
 7. Ghi các dòng thay đổi bằng **một câu UPDATE theo tập dữ liệu JSON**, có điều kiện version; commit toàn bộ.
 8. Log số file, số reading đã cập nhật, số URL tự nhập được giữ nguyên; thoát với mã 0 nếu thành công.
@@ -88,7 +90,7 @@ Nếu muốn deployment “init xong là có audio”, chạy lệnh init này l
 - PUT có `If-None-Match: *`; không overwrite object đã có.
 - Nếu object đã tồn tại, đọc metadata kiểm tra kích thước và SHA-256; sai thì dừng để bạn kiểm tra, không ghi đè tùy tiện.
 - SDK dùng timeout/retry đã cấu hình; lỗi không được bỏ qua. Nếu bị 409 khi hai lượt upload tranh nhau, chạy lại sau khi lượt kia xong.
-- Không tạo thêm reading; sử dụng 142 seed ID có bản ghi trong manifest.
+- Không tạo thêm reading; sử dụng 202 seed reading ID có bản ghi trong manifest.
 - URL bằng giá trị mong muốn: không UPDATE, không tăng version.
 - URL đang null: gắn URL mới.
 - URL có cùng object key của bundle nhưng khác public domain: cho phép chuyển sang PublicBaseUrl mới.
@@ -140,7 +142,7 @@ GROUP BY s.code
 ORDER BY s.code;
 ```
 
-Với DB seed nguyên bản, kỳ vọng mỗi bảng có 104 reading và 71 URL audio. Nếu đã chỉnh sửa nội dung/bổ sung reading, đánh giá kết quả theo dữ liệu thực tế; initializer chỉ quản lý bộ ID cố định.
+Với DB seed nguyên bản, kỳ vọng hai bảng Nhật có 104 reading và 71 URL audio mỗi bảng; bảng Đức có 60 reading và 60 URL audio. Nếu đã chỉnh sửa nội dung/bổ sung reading, đánh giá kết quả theo dữ liệu thực tế; initializer chỉ quản lý bộ ID cố định.
 
 API đọc nội dung vẫn dùng JWT ứng dụng theo module hiện có. API hiện tại đã trả `audioUrl` trong `primaryReading` khi lấy items và trong danh sách readings. Không thêm endpoint mới:
 
@@ -228,7 +230,7 @@ Giữ nguyên bốn layer; không thêm project hoặc package. Domain/Applicati
 python3 scripts/fetch-foundation-audio.py
 ```
 
-Script cần mạng; kiểm tra giấy phép public domain, tác giả và mô tả kana của từng file từ nguồn, MP3 header, lưu SHA-256 cùng SHA-1 của bản Ogg gốc; tái dùng download cũ hợp lệ theo manifest/checkpoint. Checkpoint `.json.tmp` không được commit hoặc đóng gói; chỉ thay manifest chính khi đủ 71 file. Gặp 429 phải đợi Retry-After, không spam hoặc lách rate limit. Nếu license/author thay đổi thì dừng để review. Review manifest và mapping, nghe kiểm tra trước khi phát hành. Khi chủ động thay nội dung bundle, dùng version mới và quyết định migration/chuyển URL; script không tự sửa âm đã được review trong DB.
+Script cần mạng; kiểm tra giấy phép public domain, tác giả và mô tả kana của từng file từ nguồn, MP3 header, lưu SHA-256 cùng SHA-1 của bản Ogg gốc; tái dùng download cũ hợp lệ theo manifest/checkpoint. Checkpoint `.json.tmp` không được commit hoặc đóng gói; chỉ thay manifest chính khi file của từng manifest theo ExpectedRecordings và checksum. Gặp 429 phải đợi Retry-After, không spam hoặc lách rate limit. Nếu license/author thay đổi thì dừng để review. Review manifest và mapping, nghe kiểm tra trước khi phát hành. Khi chủ động thay nội dung bundle, dùng version mới và quyết định migration/chuyển URL; script không tự sửa âm đã được review trong DB.
 
 Không chạy script tải nguồn trong migration hoặc mỗi lần API startup. Không xóa metadata/license khi copy bộ dữ liệu sang dự án khác. Public domain không bắt buộc attribution nhưng dự án giữ credit và provenance cho từng file để có thể kiểm tra nguồn.
 

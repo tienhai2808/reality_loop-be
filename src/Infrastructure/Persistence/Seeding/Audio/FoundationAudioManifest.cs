@@ -1,3 +1,4 @@
 namespace Infrastructure.Persistence.Seeding.Audio;
 
-internal sealed record FoundationAudioManifest(string Bundle, FoundationAudioEntry[] Entries);
+internal sealed record FoundationAudioManifest(
+    string Bundle, string LanguageCode, int ExpectedRecordings, FoundationAudioEntry[] Entries);

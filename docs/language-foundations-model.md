@@ -133,7 +133,7 @@ Migration không xóa hoặc đổi ngôn ngữ của profile cũ, cũng không 
 
 ## Seed ban đầu
 
-`Infrastructure/Persistence/Seeding/FoundationSeedData.cs` cung cấp HasData:
+`Infrastructure/Persistence/Seeding/Japanese/FoundationSeedData.cs` cung cấp HasData:
 
 | Bảng | Số bản ghi |
 | --- | ---: |

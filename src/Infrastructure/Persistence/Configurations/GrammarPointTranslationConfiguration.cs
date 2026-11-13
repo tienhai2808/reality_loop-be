@@ -42,6 +42,6 @@ internal sealed class GrammarPointTranslationConfiguration : IEntityTypeConfigur
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(x => new { x.GrammarPointId, x.Locale }).IsUnique()
             .HasDatabaseName("ux_grammar_point_translations_point_id_locale");
-        builder.HasData(GrammarSeedData.TranslationRows);
+        builder.HasData(CatalogSeedData.GrammarPointTranslationRows);
     }
 }

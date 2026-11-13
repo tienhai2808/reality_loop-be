@@ -15,11 +15,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Persistence/Seeding/Handwriting/templates.json" LogicalName="Handwriting.templates.json" />
-    <EmbeddedResource Include="Persistence/Seeding/Handwriting/COPYING" LogicalName="Handwriting.COPYING" />
-    <EmbeddedResource Include="Persistence/Seeding/Audio/manifest.json" LogicalName="FoundationAudio.manifest.json" />
-    <EmbeddedResource Include="Persistence/Seeding/Audio/Assets/*.mp3">
-      <LogicalName>FoundationAudio.%(Filename)%(Extension)</LogicalName>
+    <EmbeddedResource Include="Persistence/Seeding/German/Handwriting/templates.json" LogicalName="Handwriting.de.templates.json" />
+    <EmbeddedResource Include="Persistence/Seeding/German/Handwriting/COPYING" LogicalName="Handwriting.de.COPYING" />
+    <EmbeddedResource Include="Persistence/Seeding/German/Audio/manifest.json" LogicalName="FoundationAudio.de.manifest.json" />
+    <EmbeddedResource Include="Persistence/Seeding/German/Audio/Assets/*.mp3">
+      <LogicalName>FoundationAudio.de.%(Filename)%(Extension)</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Persistence/Seeding/Japanese/Handwriting/templates.json" LogicalName="Handwriting.templates.json" />
+    <EmbeddedResource Include="Persistence/Seeding/Japanese/Handwriting/COPYING" LogicalName="Handwriting.COPYING" />
+    <EmbeddedResource Include="Persistence/Seeding/Japanese/Audio/manifest.json" LogicalName="FoundationAudio.ja.manifest.json" />
+    <EmbeddedResource Include="Persistence/Seeding/Japanese/Audio/Assets/*.mp3">
+      <LogicalName>FoundationAudio.ja.%(Filename)%(Extension)</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
 

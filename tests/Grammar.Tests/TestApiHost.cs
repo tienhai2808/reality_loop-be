@@ -25,6 +25,8 @@ internal static class TestApiHost
         builder.Configuration.AddJsonFile(Path.GetFullPath("../../../../../src/Api/appsettings.json", AppContext.BaseDirectory))
             .AddInMemoryCollection(new Dictionary<string, string?>
             {
+                ["RateLimiting:LearningProfiles:PermitLimit"] = "10000",
+                ["RateLimiting:Handwriting:PermitLimit"] = "10000",
                 ["ConnectionStrings:Database"] = database, ["SnowflakeId:GeneratorId"] = "1021",
                 ["Authentication:Google:ClientId"] = "test.apps.googleusercontent.com",
                 ["Authentication:Google:ClientSecret"] = "test-only",

@@ -42,6 +42,6 @@ internal sealed class GrammarPointConfiguration : IEntityTypeConfiguration<Gramm
             .HasDatabaseName("ux_grammar_points_language_id_code");
         builder.HasIndex(x => new { x.LanguageId, x.SortOrder, x.Id })
             .HasDatabaseName("ix_grammar_points_language_id_sort_order_id");
-        builder.HasData(GrammarSeedData.PointRows);
+        builder.HasData(CatalogSeedData.GrammarPointRows);
     }
 }

@@ -26,51 +26,46 @@ public sealed class FoundationAudioInitializer
 
     public async Task InitializeAsync(CancellationToken ct)
     {
-        // Check the complete offline bundle before making changes to either external system.
         var entries = FoundationAudioCatalog.Load();
         var publicRoot = _options.PublicBaseUrl.TrimEnd('/');
-        var entriesByCode = entries.ToDictionary(x => x.ItemCode);
-        var urls = entries.ToDictionary(x => x.ItemCode, x => $"{publicRoot}/{x.ObjectKey}");
+        var recordedReadings = entries.SelectMany(entry => entry.ReadingIds.Select(id => (Id: id, Entry: entry)))
+            .ToDictionary(target => target.Id, target => target.Entry);
+        var recordedExamples = entries.SelectMany(entry => entry.ExampleIds.Select(id => (Id: id, Entry: entry)))
+            .ToDictionary(target => target.Id, target => target.Entry);
+        var expectedReadings = CatalogSeedData.WritingSystemItemReadingRows.ToDictionary(row => row.Id);
+        var expectedExamples = CatalogSeedData.PronunciationExampleRows.ToDictionary(row => row.Id);
         await _db.Database.MigrateAsync(ct);
-
         _logger.LogInformation("Uploading/verifying {Count} foundation recordings in R2.", entries.Length);
-        await Parallel.ForEachAsync(entries, new ParallelOptions
-        {
-            MaxDegreeOfParallelism = 4,
-            CancellationToken = ct
-        }, async (entry, token) => await _uploader.UploadAsync(entry, token));
+        await Parallel.ForEachAsync(entries, new ParallelOptions { MaxDegreeOfParallelism = 4, CancellationToken = ct },
+            async (entry, token) => await _uploader.UploadAsync(entry, token));
 
-        // Never hold database locks across network uploads. Publish URLs only after all uploads succeed.
+        // Uploads finish before taking DB locks. All languages publish their URLs in one transaction.
         await using var transaction = await _db.Database.BeginTransactionAsync(ct);
         await _db.Database.ExecuteSqlRawAsync("SELECT pg_advisory_xact_lock(72584619033201)", ct);
-        // Only attach recordings present in the reviewed bundle. Contracted sounds need their own recordings.
-        var recordedItems = FoundationSeedData.WritingSystemItemRows
-            .Where(x => entriesByCode.ContainsKey(x.Code)).Select(x => x.Id).ToHashSet();
-        var expected = FoundationSeedData.WritingSystemItemReadingRows
-            .Where(x => recordedItems.Contains(x.WritingSystemItemId)).ToDictionary(x => x.Id);
-        var ids = expected.Keys.ToArray();
+        var readingIds = recordedReadings.Keys.ToArray();
         var readings = await _db.WritingSystemItemReadings.FromSqlInterpolated($"""
-            SELECT * FROM writing_system_item_readings WHERE id = ANY ({ids}) ORDER BY id FOR UPDATE
+            SELECT * FROM writing_system_item_readings WHERE id = ANY ({readingIds}) ORDER BY id FOR UPDATE
             """).AsNoTracking().ToListAsync(ct);
-        if (readings.Count != expected.Count)
-            throw new InvalidOperationException("Foundation readings are missing. Restore/review the foundation seed before initializing audio.");
-
-        var items = FoundationSeedData.WritingSystemItemRows.ToDictionary(x => x.Id);
-        var patches = new List<object>();
+        var exampleIds = recordedExamples.Keys.ToArray();
+        var examples = await _db.PronunciationExamples.FromSqlInterpolated($"""
+            SELECT * FROM pronunciation_examples WHERE id = ANY ({exampleIds}) ORDER BY id FOR UPDATE
+            """).AsNoTracking().ToListAsync(ct);
+        if (readings.Count != readingIds.Length || examples.Count != exampleIds.Length)
+            throw new InvalidOperationException("Foundation audio targets are missing. Restore/review the seed before initializing audio.");
+        var readingPatches = new List<AudioPatch>();
+        var examplePatches = new List<AudioPatch>();
         var preserved = 0;
         var now = _clock.GetUtcNow();
         foreach (var reading in readings)
         {
-            var seed = expected[reading.Id];
+            var seed = expectedReadings[reading.Id];
             if (reading.WritingSystemItemId != seed.WritingSystemItemId || reading.Code != seed.Code ||
                 reading.Transcription != seed.Transcription || reading.TranscriptionSystem != seed.TranscriptionSystem)
-                throw new InvalidOperationException($"Reading {reading.Id} differs from the reviewed foundation mapping; refusing to attach incorrect audio.");
-
-            var code = items[seed.WritingSystemItemId].Code;
-            var url = urls[code];
+                throw new InvalidOperationException($"Reading {reading.Id} differs from the reviewed foundation audio mapping.");
+            var entry = recordedReadings[reading.Id];
+            var url = $"{publicRoot}/{entry.ObjectKey}";
             if (reading.AudioUrl == url) continue;
-            var key = entriesByCode[code].ObjectKey;
-            if (reading.AudioUrl is not null && !reading.AudioUrl.EndsWith('/' + key, StringComparison.Ordinal))
+            if (reading.AudioUrl is not null && !reading.AudioUrl.EndsWith('/' + entry.ObjectKey, StringComparison.Ordinal))
             {
                 preserved++;
                 continue;
@@ -78,19 +73,31 @@ public sealed class FoundationAudioInitializer
             var previousVersion = reading.Version;
             reading.Update(reading.Transcription, reading.TranscriptionSystem, url, reading.SortOrder,
                 now < reading.UpdatedAt ? reading.UpdatedAt : now);
-            patches.Add(new
-            {
-                id = reading.Id,
-                previous_version = previousVersion,
-                version = reading.Version,
-                audio_url = reading.AudioUrl,
-                updated_at = reading.UpdatedAt
-            });
+            readingPatches.Add(new(reading.Id, previousVersion, reading.Version, url, reading.UpdatedAt));
         }
-
-        if (patches.Count > 0)
+        foreach (var example in examples)
         {
-            var json = JsonSerializer.Serialize(patches);
+            var seed = expectedExamples[example.Id];
+            if (example.PronunciationRuleId != seed.PronunciationRuleId || example.Code != seed.Code ||
+                example.Text != seed.Text || example.Transcription != seed.Transcription || example.TranscriptionSystem != seed.TranscriptionSystem)
+                throw new InvalidOperationException($"Example {example.Id} differs from the reviewed foundation audio mapping.");
+            var entry = recordedExamples[example.Id];
+            var url = $"{publicRoot}/{entry.ObjectKey}";
+            if (example.AudioUrl == url) continue;
+            if (example.AudioUrl is not null && !example.AudioUrl.EndsWith('/' + entry.ObjectKey, StringComparison.Ordinal))
+            {
+                preserved++;
+                continue;
+            }
+            var previousVersion = example.Version;
+            example.Update(example.Text, example.Transcription, example.TranscriptionSystem, url, example.SortOrder,
+                now < example.UpdatedAt ? example.UpdatedAt : now);
+            examplePatches.Add(new(example.Id, previousVersion, example.Version, url, example.UpdatedAt));
+        }
+        var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower };
+        if (readingPatches.Count > 0)
+        {
+            var json = JsonSerializer.Serialize(readingPatches, jsonOptions);
             var updated = await _db.Database.ExecuteSqlInterpolatedAsync($"""
                 UPDATE writing_system_item_readings AS reading
                 SET audio_url = seed.audio_url, version = seed.version, updated_at = seed.updated_at
@@ -98,37 +105,24 @@ public sealed class FoundationAudioInitializer
                     id bigint, previous_version bigint, version bigint, audio_url text, updated_at timestamptz)
                 WHERE reading.id = seed.id AND reading.version = seed.previous_version
                 """, ct);
-            if (updated != patches.Count)
-                throw new DbUpdateConcurrencyException("Foundation audio update conflicted with another writer.");
+            if (updated != readingPatches.Count) throw new DbUpdateConcurrencyException("Foundation reading audio update conflicted.");
         }
-        // A syllable recording also applies to an example containing exactly that syllable.
-        var examplesById = PronunciationSeedData.ExampleRows.ToDictionary(x => x.Id);
-        var recordingsBySymbol = entries.SelectMany(entry => new[]
+        if (examplePatches.Count > 0)
         {
-            (Symbol: entry.Hiragana, Entry: entry), (Symbol: entry.Katakana, Entry: entry)
-        }).ToDictionary(x => x.Symbol, x => x.Entry);
-        var exampleIds = examplesById.Values.Where(example => recordingsBySymbol.ContainsKey(example.Text))
-            .Select(example => example.Id).ToArray();
-        var examples = await _db.PronunciationExamples.FromSqlInterpolated($"""
-            SELECT * FROM pronunciation_examples WHERE id = ANY ({exampleIds}) ORDER BY id FOR UPDATE
-            """).ToListAsync(ct);
-        foreach (var example in examples)
-        {
-            var seed = examplesById[example.Id];
-            if (example.Text != seed.Text || example.Transcription != seed.Transcription ||
-                example.TranscriptionSystem != "hepburn") continue;
-            var entry = recordingsBySymbol[example.Text];
-            if (example.Transcription != entry.Reading) continue;
-            var url = urls[entry.ItemCode];
-            if (example.AudioUrl == url) continue;
-            if (example.AudioUrl is not null && !example.AudioUrl.EndsWith('/' + entry.ObjectKey, StringComparison.Ordinal))
-                continue;
-            example.Update(example.Text, example.Transcription, example.TranscriptionSystem, url, example.SortOrder,
-                now < example.UpdatedAt ? example.UpdatedAt : now);
+            var json = JsonSerializer.Serialize(examplePatches, jsonOptions);
+            var updated = await _db.Database.ExecuteSqlInterpolatedAsync($"""
+                UPDATE pronunciation_examples AS example
+                SET audio_url = seed.audio_url, version = seed.version, updated_at = seed.updated_at
+                FROM jsonb_to_recordset(CAST({json} AS jsonb)) AS seed(
+                    id bigint, previous_version bigint, version bigint, audio_url text, updated_at timestamptz)
+                WHERE example.id = seed.id AND example.version = seed.previous_version
+                """, ct);
+            if (updated != examplePatches.Count) throw new DbUpdateConcurrencyException("Foundation example audio update conflicted.");
         }
-        await _db.SaveChangesAsync(ct);
         await transaction.CommitAsync(ct);
-        _logger.LogInformation("Foundation audio ready: {Recordings} recordings; {Updated} readings updated; {Preserved} custom audio URLs preserved.",
-            entries.Length, patches.Count, preserved);
+        _logger.LogInformation("Foundation audio ready: {Recordings} recordings; {Readings} readings and {Examples} examples updated; {Preserved} custom URLs preserved.",
+            entries.Length, readingPatches.Count, examplePatches.Count, preserved);
     }
+
+    private sealed record AudioPatch(long Id, long PreviousVersion, long Version, string AudioUrl, DateTimeOffset UpdatedAt);
 }

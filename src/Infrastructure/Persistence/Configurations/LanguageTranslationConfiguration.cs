@@ -32,6 +32,6 @@ internal sealed class LanguageTranslationConfiguration : IEntityTypeConfiguratio
 
         builder.HasOne<Language>().WithMany().HasForeignKey(x => x.LanguageId).OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(x => new { x.LanguageId, x.Locale }).IsUnique().HasDatabaseName("ux_language_translations_language_id_locale");
-        builder.HasData(FoundationSeedData.LanguageTranslationRows);
+        builder.HasData(CatalogSeedData.LanguageTranslationRows);
     }
 }

@@ -42,9 +42,9 @@ internal static class SeedAudioChecks
                 .Select(x => new { x.Id, x.AudioUrl, x.Version }).ToArrayAsync()
         });
         await initializer.InitializeAsync(CancellationToken.None);
-        Check.That(storage.ObjectCount == 71, "Initializer uploads all 71 verified embedded recordings.");
-        Check.That(await db.WritingSystemItemReadings.CountAsync(x => x.AudioUrl != null) == 142,
-            "Only the 142 kana with real recordings receive audio.");
+        Check.That(storage.ObjectCount == 101, "Initializer uploads all 101 verified embedded recordings.");
+        Check.That(await db.WritingSystemItemReadings.CountAsync(x => x.AudioUrl != null) == 202,
+            "Only the 202 Japanese/German items with real recordings receive audio.");
         Check.That(await db.WritingSystemItemReadings.CountAsync(x => x.AudioUrl == "https://example.invalid/custom-kana.mp3") == 1,
             "Initializer preserves customized audio on an existing reading.");
         Check.That(await db.PronunciationExamples.CountAsync(x => x.AudioUrl != null) == 5,
@@ -52,7 +52,7 @@ internal static class SeedAudioChecks
         Check.That(!await db.VocabularyEntries.AnyAsync(x => x.AudioUrl != null), "Kana audio is never attached to vocabulary words.");
         var first = await Snapshot();
         await initializer.InitializeAsync(CancellationToken.None);
-        Check.That(await Snapshot() == first && storage.MetadataReads == 71,
+        Check.That(await Snapshot() == first && storage.MetadataReads == 101,
             "Repeated initialization verifies existing objects and leaves every DB version unchanged.");
         storage.FailUploads = true;
         try

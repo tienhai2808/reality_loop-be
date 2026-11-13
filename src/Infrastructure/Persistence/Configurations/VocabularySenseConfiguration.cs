@@ -34,6 +34,6 @@ internal sealed class VocabularySenseConfiguration : IEntityTypeConfiguration<Vo
         builder.HasOne<VocabularyEntry>().WithMany().HasForeignKey(x => x.VocabularyEntryId).OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(x => new { x.VocabularyEntryId, x.Code }).IsUnique().HasDatabaseName("ux_vocabulary_senses_entry_id_code");
         builder.HasIndex(x => new { x.VocabularyEntryId, x.SortOrder, x.Id }).HasDatabaseName("ix_vocabulary_senses_entry_id_sort_order_id");
-        builder.HasData(VocabularySeedData.SenseRows);
+        builder.HasData(CatalogSeedData.VocabularySenseRows);
     }
 }

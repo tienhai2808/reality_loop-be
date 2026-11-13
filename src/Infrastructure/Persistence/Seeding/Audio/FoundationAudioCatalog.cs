@@ -9,49 +9,77 @@ internal static class FoundationAudioCatalog
 
     public static FoundationAudioEntry[] Load()
     {
-        using var stream = Open("manifest.json");
-        var manifest = JsonSerializer.Deserialize<FoundationAudioManifest>(stream, JsonSerializerOptions.Web)
-            ?? throw new InvalidOperationException("Foundation audio manifest is missing.");
-        var entries = manifest.Entries;
-        if (manifest.Bundle != "ja-kana-v2" || entries is not { Length: 71 } ||
-            entries.Select(x => x.FileName).Distinct(StringComparer.Ordinal).Count() != entries.Length ||
-            entries.Select(x => x.ItemCode).Distinct(StringComparer.Ordinal).Count() != entries.Length)
-            throw new InvalidOperationException("Foundation audio manifest does not match the reviewed kana bundle.");
-
+        var assembly = typeof(FoundationAudioCatalog).Assembly;
+        var manifests = assembly.GetManifestResourceNames()
+            .Where(name => name.StartsWith(ResourcePrefix, StringComparison.Ordinal) && name.EndsWith(".manifest.json", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal);
+        var entries = new List<FoundationAudioEntry>();
+        var languages = CatalogSeedData.LanguageRows.ToDictionary(row => row.Code);
+        var systems = CatalogSeedData.WritingSystemRows.ToDictionary(row => row.Id);
+        var items = CatalogSeedData.WritingSystemItemRows.ToDictionary(row => row.Id);
+        var readings = CatalogSeedData.WritingSystemItemReadingRows.ToDictionary(row => row.Id);
+        var examples = CatalogSeedData.PronunciationExampleRows.ToDictionary(row => row.Id);
+        var rules = CatalogSeedData.PronunciationRuleRows.ToDictionary(row => row.Id);
+        var recordedReadings = new HashSet<long>();
+        var recordedExamples = new HashSet<long>();
+        var objectKeys = new HashSet<string>(StringComparer.Ordinal);
+        var resources = new HashSet<string>(StringComparer.Ordinal);
         var header = new byte[4];
-        foreach (var entry in entries)
+        foreach (var resource in manifests)
         {
-            var fileStem = Path.GetFileNameWithoutExtension(entry.FileName);
-            if (string.IsNullOrEmpty(fileStem) || fileStem.Any(c => !char.IsAsciiLetterLower(c)) ||
-                string.IsNullOrEmpty(entry.Reading) || entry.Reading.Any(c => !char.IsAsciiLetterLower(c)) ||
-                entry.FileName != $"{fileStem}.mp3" || entry.Sha256 is not { Length: 64 } ||
-                entry.Sha256.Any(c => !char.IsAsciiHexDigitLower(c)) ||
-                entry.ObjectKey != $"foundation/ja/kana/v1/{fileStem}-{entry.Sha256[..16]}.mp3" ||
-                entry.ContentType != "audio/mpeg" || entry.Bytes is < 128 or > 1_048_576 ||
-                entry.Author != "Hakatanoshio117117" || entry.License != "Public domain (PD-self)" ||
-                !entry.SourcePage.StartsWith("https://commons.wikimedia.org/wiki/File:", StringComparison.Ordinal))
-                throw new InvalidOperationException("Foundation audio entry failed manifest validation.");
-
-            var items = FoundationSeedData.WritingSystemItemRows.Where(x => x.Code == entry.ItemCode).ToArray();
-            if (items.Length != 2 || !items.Any(x => x.Symbol == entry.Hiragana) ||
-                !items.Any(x => x.Symbol == entry.Katakana) ||
-                FoundationSeedData.WritingSystemItemReadingRows.Count(x =>
-                    items.Any(item => item.Id == x.WritingSystemItemId) && x.Transcription == entry.Reading) != 2)
-                throw new InvalidOperationException($"Audio mapping for '{entry.Reading}' does not match the foundation seed.");
-
-            using var audio = Open(entry.FileName);
-            audio.ReadExactly(header);
-            audio.Position = 0;
-            var hasMp3Header = header.AsSpan(0, 3).SequenceEqual("ID3"u8) ||
-                (header[0] == 0xff && (header[1] & 0xe0) == 0xe0);
-            if (audio.Length != entry.Bytes || !hasMp3Header ||
-                Convert.ToHexStringLower(SHA256.HashData(audio)) != entry.Sha256)
-                throw new InvalidOperationException($"Foundation audio checksum failed for '{entry.FileName}'.");
+            using var manifestStream = assembly.GetManifestResourceStream(resource)!;
+            var manifest = JsonSerializer.Deserialize<FoundationAudioManifest>(manifestStream, JsonSerializerOptions.Web)
+                ?? throw new InvalidOperationException("Foundation audio manifest is missing.");
+            if (!languages.TryGetValue(manifest.LanguageCode, out var language) ||
+                resource != $"{ResourcePrefix}{manifest.LanguageCode}.manifest.json" ||
+                string.IsNullOrWhiteSpace(manifest.Bundle) || manifest.ExpectedRecordings <= 0 ||
+                manifest.Entries is null || manifest.Entries.Length != manifest.ExpectedRecordings)
+                throw new InvalidOperationException($"Invalid foundation audio manifest '{resource}'.");
+            foreach (var source in manifest.Entries)
+            {
+                var entry = source with { LanguageCode = manifest.LanguageCode };
+                if (string.IsNullOrWhiteSpace(entry.FileName) || entry.FileName != Path.GetFileName(entry.FileName) ||
+                    !entry.FileName.EndsWith(".mp3", StringComparison.Ordinal) ||
+                    entry.FileName.Any(c => !char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c) && c is not '-' and not '.') ||
+                    entry.Sha256 is not { Length: 64 } || entry.Sha256.Any(c => !char.IsAsciiHexDigitLower(c)) ||
+                    string.IsNullOrEmpty(entry.ObjectKey) || !entry.ObjectKey.StartsWith($"foundation/{manifest.LanguageCode}/", StringComparison.Ordinal) ||
+                    !entry.ObjectKey.EndsWith($"-{entry.Sha256[..16]}.mp3", StringComparison.Ordinal) ||
+                    entry.ObjectKey.Contains("..", StringComparison.Ordinal) || entry.ObjectKey.Any(c =>
+                        !char.IsAsciiLetterLower(c) && !char.IsAsciiDigit(c) && c is not '/' and not '-' and not '.') ||
+                    entry.ContentType != "audio/mpeg" || entry.Bytes is < 128 or > 1_048_576 ||
+                    string.IsNullOrWhiteSpace(entry.Author) || string.IsNullOrWhiteSpace(entry.License) ||
+                    !IsHttps(entry.SourcePage) || !IsHttps(entry.LicenseUrl) ||
+                    entry.ReadingIds is not { Length: > 0 } || entry.ExampleIds is null ||
+                    !objectKeys.Add(entry.ObjectKey) || !resources.Add(entry.ResourceName))
+                    throw new InvalidOperationException($"Invalid foundation audio entry '{entry.ResourceName}'.");
+                foreach (var id in entry.ReadingIds)
+                    if (!readings.TryGetValue(id, out var reading) || !recordedReadings.Add(id) ||
+                        systems[items[reading.WritingSystemItemId].WritingSystemId].LanguageId != language.Id)
+                        throw new InvalidOperationException($"Audio reading target {id} is invalid, duplicated or belongs to another language.");
+                foreach (var id in entry.ExampleIds)
+                    if (!examples.TryGetValue(id, out var example) || !recordedExamples.Add(id) ||
+                        rules[example.PronunciationRuleId].LanguageId != language.Id ||
+                        !entry.ReadingIds.Select(readingId => readings[readingId]).Any(reading =>
+                            items[reading.WritingSystemItemId].Symbol == example.Text &&
+                            reading.Transcription == example.Transcription && reading.TranscriptionSystem == example.TranscriptionSystem))
+                        throw new InvalidOperationException($"Audio example target {id} does not match the recorded reading.");
+                using var audio = Open(entry.ResourceName);
+                audio.ReadExactly(header);
+                audio.Position = 0;
+                var hasMp3Header = header.AsSpan(0, 3).SequenceEqual("ID3"u8) || (header[0] == 0xff && (header[1] & 0xe0) == 0xe0);
+                if (audio.Length != entry.Bytes || !hasMp3Header || Convert.ToHexStringLower(SHA256.HashData(audio)) != entry.Sha256)
+                    throw new InvalidOperationException($"Foundation audio checksum failed for '{entry.ResourceName}'.");
+                entries.Add(entry);
+            }
         }
-        return entries;
+        if (entries.Count == 0) throw new InvalidOperationException("No foundation audio manifests are embedded.");
+        return entries.ToArray();
     }
 
-    public static Stream Open(string fileName) =>
-        typeof(FoundationAudioCatalog).Assembly.GetManifestResourceStream(ResourcePrefix + fileName)
-        ?? throw new InvalidOperationException($"Embedded foundation audio resource '{fileName}' is missing.");
+    public static Stream Open(string resourceName) =>
+        typeof(FoundationAudioCatalog).Assembly.GetManifestResourceStream(ResourcePrefix + resourceName)
+        ?? throw new InvalidOperationException($"Embedded foundation audio resource '{resourceName}' is missing.");
+
+    private static bool IsHttps(string value) => Uri.TryCreate(value, UriKind.Absolute, out var uri) &&
+        uri.Scheme == Uri.UriSchemeHttps && uri.UserInfo.Length == 0 && !value.Any(char.IsWhiteSpace);
 }

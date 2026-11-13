@@ -46,6 +46,6 @@ internal sealed class PronunciationExampleConfiguration : IEntityTypeConfigurati
             .HasDatabaseName("ux_pronunciation_examples_rule_id_code");
         builder.HasIndex(x => new { x.PronunciationRuleId, x.SortOrder, x.Id })
             .HasDatabaseName("ix_pronunciation_examples_rule_id_sort_order_id");
-        builder.HasData(PronunciationSeedData.ExampleRows);
+        builder.HasData(CatalogSeedData.PronunciationExampleRows);
     }
 }

@@ -6,6 +6,7 @@
     <Project Path="src/Infrastructure/Infrastructure.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/GrammarPractice.Tests/GrammarPractice.Tests.csproj" />
     <Project Path="tests/Grammar.Tests/Grammar.Tests.csproj" />
     <Project Path="tests/VocabularyLearning.Tests/VocabularyLearning.Tests.csproj" />
     <Project Path="tests/Handwriting.Tests/Handwriting.Tests.csproj" />

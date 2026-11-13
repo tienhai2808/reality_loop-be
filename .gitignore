@@ -25,6 +25,9 @@ docs/*
 !docs/vocabulary-learning-model.md
 !docs/vocabulary-learning-api.md
 !docs/japanese-seed-content.md
+!docs/german-seed-content.md
 !docs/grammar-model.md
 !docs/grammar-api.md
+!docs/grammar-practice-model.md
+!docs/grammar-practice-api.md
 .idea/

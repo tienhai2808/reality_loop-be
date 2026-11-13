@@ -14,6 +14,7 @@ internal sealed class TestAuthenticationHandler(IOptionsMonitor<AuthenticationSc
         var userId = Request.Headers.Authorization.ToString() switch
         {
             "Bearer grammar-test-a" => "9000",
+            "Bearer grammar-test-multilang" => "93000",
             "Bearer grammar-test-b" => "9100",
             _ => null
         };

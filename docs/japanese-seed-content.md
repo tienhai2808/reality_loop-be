@@ -1,7 +1,7 @@
 # Dữ liệu học tiếng Nhật
 
 Bản mở rộng `20261107120741_ExpandJapaneseLearningSeed` bổ sung nội dung cho các module hiện có.
-Các catalog dùng chung cho người học có TargetLanguage là `ja`. Giải thích và nghĩa có đủ hai locale `vi` và `en`.
+Các số lượng trong tài liệu này chỉ tính bộ Nhật. Hệ thống đã có thêm bộ `de` được mô tả trong [Dữ liệu tiếng Đức](german-seed-content.md). Các catalog Nhật dùng chung cho người học có TargetLanguage là `ja`. Giải thích và nghĩa có đủ hai locale `vi` và `en`.
 
 | Nội dung | Tổng sau migration |
 | --- | --- |

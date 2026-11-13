@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Domain.Handwriting;
 
-namespace Infrastructure.Persistence.Seeding;
+namespace Infrastructure.Persistence.Seeding.Japanese;
 
 internal static class HandwritingSeedData
 {

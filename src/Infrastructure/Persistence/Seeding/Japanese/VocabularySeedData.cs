@@ -1,6 +1,6 @@
 using Domain.Vocabulary;
 
-namespace Infrastructure.Persistence.Seeding;
+namespace Infrastructure.Persistence.Seeding.Japanese;
 
 internal static class VocabularySeedData
 {

@@ -49,6 +49,6 @@ internal sealed class HandwritingTemplateConfiguration : IEntityTypeConfiguratio
         builder.HasOne<WritingSystemItem>().WithMany().HasForeignKey(x => x.WritingSystemItemId).OnDelete(DeleteBehavior.Restrict);
         builder.HasIndex(x => new { x.WritingSystemItemId, x.Revision }).IsUnique()
             .HasDatabaseName("ux_handwriting_templates_item_revision");
-        builder.HasData(HandwritingSeedData.Templates);
+        builder.HasData(CatalogSeedData.HandwritingTemplateRows);
     }
 }

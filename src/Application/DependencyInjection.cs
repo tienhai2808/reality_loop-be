@@ -1,5 +1,11 @@
 using Application.Grammar.Queries.GetGrammarPoints;
 using Application.Grammar.Queries.GetGrammarPoint;
+using Application.GrammarPractice.Commands.CreateGrammarPracticeSession;
+using Application.GrammarPractice.Commands.AnswerGrammarPracticeQuestion;
+using Application.GrammarPractice.Commands.AbandonGrammarPracticeSession;
+using Application.GrammarPractice.Queries.GetGrammarPracticeOptions;
+using Application.GrammarPractice.Queries.GetGrammarPracticeSession;
+using Application.GrammarPractice.Queries.GetGrammarPracticeSessions;
 using Application.VocabularyLearning.Services;
 using Application.VocabularyLearning.Queries.GetVocabularyReviewHistory;
 using Application.VocabularyLearning.Queries.GetVocabularyLearningSummary;
@@ -114,6 +120,12 @@ public static class DependencyInjection
         services.AddScoped<GetPronunciationRulesQueryHandler>();
         services.AddScoped<GetGrammarPointsQueryHandler>();
         services.AddScoped<GetGrammarPointQueryHandler>();
+        services.AddScoped<GetGrammarPracticeOptionsQueryHandler>();
+        services.AddScoped<CreateGrammarPracticeSessionCommandHandler>();
+        services.AddScoped<AnswerGrammarPracticeQuestionCommandHandler>();
+        services.AddScoped<AbandonGrammarPracticeSessionCommandHandler>();
+        services.AddScoped<GetGrammarPracticeSessionQueryHandler>();
+        services.AddScoped<GetGrammarPracticeSessionsQueryHandler>();
         services.AddScoped<GetPronunciationRuleQueryHandler>();
         services.AddScoped<GetPronunciationExamplesQueryHandler>();
         services.AddScoped<RecordWritingSystemItemProgressCommandHandler>();

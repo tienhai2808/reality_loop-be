@@ -3,6 +3,7 @@ using Npgsql;
 
 DomainChecks.Run();
 SeedChecks.Run();
+GermanChecks.RunModelChecks();
 Console.WriteLine($"Passed {Check.Count} Domain checks.");
 var database = Environment.GetEnvironmentVariable("GRAMMAR_TEST_DATABASE");
 if (database is null)
@@ -15,5 +16,6 @@ if (new NpgsqlConnectionStringBuilder(database).Database != "grammar_tests")
 await DatabaseChecks.RunAsync(database);
 Console.WriteLine($"Passed {Check.Count} Domain/EF/PostgreSQL checks.");
 await SeedAudioChecks.RunAsync(database);
+await GermanChecks.RunApiChecks(database);
 await ApiChecks.RunAsync(database);
 Console.WriteLine($"Passed {Check.Count} Domain/EF/PostgreSQL/HTTP checks.");

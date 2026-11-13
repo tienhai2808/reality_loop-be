@@ -1,0 +1,18 @@
+{
+  "upstreamRevision": "262f4782cd412ee539eb43d4d9d9b92562d7590b",
+  "sourceRevision": "262f4782cd412ee539eb43d4d9d9b92562d7590b+de-latin-v1",
+  "sourceUrl": "https://github.com/techninja/hersheytextjs/blob/262f4782cd412ee539eb43d4d9d9b92562d7590b/svg_fonts/HersheySans1.svg",
+  "license": "Hershey font redistribution license",
+  "licenseUrl": "https://github.com/techninja/hersheytextjs/blob/262f4782cd412ee539eb43d4d9d9b92562d7590b/svg_fonts/HersheySans1.svg",
+  "attribution": "The Hershey Fonts were originally created by Dr. A. V. Hershey while working at the U. S. National Bureau of Standards. The format of the Font data in this distribution was originally created by James Hurt, Cognition, Inc., 900 Technology Park Drive, Billerica, MA 01821 (mit-eddie!ci-dandelion!hurt). SVG conversion by Windell H. Oskay. RealityLoop sampled/normalized paths and adapted the capital eszett reference.",
+  "files": [
+    {
+      "file": "HersheySans1.svg",
+      "sha256": "a7b9cb8f6465a66d7b1b2f774579749edf1f960b0ed929f0908bd97211f479fa"
+    },
+    {
+      "file": "capital-eszett.svg",
+      "sha256": "23425e2bddded90af20540a6e8a47343697ef6f8ae4655728d1204df08b7277f"
+    }
+  ]
+}

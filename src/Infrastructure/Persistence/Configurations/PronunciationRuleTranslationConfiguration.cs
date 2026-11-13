@@ -42,6 +42,6 @@ internal sealed class PronunciationRuleTranslationConfiguration : IEntityTypeCon
             .OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(x => new { x.PronunciationRuleId, x.Locale }).IsUnique()
             .HasDatabaseName("ux_pronunciation_rule_translations_rule_id_locale");
-        builder.HasData(PronunciationSeedData.TranslationRows);
+        builder.HasData(CatalogSeedData.PronunciationRuleTranslationRows);
     }
 }

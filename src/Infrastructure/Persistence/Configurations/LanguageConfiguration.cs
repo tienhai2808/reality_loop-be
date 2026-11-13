@@ -34,6 +34,6 @@ internal sealed class LanguageConfiguration : IEntityTypeConfiguration<Language>
         builder.HasIndex(x => x.Code).IsUnique().HasDatabaseName("ux_languages_code");
         builder.HasIndex(x => new { x.IsEnabled, x.SortOrder, x.Id })
             .HasDatabaseName("ix_languages_is_enabled_sort_order_id");
-        builder.HasData(FoundationSeedData.LanguageRows);
+        builder.HasData(CatalogSeedData.LanguageRows);
     }
 }

@@ -9,6 +9,7 @@ using Domain.WritingSystems;
 using Domain.Pronunciation;
 using Domain.Vocabulary;
 using Domain.Grammar;
+using Domain.GrammarPractice;
 using Domain.VocabularyLearning;
 using Domain.Handwriting;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,11 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     public DbSet<GrammarPoint> GrammarPoints => Set<GrammarPoint>();
     public DbSet<GrammarPointTranslation> GrammarPointTranslations => Set<GrammarPointTranslation>();
+
+    public DbSet<GrammarExercise> GrammarExercises => Set<GrammarExercise>();
+    public DbSet<GrammarExerciseTranslation> GrammarExerciseTranslations => Set<GrammarExerciseTranslation>();
+    public DbSet<GrammarPracticeSession> GrammarPracticeSessions => Set<GrammarPracticeSession>();
+    public DbSet<GrammarPracticeSessionItem> GrammarPracticeSessionItems => Set<GrammarPracticeSessionItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

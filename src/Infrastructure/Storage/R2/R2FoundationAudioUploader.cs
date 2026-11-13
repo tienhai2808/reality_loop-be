@@ -10,7 +10,7 @@ internal sealed class R2FoundationAudioUploader(IAmazonS3 client, IOptions<R2Opt
 {
     public async Task UploadAsync(FoundationAudioEntry entry, CancellationToken ct)
     {
-        using var stream = FoundationAudioCatalog.Open(entry.FileName);
+        using var stream = FoundationAudioCatalog.Open(entry.ResourceName);
         var request = new PutObjectRequest
         {
             BucketName = options.Value.BucketName,
@@ -28,6 +28,7 @@ internal sealed class R2FoundationAudioUploader(IAmazonS3 client, IOptions<R2Opt
         request.Metadata["source"] = entry.SourcePage;
         request.Metadata["author"] = entry.Author;
         request.Metadata["license"] = entry.License;
+        request.Metadata["license-url"] = entry.LicenseUrl;
 
         try
         {

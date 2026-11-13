@@ -39,6 +39,6 @@ internal sealed class WritingSystemItemReadingConfiguration : IEntityTypeConfigu
         builder.HasIndex(x => new { x.WritingSystemItemId, x.Code }).IsUnique().HasDatabaseName("ux_writing_system_item_readings_writing_system_item_id_code");
         builder.HasIndex(x => new { x.WritingSystemItemId, x.SortOrder, x.Id })
             .HasDatabaseName("ix_writing_item_readings_item_id_sort_order_id");
-        builder.HasData(FoundationSeedData.WritingSystemItemReadingRows);
+        builder.HasData(CatalogSeedData.WritingSystemItemReadingRows);
     }
 }

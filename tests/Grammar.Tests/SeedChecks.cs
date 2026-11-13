@@ -24,9 +24,9 @@ internal static class SeedChecks
         var items = Rows("WritingSystemItem");
         var readings = Rows("WritingSystemItemReading");
         var templates = Rows("HandwritingTemplate");
-        Check.That(systems.Length == 2 && items.Length == 208 && readings.Length == 208 && templates.Length == 208,
+        Check.That(systems.Length == 3 && items.Length == 268 && readings.Length == 268 && templates.Length == 268,
             "Both writing systems have catalog, reading and handwriting coverage.");
-        foreach (var system in systems)
+        foreach (var system in systems.Where(row => Equals(row["LanguageId"], 1563703640068190208L)))
         {
             var selected = items.Where(row => Equals(row["WritingSystemId"], system["Id"])).ToArray();
             Check.That(selected.Length == 104 && selected.Select(row => row["SortOrder"]).Distinct().Count() == 104,
@@ -45,10 +45,10 @@ internal static class SeedChecks
             Check.That(readings.Where(row => ids.Contains(row["WritingSystemItemId"]))
                 .All(row => (string)row["Transcription"]! == pair.Item3), "Hepburn preserves valid duplicate readings.");
         }
-        Check.That(Rows("VocabularyEntry").Length == 200 && Rows("VocabularySense").Length == 202 &&
-            Rows("VocabularySenseTranslation").Length == 404, "Expanded vocabulary has 200 entries and aligned meanings.");
-        Check.That(Rows("GrammarPoint").Length == 50 && Rows("PronunciationRule").Length == 12 &&
-            Rows("PronunciationExample").Length == 60, "Expanded grammar and pronunciation coverage.");
+        Check.That(Rows("VocabularyEntry").Length == 400 && Rows("VocabularySense").Length == 402 &&
+            Rows("VocabularySenseTranslation").Length == 804, "Vocabulary covers both languages with aligned meanings.");
+        Check.That(Rows("GrammarPoint").Length == 100 && Rows("PronunciationRule").Length == 24 &&
+            Rows("PronunciationExample").Length == 120, "Expanded grammar and pronunciation coverage.");
         foreach (var (parent, translation, foreignKey) in new[]
         {
             ("VocabularySense", "VocabularySenseTranslation", "VocabularySenseId"),
@@ -84,12 +84,12 @@ internal static class SeedChecks
             }
         }
         foreach (var type in new[] { "LanguageTranslation", "WritingSystemTranslation" })
-            Check.That(Rows(type).All(row => (long)row["Version"]! == 2 &&
+            Check.That(Rows(type).Where(row => (long)row["Id"]! < 1563703640076578816L).All(row => (long)row["Version"]! == 2 &&
                 (DateTimeOffset)row["UpdatedAt"]! > (DateTimeOffset)row["CreatedAt"]!), "Edited descriptions advance version and timestamp.");
         var loader = typeof(ApplicationDbContext).Assembly.GetType("Infrastructure.Persistence.Seeding.Audio.FoundationAudioCatalog")!
             .GetMethod("Load", BindingFlags.Static | BindingFlags.Public)!;
         var audio = (Array)loader.Invoke(null, null)!;
-        Check.That(audio.Length == 71, "All 71 embedded recordings pass mapping, license and checksum validation.");
+        Check.That(audio.Length == 101, "All 101 embedded recordings pass mapping, license and checksum validation.");
         Check.That(!db.Database.HasPendingModelChanges(), "Deterministic content matches the generated migration snapshot.");
     }
 }

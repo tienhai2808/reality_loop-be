@@ -50,15 +50,15 @@ internal static class DatabaseChecks
         await db.SaveChangesAsync();
         await migrator.MigrateAsync();
         Check.That(!db.Database.HasPendingModelChanges(), "Runtime model matches snapshot, including deterministic seed.");
-        Check.That(await db.VocabularyEntries.CountAsync() == 200 && await db.VocabularySenses.CountAsync() == 202 &&
-                   await db.VocabularySenseTranslations.CountAsync() == 404, "Migration seeds 200 entries, 202 senses, 404 translations.");
+        Check.That(await db.VocabularyEntries.CountAsync() == 400 && await db.VocabularySenses.CountAsync() == 402 &&
+                   await db.VocabularySenseTranslations.CountAsync() == 804, "Migration seeds both languages with 400 entries, 402 senses and 804 translations.");
         Check.That(await db.Users.CountAsync() == 1 && await db.LearningProfiles.CountAsync() == 1 && await db.WritingSystemItemProgress.CountAsync() == 1,
             "Upgrade preserves existing user/profile/progress data.");
-        Check.That(await db.WritingSystemItems.CountAsync() == 208 && await db.PronunciationRules.CountAsync() == 12, "Upgrade preserves old catalog seed.");
+        Check.That(await db.WritingSystemItems.CountAsync() == 268 && await db.PronunciationRules.CountAsync() == 24, "Upgrade preserves old catalog seed.");
 
-        var entries = await db.VocabularyEntries.AsNoTracking().OrderBy(x => x.Id).ToArrayAsync();
-        var senses = await db.VocabularySenses.AsNoTracking().OrderBy(x => x.Id).ToArrayAsync();
-        var translations = await db.VocabularySenseTranslations.AsNoTracking().OrderBy(x => x.Id).ToArrayAsync();
+        var entries = await db.VocabularyEntries.AsNoTracking().Where(x => x.LanguageId == japanese.Id).OrderBy(x => x.Id).ToArrayAsync();
+        var senses = await db.VocabularySenses.AsNoTracking().Where(x => db.VocabularyEntries.Any(e => e.Id == x.VocabularyEntryId && e.LanguageId == japanese.Id)).OrderBy(x => x.Id).ToArrayAsync();
+        var translations = await db.VocabularySenseTranslations.AsNoTracking().Where(x => db.VocabularySenses.Any(s => s.Id == x.VocabularySenseId && db.VocabularyEntries.Any(e => e.Id == s.VocabularyEntryId && e.LanguageId == japanese.Id))).OrderBy(x => x.Id).ToArrayAsync();
         var seedIds = entries.Select(x => x.Id).Concat(senses.Select(x => x.Id)).Concat(translations.Select(x => x.Id)).ToArray();
         Check.That(seedIds.Distinct().Count() == seedIds.Length && seedIds.All(x => x > 0), "Seed Snowflake IDs are positive and globally distinct within vocabulary.");
         var allSeedIds = db.GetService<IDesignTimeModel>().Model.GetEntityTypes().SelectMany(x => x.GetSeedData())
@@ -85,10 +85,10 @@ internal static class DatabaseChecks
             "Down preserves unrelated data and schema.");
         await migrator.MigrateAsync();
         await migrator.MigrateAsync();
-        var reappliedIds = (await db.VocabularyEntries.Select(x => x.Id).OrderBy(x => x).ToArrayAsync())
-            .Concat(await db.VocabularySenses.Select(x => x.Id).OrderBy(x => x).ToArrayAsync())
-            .Concat(await db.VocabularySenseTranslations.Select(x => x.Id).OrderBy(x => x).ToArrayAsync());
-        Check.That(reappliedIds.SequenceEqual(seedIds) && await db.VocabularySenseTranslations.CountAsync() == 404, "Down/up preserves stable identities; repeated migrate does not duplicate seed.");
+        var reappliedIds = (await db.VocabularyEntries.Where(x => x.LanguageId == japanese.Id).Select(x => x.Id).OrderBy(x => x).ToArrayAsync())
+            .Concat(await db.VocabularySenses.Where(x => db.VocabularyEntries.Any(e => e.Id == x.VocabularyEntryId && e.LanguageId == japanese.Id)).Select(x => x.Id).OrderBy(x => x).ToArrayAsync())
+            .Concat(await db.VocabularySenseTranslations.Where(x => db.VocabularySenses.Any(s => s.Id == x.VocabularySenseId && db.VocabularyEntries.Any(e => e.Id == s.VocabularyEntryId && e.LanguageId == japanese.Id))).Select(x => x.Id).OrderBy(x => x).ToArrayAsync());
+        Check.That(reappliedIds.SequenceEqual(seedIds) && await db.VocabularySenseTranslations.CountAsync() == 804, "Down/up preserves stable identities; repeated migrate does not duplicate seed.");
 
         var assembly = db.GetService<IMigrationsAssembly>();
         var migrationType = assembly.Migrations.Single(x => x.Key.EndsWith("_AddVocabularyCatalog"));

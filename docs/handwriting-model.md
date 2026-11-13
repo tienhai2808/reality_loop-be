@@ -175,7 +175,7 @@ bổ sung 88 mẫu để đủ **46 Hiragana + 46 Katakana** (212 nét), mỗi c
 4 mẫu cũ giữ nguyên ID, hình học, revision, version và timestamp; không tạo lại lịch sử.
 Tọa độ là đúng dataset đã dùng trong lab, nguồn KanjiVG commit
 `70a0b7ae0c18ceb5cb358274b029cce0234a43bc`, giấy phép CC BY-SA 3.0, copyright Ulrich Apel.
-File chuyển đổi và COPYING được giữ trong `src/Infrastructure/Persistence/Seeding/Handwriting/` và
+File chuyển đổi và COPYING được giữ trong `src/Infrastructure/Persistence/Seeding/Japanese/Handwriting/` và
 embed trong assembly. Hướng dẫn chuyển đổi/hash SVG nguồn ở tài liệu lab.
 
 ID cố định dùng allocation Snowflake JapaneseId hiện có, generator 1023, sequences **3000–3003** (4 mẫu cũ), **3100–3145**, **3200–3245** (bỏ qua 4 mục đã có);
@@ -215,7 +215,7 @@ container biệt lập; bao gồm các ca thiếu key trong strict JSONPath và 
 ## Tái tạo dataset kana đầy đủ (offline)
 
 Nguồn gốc: KanjiVG commit cố định nêu trên, CC BY-SA 3.0. Giữ SVG gốc trong
-`src/Infrastructure/Persistence/Seeding/Handwriting/Sources/`, manifest `sources.json` ghi rõ
+`src/Infrastructure/Persistence/Seeding/Japanese/Handwriting/Sources/`, manifest `sources.json` ghi rõ
 SHA-256, symbol, số nét, Snowflake sequence và item sequence cho từng mẫu. COPYING đi kèm dataset.
 
 ```bash

@@ -1,6 +1,6 @@
 using Domain.Grammar;
 
-namespace Infrastructure.Persistence.Seeding;
+namespace Infrastructure.Persistence.Seeding.Japanese;
 
 internal static class GrammarSeedData
 {

@@ -37,6 +37,6 @@ internal sealed class WritingSystemConfiguration : IEntityTypeConfiguration<Writ
         builder.HasIndex(x => new { x.LanguageId, x.Code }).IsUnique().HasDatabaseName("ux_writing_systems_language_id_code");
         builder.HasIndex(x => new { x.LanguageId, x.SortOrder, x.Id })
             .HasDatabaseName("ix_writing_systems_language_id_sort_order_id");
-        builder.HasData(FoundationSeedData.WritingSystemRows);
+        builder.HasData(CatalogSeedData.WritingSystemRows);
     }
 }

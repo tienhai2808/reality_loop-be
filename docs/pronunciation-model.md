@@ -21,7 +21,7 @@ Language
 - Domain/Pronunciation: mỗi entity một file, factory Create và Update kiểm soát invariant.
 - Domain/Common: tái sử dụng LanguageTag và FoundationContentValidation hiện có.
 - Infrastructure/Persistence/Configurations: mỗi mapping một file, tự nhận qua ApplyConfigurationsFromAssembly.
-- Infrastructure/Persistence/Seeding/PronunciationSeedData.cs: dữ liệu tĩnh được đưa vào HasData.
+- Infrastructure/Persistence/Seeding/Japanese/PronunciationSeedData.cs: dữ liệu tĩnh được đưa vào HasData.
 - ApplicationDbContext có DbSet cho cả 3 entity; không cần đăng ký DI mới.
 
 Rule thuộc trực tiếp Language để cùng quy tắc có thể áp dụng cho nhiều bộ chữ. Ví dụ giữ

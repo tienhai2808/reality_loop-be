@@ -27,6 +27,7 @@ src/
     WritingSystems/                 Bộ chữ, mục chữ và cách đọc
     Pronunciation/                  Quy tắc phát âm, bản dịch và ví dụ
     Grammar/                        Điểm ngữ pháp, cấu trúc mẫu và giải thích đa ngôn ngữ
+    GrammarPractice/                Câu hỏi ngữ pháp, bản dịch và lượt luyện có bản chụp đề
     Vocabulary/                     Từ, từng nghĩa/từ loại và diễn giải đa ngôn ngữ
     VocabularyLearning/             Tiến độ từng nghĩa, lịch đến hạn và lịch sử tự đánh giá
   Application/
@@ -103,6 +104,12 @@ src/
     Grammar/
       Queries/                      Danh sách có cursor và chi tiết điểm ngữ pháp theo locale
       Models/                       Summary/detail/page DTO
+    GrammarPractice/
+      Commands/                     Tạo lượt, ghi đáp án và bỏ lượt có version
+      Queries/                      Nội dung khả dụng theo profile, lịch sử cursor và chi tiết
+      Models/                       DTO che đáp án, context và dữ liệu chọn câu
+      Services/                     Hoán vị lựa chọn và ánh xạ đáp án đúng
+      Validation/                   ID, version, số câu và cursor
     Vocabulary/
       Queries/                      Danh sách từ, metadata và các nghĩa có phân trang
       Models/                       Entry/primary sense, bản dịch fallback và page DTO
@@ -157,6 +164,7 @@ src/
     appsettings.json
 docs/                               Tài liệu tích hợp và vận hành
 tests/
+  GrammarPractice.Tests/            Domain/EF/PostgreSQL/HTTP, bản chụp đề, query budget và concurrency
   Grammar.Tests/                    Domain/EF/PostgreSQL/HTTP, locale, cursor và query budget
   AiSetup.Tests/                    Console runner AI; PostgreSQL checks bật qua biến môi trường
   LearningProgress.Tests/           HTTP/PostgreSQL, ownership, query count và concurrency
@@ -457,6 +465,9 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 
 ## Tài liệu chi tiết
 
+- [API luyện ngữ pháp và tích hợp FE](docs/grammar-practice-api.md) gồm 6 endpoint, payload, feedback, version, query budget và luồng màn hình.
+- [Model, DB và seed luyện ngữ pháp](docs/grammar-practice-model.md) gồm bốn bảng, bản chụp đề, version, transaction và 200 câu Nhật/Đức.
+- [Dữ liệu học tiếng Đức và seed đa ngôn ngữ](docs/german-seed-content.md) gồm phạm vi nội dung, migration, audio và cách tích hợp FE.
 - [Dữ liệu học tiếng Nhật](docs/japanese-seed-content.md) gồm độ phủ seed hiện tại, migration, audio và phân trang FE.
 - [API ngữ pháp và tích hợp FE](docs/grammar-api.md) gồm endpoint, payload, locale fallback và ví dụ TypeScript.
 - [Model danh mục ngữ pháp](docs/grammar-model.md) gồm field, seed nhập môn, constraints và migration.
@@ -472,7 +483,7 @@ riêng (0–1023). User-secrets chỉ là nguồn cấu hình cho development.
 - [API tiến độ học bảng chữ cho FE](docs/learning-progress-api.md): 4 endpoint, action/version, query budget, conflict và cách ghép chart.
 - [Tiến độ học bảng chữ: model và DB](docs/learning-progress-model.md): trạng thái Learning/Completed, invariant, concurrency, constraint và migration.
 
-- [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 71 file cho 142 reading, lệnh init migration/upload/seed và nối FE.
+- [Khởi tạo audio kana trên R2](docs/foundation-audio-seeding.md): nguồn public domain, 101 file cho 202 reading Nhật/Đức, lệnh init migration/upload/seed và nối FE.
 - [Cloudflare R2 storage setup](docs/r2-storage-setup.md): tạo bucket, credentials, cấu hình bắt buộc, domain audio, CORS và triển khai.
 - [Pronunciation API cho FE](docs/pronunciation-api.md): 3 API đọc, fallback bản dịch, pagination và luồng nối LearningProfile.
 - [Pronunciation: model, DB và seed](docs/pronunciation-model.md): 3 bảng quy tắc phát âm và seed nhập môn tiếng Nhật.

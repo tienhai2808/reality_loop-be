@@ -41,6 +41,6 @@ internal sealed class VocabularyEntryConfiguration : IEntityTypeConfiguration<Vo
         // Term is deliberately not unique: homographs/readings can be separate entries with stable codes.
         builder.HasIndex(x => new { x.LanguageId, x.Code }).IsUnique().HasDatabaseName("ux_vocabulary_entries_language_id_code");
         builder.HasIndex(x => new { x.LanguageId, x.SortOrder, x.Id }).HasDatabaseName("ix_vocabulary_entries_language_id_sort_order_id");
-        builder.HasData(VocabularySeedData.EntryRows);
+        builder.HasData(CatalogSeedData.VocabularyEntryRows);
     }
 }

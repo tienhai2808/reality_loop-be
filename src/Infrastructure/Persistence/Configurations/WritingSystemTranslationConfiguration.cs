@@ -32,6 +32,6 @@ internal sealed class WritingSystemTranslationConfiguration : IEntityTypeConfigu
 
         builder.HasOne<WritingSystem>().WithMany().HasForeignKey(x => x.WritingSystemId).OnDelete(DeleteBehavior.Cascade);
         builder.HasIndex(x => new { x.WritingSystemId, x.Locale }).IsUnique().HasDatabaseName("ux_writing_system_translations_writing_system_id_locale");
-        builder.HasData(FoundationSeedData.WritingSystemTranslationRows);
+        builder.HasData(CatalogSeedData.WritingSystemTranslationRows);
     }
 }

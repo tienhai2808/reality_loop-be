@@ -35,6 +35,6 @@ internal sealed class VocabularySenseTranslationConfiguration : IEntityTypeConfi
         // Locales are explanation languages, not foreign keys to the target-language catalog.
         builder.HasIndex(x => new { x.VocabularySenseId, x.Locale }).IsUnique()
             .HasDatabaseName("ux_vocabulary_sense_translations_sense_id_locale");
-        builder.HasData(VocabularySeedData.TranslationRows);
+        builder.HasData(CatalogSeedData.VocabularySenseTranslationRows);
     }
 }

@@ -34,6 +34,7 @@ public static class DependencyInjection
         services.AddScoped<IVocabularyLearningRepository, VocabularyLearningRepository>();
         services.AddScoped<IPronunciationReadRepository, PronunciationReadRepository>();
         services.AddScoped<IGrammarReadRepository, GrammarReadRepository>();
+        services.AddScoped<IGrammarPracticeRepository, GrammarPracticeRepository>();
         services.AddScoped<IVocabularyReadRepository, VocabularyReadRepository>();
         services.AddScoped<ILanguageReadRepository, LanguageReadRepository>();
         services.AddScoped<IWritingSystemReadRepository, WritingSystemReadRepository>();

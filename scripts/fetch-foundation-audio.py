@@ -15,34 +15,16 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DEST = ROOT / 'src/Infrastructure/Persistence/Seeding/Audio/Assets'
-USER_AGENT = 'RealityLoopAudioSeed/1.0 (educational kana bundle; Wikimedia Commons reuse)'
+DEST = ROOT / 'src/Infrastructure/Persistence/Seeding/Japanese/Audio/Assets'
+from foundation_audio_source import request, is_mp3
 OVERRIDES = {'a': 'Ja-A.oga', 'e': 'Ja-E.oga', 'i': 'Japanese I.ogg',
              'u': 'Japanese U.ogg', 'o': 'Japanese O.ogg', 'ka': 'Ja-Ka.oga',
              'chi': 'Japanese ti.ogg', 'fu': 'Japanese hu.ogg', 'n': 'Japanese N.ogg', 'ji': 'Japanese zi.ogg'}
 
 
-def request(url):
-    for attempt in range(4):
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': USER_AGENT}), timeout=45) as response:
-                return response.read()
-        except Exception as error:
-            if attempt == 3:
-                raise
-            delay = 2 ** attempt
-            if isinstance(error, urllib.error.HTTPError) and error.code == 429:
-                delay = max(30, int(error.headers.get('Retry-After', '30')))
-                print(f'Wikimedia rate limit: waiting {delay}s before retry.', flush=True)
-            time.sleep(delay)
-
-
-def is_mp3(content):
-    return content.startswith(b'ID3') or (len(content) >= 2 and content[0] == 0xff and content[1] & 0xe0 == 0xe0)
-
 
 def main():
-    seed = (ROOT / 'src/Infrastructure/Persistence/Seeding/FoundationSeedData.cs').read_text()
+    seed = (ROOT / 'src/Infrastructure/Persistence/Seeding/Japanese/FoundationSeedData.cs').read_text()
     kana = re.findall(r'\((\d+), "(kana-[^"]+)", "([^"]+)", "([^"]+)", "([^"]+)"', seed)
     kana = [row for row in kana if len(row[2]) == 1]
     if len(kana) != 71:
@@ -111,7 +93,16 @@ def main():
         print(f'{row[4]}: {len(content)} bytes; public domain; MP3; SHA-256 recorded', flush=True)
         if not old:
             time.sleep(2)
-    manifest = {'bundle': 'ja-kana-v2', 'source': 'Wikimedia Commons', 'entries': entries}
+    seed_base = 1563703640068190208
+    expansion = seed_base + (1 << 22)
+    for row, entry in zip(kana, entries):
+        key = int(row[0])
+        entry['readingIds'] = [expansion + 200 + key, expansion + 300 + key] if row[1].startswith('kana-voiced-') else [seed_base + 300 + key, seed_base + 400 + key]
+        entry['exampleIds'] = {'kana-voiced-ga': [seed_base + 1100], 'kana-voiced-ba': [seed_base + 1101],
+                               'kana-voiced-pa': [seed_base + 1102], 'kana-voiced-gi': [expansion + 2500],
+                               'kana-voiced-po': [expansion + 2501]}.get(row[1], [])
+    manifest = {'bundle': 'ja-kana-v2', 'languageCode': 'ja', 'expectedRecordings': 71,
+                'source': 'Wikimedia Commons', 'entries': entries}
     temporary.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     temporary.replace(manifest_path)
     print(f'Wrote {len(entries)} recordings ({sum(e["bytes"] for e in entries)} bytes) and source manifest.')

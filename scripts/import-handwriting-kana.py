@@ -7,7 +7,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "src/Infrastructure/Persistence/Seeding/Handwriting"
+DATA = ROOT / "src/Infrastructure/Persistence/Seeding/Japanese/Handwriting"
 spec = importlib.util.spec_from_file_location("lab_import", ROOT / "tools/HandwritingLab/import_templates.py")
 parser = importlib.util.module_from_spec(spec)
 sys.dont_write_bytecode = True

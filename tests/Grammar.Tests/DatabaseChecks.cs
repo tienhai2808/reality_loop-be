@@ -58,10 +58,10 @@ internal static class DatabaseChecks
                 x.AudioUrl == "https://example.invalid/custom-kana.mp3"), "Expansion preserves learning progress and customized audio.");
         Check.That(!db.Database.HasPendingModelChanges(), "Model matches snapshot and deterministic seed.");
         Check.That(await db.Users.CountAsync() == 1 && await db.LearningProfiles.CountAsync() == 1 &&
-            await db.HandwritingTemplates.CountAsync() == 208 && await db.VocabularyEntries.CountAsync() == 200,
+            await db.HandwritingTemplates.CountAsync() == 268 && await db.VocabularyEntries.CountAsync() == 400,
             "Upgrade preserves private data and other catalog modules.");
-        var points = await db.GrammarPoints.AsNoTracking().OrderBy(x => x.Id).ToArrayAsync();
-        var translations = await db.GrammarPointTranslations.AsNoTracking().ToArrayAsync();
+        var points = await db.GrammarPoints.AsNoTracking().Where(x => x.LanguageId == language.Id).OrderBy(x => x.Id).ToArrayAsync();
+        var translations = await db.GrammarPointTranslations.AsNoTracking().Where(x => db.GrammarPoints.Any(p => p.Id == x.GrammarPointId && p.LanguageId == language.Id)).ToArrayAsync();
         Check.That(points.Length == 50 && translations.Length == 100, "Seed contains 50 points and 100 translations.");
         Check.That(points.All(x => x.Version == 1 && x.IsPublished && x.CreatedAt == x.UpdatedAt && x.Pattern.Length > 0), "Published initial seed metadata.");
         Check.That(translations.All(x => x.Version == 1 && x.CreatedAt == x.UpdatedAt) &&
@@ -160,7 +160,7 @@ internal static class DatabaseChecks
             await db.Users.CountAsync() == 1 && await db.VocabularyEntries.CountAsync() == 40, "Down preserves unrelated user/catalog data.");
         await migrator.MigrateAsync();
         await migrator.MigrateAsync();
-        Check.That(await db.GrammarPoints.CountAsync() == 50 && await db.GrammarPointTranslations.CountAsync() == 100 &&
+        Check.That(await db.GrammarPoints.CountAsync() == 100 && await db.GrammarPointTranslations.CountAsync() == 200 &&
             !db.Database.HasPendingModelChanges(), "Down/up and repeated migrate seed deterministically exactly once.");
     }
 }

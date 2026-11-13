@@ -40,6 +40,6 @@ internal sealed class PronunciationRuleConfiguration : IEntityTypeConfiguration<
             .HasDatabaseName("ux_pronunciation_rules_language_id_code");
         builder.HasIndex(x => new { x.LanguageId, x.SortOrder, x.Id })
             .HasDatabaseName("ix_pronunciation_rules_language_id_sort_order_id");
-        builder.HasData(PronunciationSeedData.RuleRows);
+        builder.HasData(CatalogSeedData.PronunciationRuleRows);
     }
 }
